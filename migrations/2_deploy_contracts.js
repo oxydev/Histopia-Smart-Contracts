@@ -1,5 +1,5 @@
-const AssignableERC721 = artifacts.require("AssignableERC721");
+const RentDeal = artifacts.require("RentDeal");
 
 module.exports = function(deployer) {
-  deployer.deploy(AssignableERC721);
+  deployer.deploy(RentDeal,"a","b");
 };

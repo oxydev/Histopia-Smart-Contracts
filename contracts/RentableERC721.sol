@@ -8,12 +8,18 @@ struct Type {
     uint256 allowedAssignorTypes;
     uint256 typeId;
 }
-
-contract AssignableERC721 is ERC721 {
+struct AccessContract {
+    address tenant;
+    uint256 dueDate;
+}
+contract RentableERC721 is ERC721 {
     Type[] types;
     mapping(uint256 => uint256) public tokenTypeIndices;
 
     mapping(uint256 => uint256) public assignedNFTs;
+
+
+    mapping(uint256 => AccessContract) public tokenAccessor;
 
     event SetAssignor(address indexed owner, uint256 indexed assigneeTokenId, uint256 indexed assignorTokenId);
     event RemoveAssignor(address indexed owner, uint256 indexed assigneeTokenId, uint256 indexed assignorTokenId);
@@ -22,28 +28,29 @@ contract AssignableERC721 is ERC721 {
     }
 
     function setAssignor(uint256 assigneeTokenId, uint256 assignorTokenId) public {
-        require(ownerOf(assigneeTokenId) == msg.sender,  "AssignableERC721: assign of token that is not own");
-        require(ownerOf(assignorTokenId) == msg.sender,  "AssignableERC721: assign to token that is not own");
+        if(tokenAccessor[assigneeTokenId].tenant == address(0))
+            require(ownerOf(assigneeTokenId) == msg.sender, "AssignableERC721: assign of token that is not own");
+        else 
+            require(tokenAccessor[assigneeTokenId].tenant == msg.sender && tokenAccessor[assigneeTokenId].dueDate > block.timestamp,  "AssignableERC721: assign of token that is not own");
+
         require(types[tokenTypeIndices[assigneeTokenId]].allowedAssignorTypes % types[tokenTypeIndices[assignorTokenId]].typeId == 0, "AssignableERC721: this assignor type is not allowed for this assignee type");
-
-        _transfer(msg.sender, address(this), assigneeTokenId);
-
         assignedNFTs[assigneeTokenId] = assignorTokenId;
 
         emit SetAssignor(msg.sender, assigneeTokenId, assignorTokenId);
     }
 
     function removeAssignor(uint256 assigneeTokenId) public {
-        require(ownerOf(assigneeTokenId) == address(this),  "AssignableERC721: assign of token that is not own");
+        if(tokenAccessor[assigneeTokenId].tenant == address(0))
+            require(ownerOf(assigneeTokenId) == msg.sender, "AssignableERC721: assign of token that is not own");
+        else 
+            require(tokenAccessor[assigneeTokenId].tenant == msg.sender && tokenAccessor[assigneeTokenId].dueDate > block.timestamp,  "AssignableERC721: assign of token that is not own");
         uint256 assignorTokenId = assignedNFTs[assigneeTokenId];
         require(assignorTokenId > 0,  "AssignableERC721: this assignee is not owned by this assignor");
-        require(ownerOf(assignorTokenId) == msg.sender,  "AssignableERC721: assign to token that is not own");
+        _removeAssignor(assigneeTokenId,assignorTokenId);
+    }
 
-
-        _transfer(address(this), msg.sender, assigneeTokenId);
-
+    function _removeAssignor(uint256 assigneeTokenId,uint256 assignorTokenId) internal{
         assignedNFTs[assigneeTokenId]  = 0;
-
         emit RemoveAssignor(msg.sender, assigneeTokenId, assignorTokenId);
     }
 
@@ -55,9 +62,9 @@ contract AssignableERC721 is ERC721 {
         types[typeindex].typeName = typeName;
         types[typeindex].allowedAssignorTypes =  allowedAssignorTypes;
     }
-
-
-    function getAssignorId(uint256 assigneeTokenId) public view returns (uint256) {
-        return assignedNFTs[assigneeTokenId];
+    
+    function mint() public {
+        
     }
+
 }
