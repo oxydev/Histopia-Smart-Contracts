@@ -22,6 +22,7 @@ contract RentDeal is RentableERC721 {
     IERC20 public ERAToken = IERC20(0xd9145CCE52D386f254917e481eB44e9943F39138);
     event AddRentDeal(address indexed renter, uint256 indexed duration, uint256 indexed index,uint256 assigneeTokenId);
     event ChangeDisableRentDeal(uint256 indexed index, bool disabled);
+    event ChangePriceRentDeal(uint256 indexed index, uint256 price);
     event RentDealPurchased(uint256 indexed index, uint256 indexed startedTime, address indexed tenant);
 
     constructor (string memory name_, string memory symbol_) RentableERC721(name_, symbol_) {
@@ -41,9 +42,17 @@ contract RentDeal is RentableERC721 {
         emit ChangeDisableRentDeal(index, rentDeal.disabled);
     }
 
+    function editRentDealPrice(uint256 index,uint256 price) public{
+        RentType storage rentDeal = deals[index];
+        require(rentDeal.renter == msg.sender,  "AssignableERC721: assign of token that is not own");
+        rentDeal.amountOfERA = price;
+        emit ChangePriceRentDeal(index, price);
+    }
+
+
     function purchaseRentDeal(uint256 index) public{
         RentType storage rentDeal = deals[index];
-        require(rentDeal.tenant == address(0),  "AssignableERC721: assign of token that is not own");
+        require(rentDeal.tenant == address(0) || rentDeal.startedTime + rentDeal.duration <= block.timestamp,  "AssignableERC721: assign of token that is not own");
         require(!rentDeal.disabled,  "AssignableERC721: assign of token that is not own");
         require(ERAToken.transferFrom(msg.sender,rentDeal.renter,rentDeal.amountOfERA),  "AssignableERC721: assign of token that is not own");
 
@@ -60,15 +69,12 @@ contract RentDeal is RentableERC721 {
 
     function finishRentDeal(uint256 index) public{
         RentType storage rentDeal = deals[index];
-        require(rentDeal.renter == msg.sender, "AssignableERC721: assign of token that is not own");
         require(rentDeal.startedTime + rentDeal.duration <= block.timestamp,  "AssignableERC721: assign of token that is not own");
 
         rentDeal.tenant = address(0);
         tokenAccessor[rentDeal.assigneeTokenId].tenant = address(0);
         if(assignedNFTs[rentDeal.assigneeTokenId] > 0)
             _removeAssignor(rentDeal.assigneeTokenId, assignedNFTs[rentDeal.assigneeTokenId]);
-
-        emit RentDealPurchased(index, block.timestamp, msg.sender);
     }
 
 }
