@@ -33,10 +33,11 @@ contract AssignableERC721 is ERC721 {
         emit SetAssignor(msg.sender, assigneeTokenId, assignorTokenId);
     }
 
-    function removeAssignor(uint256 assigneeTokenId, uint256 assignorTokenId) public {
+    function removeAssignor(uint256 assigneeTokenId) public {
         require(ownerOf(assigneeTokenId) == address(this),  "AssignableERC721: assign of token that is not own");
+        uint256 assignorTokenId = assignedNFTs[assigneeTokenId];
+        require(assignorTokenId > 0,  "AssignableERC721: this assignee is not owned by this assignor");
         require(ownerOf(assignorTokenId) == msg.sender,  "AssignableERC721: assign to token that is not own");
-        require(assignedNFTs[assigneeTokenId] == assignorTokenId,  "AssignableERC721: this assignee is not owned by this assignor");
 
 
         _transfer(address(this), msg.sender, assigneeTokenId);
