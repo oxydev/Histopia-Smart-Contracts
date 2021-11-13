@@ -14,7 +14,7 @@ struct AccessContract {
     uint256 dueDate;
 }
 contract RentableERC721 is ERC721, Ownable {
-    uint256 tokenID;
+    uint256 public tokenID;
     Type[] public types;
     mapping(uint256 => uint256) public tokenTypeIndices;
 

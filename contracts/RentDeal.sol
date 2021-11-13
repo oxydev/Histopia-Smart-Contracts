@@ -18,15 +18,18 @@ struct RentType {
 }
 
 contract RentDeal is RentableERC721 {
-    RentType[] deals;
-    IERC20 public ERAToken = IERC20(0xd9145CCE52D386f254917e481eB44e9943F39138);
+    RentType[] public deals;
+    IERC20 public ERAToken;
+    address feeAccount;
+    uint256 fee = 10;
     event AddRentDeal(address indexed renter, uint256 indexed duration, uint256 indexed index,uint256 assigneeTokenId);
     event ChangeDisableRentDeal(uint256 indexed index, bool disabled);
     event ChangePriceRentDeal(uint256 indexed index, uint256 price);
     event RentDealPurchased(uint256 indexed index, uint256 indexed startedTime, address indexed tenant);
 
-    constructor (string memory name_, string memory symbol_) RentableERC721(name_, symbol_) {
-        
+    constructor (IERC20 ERA,address _feeAccount,string memory name_, string memory symbol_) RentableERC721(name_, symbol_) {
+        ERAToken = ERA;
+        feeAccount =  _feeAccount;
     }
 
     function addRentDeal(uint256 assigneeTokenId,uint256 duration,uint256 amountOfERA) public {
@@ -54,7 +57,8 @@ contract RentDeal is RentableERC721 {
         RentType storage rentDeal = deals[index];
         require(rentDeal.tenant == address(0) || rentDeal.startedTime + rentDeal.duration <= block.timestamp,  "AssignableERC721: assign of token that is not own");
         require(!rentDeal.disabled,  "AssignableERC721: assign of token that is not own");
-        require(ERAToken.transferFrom(msg.sender,rentDeal.renter,rentDeal.amountOfERA),  "AssignableERC721: assign of token that is not own");
+        require(ERAToken.transferFrom(msg.sender,rentDeal.renter,rentDeal.amountOfERA * (1000 - fee) / 1000),  "AssignableERC721: assign of token that is not own");
+        require(ERAToken.transferFrom(msg.sender,feeAccount,rentDeal.amountOfERA * fee / 1000),  "AssignableERC721: assign of token that is not own");
 
         rentDeal.startedTime = block.timestamp;
         rentDeal.tenant = msg.sender;
