@@ -7,22 +7,21 @@ interface IERC20 {
     function transferFrom(address sender, address recipient, uint256 amount) external returns (bool);
 }
 
-struct RentType {
+struct RentDeal {
     uint256 duration;
     uint256 startedTime;
     uint256 amountOfERA;
     uint256 assigneeTokenId;
-    address renter;
     address tenant;
     bool disabled;
 }
 
-contract RentDeal is RentableERC721 {
-    RentType[] public deals;
+contract RentDealer is RentableERC721 {
+    RentDeal[] public deals;
     IERC20 public ERAToken;
     address feeAccount;
     uint256 fee = 10;
-    event AddRentDeal(address indexed renter, uint256 indexed duration, uint256 indexed index,uint256 assigneeTokenId);
+    event AddRentDeal(uint256 indexed duration, uint256 indexed index,uint256 assigneeTokenId);
     event ChangeDisableRentDeal(uint256 indexed index, bool disabled);
     event ChangePriceRentDeal(uint256 indexed index, uint256 price);
     event RentDealPurchased(uint256 indexed index, uint256 indexed startedTime, address indexed tenant);
@@ -34,30 +33,30 @@ contract RentDeal is RentableERC721 {
 
     function addRentDeal(uint256 assigneeTokenId,uint256 duration,uint256 amountOfERA) public {
         require(ownerOf(assigneeTokenId) == msg.sender,  "AssignableERC721: assign of token that is not own");
-        deals.push(RentType (duration,0,amountOfERA,assigneeTokenId,msg.sender, address(0),false));
-        emit AddRentDeal(msg.sender, duration, deals.length - 1, assigneeTokenId);
+        deals.push(RentDeal (duration,0,amountOfERA,assigneeTokenId, address(0),false));
+        emit AddRentDeal(duration, deals.length - 1, assigneeTokenId);
     }
 
     function disableRentDeal(uint256 index) public{
-        RentType storage rentDeal = deals[index];
-        require(rentDeal.renter == msg.sender,  "AssignableERC721: assign of token that is not own");
+        RentDeal storage rentDeal = deals[index];
+        require(ownerOf(rentDeal.assigneeTokenId) == msg.sender,  "AssignableERC721: assign of token that is not own");
         rentDeal.disabled = !rentDeal.disabled;
         emit ChangeDisableRentDeal(index, rentDeal.disabled);
     }
 
     function editRentDealPrice(uint256 index,uint256 price) public{
-        RentType storage rentDeal = deals[index];
-        require(rentDeal.renter == msg.sender,  "AssignableERC721: assign of token that is not own");
+        RentDeal storage rentDeal = deals[index];
+        require(ownerOf(rentDeal.assigneeTokenId) == msg.sender,  "AssignableERC721: assign of token that is not own");
         rentDeal.amountOfERA = price;
         emit ChangePriceRentDeal(index, price);
     }
 
 
     function purchaseRentDeal(uint256 index) public{
-        RentType storage rentDeal = deals[index];
+        RentDeal storage rentDeal = deals[index];
         require(rentDeal.tenant == address(0) || rentDeal.startedTime + rentDeal.duration <= block.timestamp,  "AssignableERC721: assign of token that is not own");
         require(!rentDeal.disabled,  "AssignableERC721: assign of token that is not own");
-        require(ERAToken.transferFrom(msg.sender,rentDeal.renter,rentDeal.amountOfERA * (1000 - fee) / 1000),  "AssignableERC721: assign of token that is not own");
+        require(ERAToken.transferFrom(msg.sender,ownerOf(rentDeal.assigneeTokenId),rentDeal.amountOfERA * (1000 - fee) / 1000),  "AssignableERC721: assign of token that is not own");
         require(ERAToken.transferFrom(msg.sender,feeAccount,rentDeal.amountOfERA * fee / 1000),  "AssignableERC721: assign of token that is not own");
 
         rentDeal.startedTime = block.timestamp;
@@ -72,7 +71,7 @@ contract RentDeal is RentableERC721 {
     }
 
     function finishRentDeal(uint256 index) public{
-        RentType storage rentDeal = deals[index];
+        RentDeal storage rentDeal = deals[index];
         require(rentDeal.startedTime + rentDeal.duration <= block.timestamp,  "AssignableERC721: assign of token that is not own");
 
         rentDeal.tenant = address(0);
