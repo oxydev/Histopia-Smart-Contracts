@@ -248,7 +248,7 @@ contract ERAAllocation is Ownable {
     /**
      * @dev Withdraw all unlocked shares.
      */
-    function withdrawShare(uint256 amount) external
+    function withdrawShare(address dest, uint256 amount) external
     {
         uint256 unlockedBlock;
         if (block.number > endBlock) {
@@ -263,7 +263,7 @@ contract ERAAllocation is Ownable {
         allocation.withdrawableAmount = allocation.withdrawableAmount.add(unlockedShares);
 
         allocation.withdrawableAmount = allocation.withdrawableAmount.sub(amount);
-        ERA.mint(msg.sender, amount);
+        ERA.mint(dest, amount);
     }
 
     /**
