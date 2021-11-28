@@ -72,7 +72,7 @@ contract RentableERC721 is ERC721, Ownable {
     function _removeAssignor(uint256 assigneeTokenId,uint256 assignorTokenId) internal{
         assignedNFTs[assigneeTokenId]  = 0;
         uint256[] memory assigneeCharactristics = charactrestsicsValues[assigneeTokenId];
-        uint256[] storage assignorCharactristics = comulativeCharactrestsicsValues[assigneeTokenId];
+        uint256[] storage assignorCharactristics = comulativeCharactrestsicsValues[assignorTokenId];
 
         for (uint256 index = 0; index < assigneeCharactristics.length; index++) {
             assignorCharactristics[index] = assignorCharactristics[index].sub(assigneeCharactristics[index]);
@@ -80,12 +80,50 @@ contract RentableERC721 is ERC721, Ownable {
         emit RemoveAssignor(msg.sender, assigneeTokenId, assignorTokenId);
     }
 
-    function addType(string memory typeName, uint256 typeId,uint256 maxSupply, bool breadable, Characterstic[] memory a) public onlyOwner{
-        types.push(Type (typeName, primeNumbers[types.length],address(0), typeId, maxSupply, 0, breadable));
+    function addType(string memory typeName, uint256 allowedAccessorTypes,uint256 maxSupply, bool breadable, Characterstic[] memory a) public onlyOwner{
+        types.push(Type (typeName, allowedAccessorTypes,address(0), primeNumbers[types.length], maxSupply, 0, breadable));
         
         for (uint256 index = 0; index < a.length; index++) {
             charactrestsicsTypes[types.length - 1].push(a[index]);
         }
+    }
+
+    function addCharactersticToType(uint256 typeIndex, Characterstic[] memory a) public onlyOwner{
+        for (uint256 index = 0; index < a.length; index++) {
+            charactrestsicsTypes[typeIndex].push(a[index]);
+        }
+    }
+
+    function needsUpdate(uint256 tokenId) public view returns(bool) {
+        return charactrestsicsTypes[tokenTypeIndices[tokenId]].length == charactrestsicsValues[tokenId].length;
+    }
+
+    function updateTokenCharactrestics(uint256 tokenId) public {
+        uint256 typeIndex = tokenTypeIndices[tokenId];
+        Characterstic[] memory typeCharacterstic = charactrestsicsTypes[typeIndex];
+        uint256[] storage tokenCharactrestsicsValues = charactrestsicsValues[tokenId];
+        uint256[] storage comulativeValues = comulativeCharactrestsicsValues[tokenID];
+
+        if (typeCharacterstic.length > tokenCharactrestsicsValues.length) {
+            uint256 assinorTokenId = assignedNFTs[tokenId];
+            if (assinorTokenId > 0) {
+                updateTokenCharactrestics(assinorTokenId);
+            }
+            uint256 updatingValuesCount = typeCharacterstic.length - tokenCharactrestsicsValues.length;
+            for (uint256 index = 0; index < updatingValuesCount; index++) {
+                uint256 power = random(
+                    charactrestsicsTypes[typeIndex][index].minimum, 
+                    charactrestsicsTypes[typeIndex][index].maximum, 
+                    charactrestsicsTypes[typeIndex][index].name
+                );
+                tokenCharactrestsicsValues.push(power);
+                comulativeValues.push(power);
+                if (assinorTokenId > 0 && tokenCharactrestsicsValues.length < comulativeCharactrestsicsValues[assinorTokenId].length) {
+                    comulativeCharactrestsicsValues[assinorTokenId][tokenCharactrestsicsValues.length - 1] += power;
+                }
+            }
+        }
+        
     }
 
     function editType(uint256 typeindex, string memory typeName, uint256 allowedAssignorTypes) public onlyOwner {
