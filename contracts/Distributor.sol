@@ -197,7 +197,7 @@ abstract contract Ownable is Context {
 }
 
 /******************************************/
-/*       ERAAllocation Starting below      */
+/*       ERA Allocation Starting below    */
 /******************************************/
 
 contract ERAAllocation is Ownable {
@@ -205,37 +205,37 @@ contract ERAAllocation is Ownable {
 
     IERC20 public ERA; 
 
-    uint256 public startBlock;
-    uint256 public endBlock;
+    uint256 public startTime;
+    uint256 public endTime;
     bool initialized;
 
     mapping (address => Allocation) public allocations;
 
     struct Allocation {
-        uint256 sharePerBlock;
-        uint256 lastWithdrawalBlock;
+        uint256 sharePerSecond;
+        uint256 lastWithdrawalTime;
         uint256 withdrawableAmount;
     }
 
     /**
      * @dev Populate allocations.
      */
-    constructor()
+    constructor(address[] memory shareHolders, uint256[] memory sharesPerSecond)
     {
-        address[2] memory shareHolders = [address(0),address(0)];
+        // address[2] memory shareHolders = [address(0),address(0)];
 
-        uint256[2] memory sharesPerBlock =[uint256(1),1];
+        // uint256[2] memory sharesPerTime =[uint256(1),1];
         // Team Draft
         for (uint256 index = 0; index < shareHolders.length; index++) {
             allocations[shareHolders[index]] = Allocation({
-            sharePerBlock: sharesPerBlock[index],
-            lastWithdrawalBlock: block.number,
+            sharePerSecond: sharesPerSecond[index],
+            lastWithdrawalTime: block.number,
             withdrawableAmount: 0
             });
         }
        
-        startBlock = block.number;
-        endBlock = block.number + 3110400; //5760 blocks per day * 30 days * 18 months
+        startTime = block.timestamp;
+        endTime = block.timestamp + (31_104_000 * 2); //60*60*24*30*12 * 2
     }
 
     function initialize(IERC20 _ERA) external onlyOwner
@@ -250,16 +250,16 @@ contract ERAAllocation is Ownable {
      */
     function withdrawShare(address dest, uint256 amount) external
     {
-        uint256 unlockedBlock;
-        if (block.number > endBlock) {
-            unlockedBlock = endBlock;
+        uint256 unlockedTime;
+        if (block.timestamp > endTime) {
+            unlockedTime = endTime;
         } else {
-            unlockedBlock = block.number;
+            unlockedTime = block.timestamp;
         }
         Allocation storage allocation = allocations[msg.sender];
-        uint256 tempLastWithdrawalBlock = allocation.lastWithdrawalBlock;
-        allocation.lastWithdrawalBlock = unlockedBlock;                    // Avoid reentrancy
-        uint256 unlockedShares = allocation.sharePerBlock.mul(unlockedBlock.sub(tempLastWithdrawalBlock));
+        uint256 tempLastWithdrawalTime = allocation.lastWithdrawalTime;
+        allocation.lastWithdrawalTime = unlockedTime;                    // Avoid reentrancy
+        uint256 unlockedShares = allocation.sharePerSecond.mul(unlockedTime.sub(tempLastWithdrawalTime));
         allocation.withdrawableAmount = allocation.withdrawableAmount.add(unlockedShares);
 
         allocation.withdrawableAmount = allocation.withdrawableAmount.sub(amount);
@@ -271,7 +271,7 @@ contract ERAAllocation is Ownable {
      */
     function getOutstandingShares() external view returns(uint256)
     {
-        return allocations[msg.sender].sharePerBlock * (endBlock - allocations[msg.sender].lastWithdrawalBlock);
+        return allocations[msg.sender].sharePerSecond * (endTime - allocations[msg.sender].lastWithdrawalTime);
     }
 
     /**
@@ -279,13 +279,13 @@ contract ERAAllocation is Ownable {
      */
     function getUnlockedShares() external view returns(uint256)
     {
-        uint256 unlockedBlock;
-        if (block.number > endBlock) {
-            unlockedBlock = endBlock;
+        uint256 unlockedTime;
+        if (block.number > endTime) {
+            unlockedTime = endTime;
         } else {
-            unlockedBlock = block.number;
+            unlockedTime = block.number;
         }
-        return allocations[msg.sender].sharePerBlock * (unlockedBlock - allocations[msg.sender].lastWithdrawalBlock);
+        return allocations[msg.sender].sharePerSecond * (unlockedTime - allocations[msg.sender].lastWithdrawalTime);
     }
 
     /**
@@ -293,7 +293,7 @@ contract ERAAllocation is Ownable {
      */
     function getWithdrawnShares() external view returns(uint256)
     {
-        return allocations[msg.sender].sharePerBlock * (allocations[msg.sender].lastWithdrawalBlock - startBlock);
+        return allocations[msg.sender].sharePerSecond * (allocations[msg.sender].lastWithdrawalTime - startTime);
     }
 
     /**
@@ -301,6 +301,6 @@ contract ERAAllocation is Ownable {
      */
     function getTotalShares(address shareholder) external view returns(uint256)
     {
-        return allocations[shareholder].sharePerBlock * (endBlock - startBlock);
+        return allocations[shareholder].sharePerSecond * (endTime - startTime);
     }
 }
