@@ -163,7 +163,7 @@ contract AttachableERC721 is ERC721, Ownable {
         return (uint(keccak256(abi.encodePacked(block.difficulty, block.timestamp, block.coinbase, latestTokenID, name))) % (max - min)) + min;
     }
 
-    
+
     modifier assignAccess(uint256 assigneeTokenId) {
         if(tokenAccessor[assigneeTokenId].tenant == address(0))
             require(ownerOf(assigneeTokenId) == msg.sender, "AssignableERC721: assign of token that is not own");
@@ -182,8 +182,16 @@ contract AttachableERC721 is ERC721, Ownable {
      */
     function tokenURI(uint256 tokenId) public view override returns (string memory) {
         require(_exists(tokenId), "ERC721Metadata: URI query for nonexistent token");
-
+        uint256 chainId = getChainID();
         string memory baseURI = "https://histopia.io/meta/";
-        return  string(abi.encodePacked(baseURI, tokenId.toString()));
+        return  string(abi.encodePacked(baseURI,chainId,'/', tokenId.toString()));
     }
+
+    function getChainID() public view returns (uint256) {
+    uint256 id;
+    assembly {
+        id := chainid()
+    }
+    return id;
+}
 }
