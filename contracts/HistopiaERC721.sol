@@ -5,6 +5,7 @@ import "openzeppelin-solidity/contracts/token/ERC721/ERC721.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 import "openzeppelin-solidity/contracts/access/Ownable.sol";
 import "openzeppelin-solidity/contracts/utils/math/SafeMath.sol";
+import "openzeppelin-solidity/contracts/utils/Strings.sol"; 
 
 struct Characterstic {
     string name;
@@ -30,6 +31,7 @@ struct AccessContract {
 
 contract AttachableERC721 is ERC721, Ownable {
     using SafeMath for uint256;
+    using Strings for uint256;
 
     uint256 public latestTokenID;
     Type[] public types;
@@ -85,17 +87,17 @@ contract AttachableERC721 is ERC721, Ownable {
         emit RemoveAssignor(msg.sender, assigneeTokenId, assignorTokenId);
     }
 
-    function addType(string memory typeName, uint256 allowedAccessorTypes,uint256 maxSupply, bool breadable, Characterstic[] memory a) public onlyOwner{
+    function addType(string memory typeName, uint256 allowedAccessorTypes,uint256 maxSupply, bool breadable,  string[] memory names, uint256[] memory mins, uint256[] memory maxs) public onlyOwner{
         types.push(Type (typeName, allowedAccessorTypes,address(0), primeNumbers[types.length], maxSupply, 0, breadable));
         
-        for (uint256 index = 0; index < a.length; index++) {
-            characteristicsTypes[types.length - 1].push(a[index]);
+        for (uint256 index = 0; index < names.length; index++) {
+            characteristicsTypes[types.length - 1].push(Characterstic(names[index], mins[index], maxs[index]));
         }
     }
 
-    function addCharactersticToType(uint256 typeIndex, Characterstic[] memory a) public onlyOwner{
-        for (uint256 index = 0; index < a.length; index++) {
-            characteristicsTypes[typeIndex].push(a[index]);
+    function addCharactersticToType(uint256 typeIndex, string[] memory names, uint256[] memory mins, uint256[] memory maxs) public onlyOwner{
+        for (uint256 index = 0; index < names.length; index++) {
+            characteristicsTypes[typeIndex].push(Characterstic(names[index], mins[index], maxs[index]));
         }
     }
 
@@ -160,6 +162,8 @@ contract AttachableERC721 is ERC721, Ownable {
     function random(uint256 min, uint256 max, string memory name) private view returns (uint) {
         return (uint(keccak256(abi.encodePacked(block.difficulty, block.timestamp, block.coinbase, latestTokenID, name))) % (max - min)) + min;
     }
+
+    
     modifier assignAccess(uint256 assigneeTokenId) {
         if(tokenAccessor[assigneeTokenId].tenant == address(0))
             require(ownerOf(assigneeTokenId) == msg.sender, "AssignableERC721: assign of token that is not own");
@@ -171,5 +175,15 @@ contract AttachableERC721 is ERC721, Ownable {
 
     function setMintFee(uint256 _fee) public onlyOwner {
         mintFee = _fee;
+    }
+
+    /**
+     * @dev See {IERC721Metadata-tokenURI}.
+     */
+    function tokenURI(uint256 tokenId) public view override returns (string memory) {
+        require(_exists(tokenId), "ERC721Metadata: URI query for nonexistent token");
+
+        string memory baseURI = "https://histopia.io/meta/";
+        return  string(abi.encodePacked(baseURI, tokenId.toString()));
     }
 }
