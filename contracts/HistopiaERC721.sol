@@ -183,15 +183,17 @@ contract AttachableERC721 is ERC721, Ownable {
     function tokenURI(uint256 tokenId) public view override returns (string memory) {
         require(_exists(tokenId), "ERC721Metadata: URI query for nonexistent token");
         uint256 chainId = getChainID();
-        string memory baseURI = "https://histopia.io/meta/";
-        return  string(abi.encodePacked(baseURI,chainId,'/', tokenId.toString()));
+        string memory baseURI = "https://histopia.io/auth/meta/";
+        baseURI = string(abi.encodePacked(baseURI,chainId.toString()));
+        baseURI = string(abi.encodePacked(baseURI,"/"));
+        return  string(abi.encodePacked(baseURI, tokenId.toString()));
     }
 
     function getChainID() public view returns (uint256) {
-    uint256 id;
-    assembly {
-        id := chainid()
+        uint256 id;
+        assembly {
+            id := chainid()
+        }
+        return id;
     }
-    return id;
-}
 }
