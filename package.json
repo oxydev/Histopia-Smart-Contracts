@@ -12,6 +12,7 @@
     "url": "git+https://github.com/oxydev/Histopia_smart_contracts.git"
   },
   "author": "atomaton00@gmail.com",
+  "license": "ISC",
   "dependencies": {
     "@0x/subproviders": "^6.4.1",
     "eth-gas-reporter": "^0.2.17",
