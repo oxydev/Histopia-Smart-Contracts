@@ -10,7 +10,7 @@ contract ERA is ERC20, Ownable  {
     address mintAccessor = address(0);
 
     constructor () ERC20("ER", "ERRRR") {
-        _decimals = 6;
+        _decimals = 18;
         maxSupply = 10 ** 8 * 10 ** _decimals;
     }
 
