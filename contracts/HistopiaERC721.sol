@@ -237,7 +237,7 @@ contract AttachableERC721 is ERC721, Ownable {
     function rootOwner(uint256 tokenId) public view returns(address) {
         uint256 currentTokenId = tokenId;
         while (assignedNFTs[currentTokenId] > 0) {
-            currentTokenId = assignedNFTs[tokenId];
+            currentTokenId = assignedNFTs[currentTokenId];
         }
         return ownerOf(currentTokenId);
     }
