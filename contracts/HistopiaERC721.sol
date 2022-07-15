@@ -5,7 +5,7 @@ import "openzeppelin-solidity/contracts/token/ERC721/ERC721.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 import "openzeppelin-solidity/contracts/access/Ownable.sol";
 import "openzeppelin-solidity/contracts/utils/math/SafeMath.sol";
-import "openzeppelin-solidity/contracts/utils/Strings.sol"; 
+import "openzeppelin-solidity/contracts/utils/Strings.sol";
 
 struct Property {
     string name;
@@ -36,7 +36,7 @@ contract AttachableERC721 is ERC721, Ownable {
     mapping(uint256 =>  Property[]) public propertiesTypes;
     mapping(uint256 => uint256) public tokenTypeIndices;
     mapping(uint256 => uint256[]) tokenPropertiesValues;
-    mapping(uint256 => uint256[]) comulativeTokenProperties;
+    mapping(uint256 => uint256[]) cumulativeTokenProperties;
 
     mapping(uint256 => uint256) public assignedNFTs;
     mapping(uint256 => mapping(address => bool)) upgradeAccessor;
@@ -44,7 +44,7 @@ contract AttachableERC721 is ERC721, Ownable {
     address public ERA;
     uint256 public mintFee;
 
-    event SetAssignor(address indexed owner, uint256 indexed assigneeTokenId, uint256 indexed assignorTokenId);
+    event MintTypedNFT(address _to, uint256 indexed tokenId, uint256 typeIndex, uint256[] properties);
     event RemoveAssignor(address indexed owner, uint256 indexed assigneeTokenId, uint256 indexed assignorTokenId);
     event Equip(uint256 indexed assigneeTokenId, uint256 indexed assignorTokenId);
 
@@ -61,12 +61,11 @@ contract AttachableERC721 is ERC721, Ownable {
         }
         assignedNFTs[assigneeTokenId] = assignorTokenId;
 
-        uint256[] memory assigneeProperties = comulativeTokenProperties[assigneeTokenId];
+        uint256[] memory assigneeProperties = cumulativeTokenProperties[assigneeTokenId];
         _updateRoot(assignorTokenId, assigneeProperties);
-        
 
-        emit SetAssignor(msg.sender, assigneeTokenId, assignorTokenId);
-        emit Equip(assignorTokenId, assigneeTokenId);
+
+        emit Equip(assignorTokenId, assigneeTokenId, assigneeProperties);
     }
 
 
@@ -96,7 +95,7 @@ contract AttachableERC721 is ERC721, Ownable {
         require (names.length == maxs.length);
 
         types.push(Type (typeName, allowedAccessorTypes, primeNumbers[types.length], maxSupply, 0));
-        
+
         for (uint256 index = 0; index < names.length; index++) {
             require (maxs[index] > mins[index], "invalid max and min (max should be greater than min)");
             propertiesTypes[types.length - 1].push(Property(names[index], mins[index], maxs[index]));
@@ -136,19 +135,19 @@ contract AttachableERC721 is ERC721, Ownable {
 
     function _updateRoot(uint256 tokenId, uint256[] memory updates, bool[] memory sign) private {
         uint256 updatingIndex = _fillMissingProperties(tokenId);
-        
+
         uint256 root = assignedNFTs[tokenId];
-        uint256[] storage comulativeValues = comulativeTokenProperties[tokenId];
+        uint256[] storage cumulativeValues = cumulativeTokenProperties[tokenId];
         uint256[] memory tokenProperties = tokenPropertiesValues[tokenId];
 
         for (uint256 index = 0; index < updates.length; index++) {
-            if (sign[index]) 
-                if (comulativeValues[index] >= updates[index])
-                    comulativeValues[index] -= updates[index];
-                else 
-                    comulativeValues[index] = 0;
-            else 
-                comulativeValues[index] += updates[index];
+            if (sign[index])
+                if (cumulativeValues[index] >= updates[index])
+                    cumulativeValues[index] -= updates[index];
+                else
+                    cumulativeValues[index] = 0;
+            else
+                cumulativeValues[index] += updates[index];
         }
         if (root > 0) {
             for (uint256 index = updatingIndex; index < updates.length && index < tokenProperties.length; index++) {
@@ -159,7 +158,7 @@ contract AttachableERC721 is ERC721, Ownable {
                         updates[index] = tokenProperties[index] - updates[index];
                         sign[index] = false;
                     }
-                } 
+                }
                 else {
                     updates[index] += tokenProperties[index];
                 }
@@ -172,17 +171,17 @@ contract AttachableERC721 is ERC721, Ownable {
         uint256 typeIndex = tokenTypeIndices[tokenId];
         Property[] memory typeProperties = propertiesTypes[typeIndex];
         uint256[] storage tokenProperties = tokenPropertiesValues[tokenId];
-        uint256[] storage comulativeValues = comulativeTokenProperties[tokenId];
+        uint256[] storage cumulativeValues = cumulativeTokenProperties[tokenId];
         if (typeProperties.length > tokenProperties.length) {
             updatingIndex = tokenProperties.length;
             for (uint256 index = tokenProperties.length; index < typeProperties.length; index++) {
                 uint256 power = random(
-                    typeProperties[index].minimum, 
-                    typeProperties[index].maximum, 
+                    typeProperties[index].minimum,
+                    typeProperties[index].maximum,
                     typeProperties[index].name
                 );
                 tokenProperties.push(power);
-                comulativeValues.push(power);
+                cumulativeValues.push(power);
             }
             return updatingIndex;
         }
@@ -202,17 +201,18 @@ contract AttachableERC721 is ERC721, Ownable {
         _mint(to, latestTokenID);
         tokenTypeIndices[latestTokenID] = typeIndex;
         uint256[] storage values = tokenPropertiesValues[latestTokenID];
-        uint256[] storage comulativeValues = comulativeTokenProperties[latestTokenID];
+        uint256[] storage cumulativeValues = cumulativeTokenProperties[latestTokenID];
         latestTokenID += 1;
-        for (uint256 index = 0; index < propertiesTypes[typeIndex].length; index++) { 
+        for (uint256 index = 0; index < propertiesTypes[typeIndex].length; index++) {
             uint256 power = random(
-                propertiesTypes[typeIndex][index].minimum, 
-                propertiesTypes[typeIndex][index].maximum, 
+                propertiesTypes[typeIndex][index].minimum,
+                propertiesTypes[typeIndex][index].maximum,
                 propertiesTypes[typeIndex][index].name
             );
             values.push(power);
-            comulativeValues.push(power);
+            cumulativeValues.push(power);
         }
+        emit MintTypedNFT(to, latestTokenID - 1, typeIndex,values);
     }
 
 
@@ -262,8 +262,8 @@ contract AttachableERC721 is ERC721, Ownable {
         return id;
     }
 
-    function getComulativeTokenProperties (uint256 tokenId) public view returns (uint256[] memory) {
-        return comulativeTokenProperties[tokenId];
+    function getCumulativeTokenProperties (uint256 tokenId) public view returns (uint256[] memory) {
+        return CumulativeTokenProperties[tokenId];
     }
 
     function getTokenProperties (uint256 tokenId) public view returns (uint256[] memory) {

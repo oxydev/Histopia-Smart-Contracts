@@ -14,7 +14,7 @@ interface INFT {
      * @dev Returns the amount of tokens in existence.
      */
 
-    function comulativeCharactrestsicsValues(uint256) external view returns (uint256[]);
+    function getCumulativeTokenProperties(uint256) external view returns (uint256[]);
 
     /**
      * @dev Moves `amount` tokens from `sender` to `recipient` using the
@@ -75,7 +75,7 @@ contract MasterChef is Ownable {
     // Info of each pool.
     PoolInfo[] public poolInfo;
 
-    
+
     // Info of each user that stakes LP tokens.
     mapping(uint256 => mapping(address => UserInfo)) public userInfo;
     event Deposit(address indexed user, uint256 indexed pid, uint256 amount);
@@ -197,10 +197,10 @@ contract MasterChef is Ownable {
         _recalculateCharactrestsicsValues(_pid);
         for (uint256 index = 0; index < tokenIds.length; index++) {
             nftContract.transferFrom(msg.sender, address(this), tokenIds[index]);
-            user.amount.add(nftContract.comulativeCharactrestsicsValues(tokenIds[index]));
+            user.amount.add(nftContract.getCumulativeTokenProperties(tokenIds[index]));
             user.tokenIDs.push(tokenIds[index]);
         }
-        
+
         user.rewardDebt = user.amount.mul(pool.accSushiPerShare).div(1e12);
         emit Deposit(msg.sender, _pid, tokenIds);
     }
@@ -219,7 +219,7 @@ contract MasterChef is Ownable {
 
         for (uint256 index = 0; index < tokenIds.length; index++) {
             nftContract.transferFrom(address(this), msg.sender, tokenIds[index]);
-            user.amount.sub(nftContract.comulativeCharactrestsicsValues(tokenIds[index]));
+            user.amount.sub(nftContract.getCumulativeTokenProperties(tokenIds[index]));
             uint256 indexOf = _findIndex(user.tokenIDs, tokenIds[index]);
             user.tokenIDs[indexOf] = user.tokenIDs[user.tokenIDs.length - 1];
             delete user.tokenIDs[user.tokenIDs.length - 1];
@@ -255,16 +255,17 @@ contract MasterChef is Ownable {
         UserInfo storage user = userInfo[_pid][msg.sender];
         uint256 amount;
         for (uint256 index = 0; index < user.tokenIDs.length; index++) {
-            amount.add(nftContract.comulativeCharactrestsicsValues(user.tokenIDs[index]));
+            amount.add(nftContract.getCumulativeTokenProperties(user.tokenIDs[index]));
         }
         user.amount = amount;
     }
-    
+
     function _findIndex(uint256[] memory tokenIDs, uint256 tokenID) private returns (uint256)  {
         for (uint256 index = 0; index < tokenIDs.length; index++) {
             if (tokenIDs[index] == tokenID) {
                 return index;
             }
         }
+        revert("Token not found");
     }
 }
