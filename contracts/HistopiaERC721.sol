@@ -7,25 +7,25 @@ import "openzeppelin-solidity/contracts/access/Ownable.sol";
 import "openzeppelin-solidity/contracts/utils/math/SafeMath.sol";
 import "openzeppelin-solidity/contracts/utils/Strings.sol";
 
-struct Property {
-    string name;
-    uint256 minimum;
-    uint256 maximum;
-}
+    struct Property {
+        string name;
+        uint256 minimum;
+        uint256 maximum;
+    }
 
 
-struct Type {
-    string typeName;
-    uint256 allowedAssignorTypes;
-    uint256 typeId;
-    uint256 maxSupply;
-    uint256 currentSupply;
-}
+    struct Type {
+        string typeName;
+        uint256 allowedAssignorTypes;
+        uint256 typeId;
+        uint256 maxSupply;
+        uint256 currentSupply;
+    }
 
-struct AccessContract {
-    address tenant;
-    uint256 dueDate;
-}
+    struct AccessContract {
+        address tenant;
+        uint256 dueDate;
+    }
 
 contract AttachableERC721 is ERC721, Ownable {
     using Strings for uint256;
@@ -44,8 +44,8 @@ contract AttachableERC721 is ERC721, Ownable {
     address public ERA;
     uint256 public mintFee;
 
-    event MintTypedNFT(address _to, uint256 indexed tokenId, uint256 typeIndex, uint256[] properties);
-    event RemoveAssignor(address indexed owner, uint256 indexed assigneeTokenId, uint256 indexed assignorTokenId);
+    event AddType(uint256 typeId, string typeName, uint256 allowedAccessorTypes, uint256 maxSupply, string[]names, uint256[]mins, uint256[]maxs, uint256 primeNumber);
+    event Unequip(address indexed owner, uint256 indexed assigneeTokenId, uint256 indexed assignorTokenId);
     event Equip(uint256 indexed assigneeTokenId, uint256 indexed assignorTokenId);
 
     constructor (string memory name_, string memory symbol_, address _ERA, uint256 _mintFee) ERC721(name_, symbol_) {
@@ -65,7 +65,7 @@ contract AttachableERC721 is ERC721, Ownable {
         _updateRoot(assignorTokenId, assigneeProperties);
 
 
-        emit Equip(assignorTokenId, assigneeTokenId, assigneeProperties);
+        emit Equip(assigneeTokenId, assignorTokenId);
     }
 
 
@@ -87,7 +87,7 @@ contract AttachableERC721 is ERC721, Ownable {
 
         _updateRoot(assignorTokenId, assigneeProperties, signs);
 
-        emit RemoveAssignor(msg.sender, assigneeTokenId, assignorTokenId);
+        emit Unequip(msg.sender, assigneeTokenId, assignorTokenId);
     }
 
     function addType(string memory typeName, uint256 allowedAccessorTypes, uint256 maxSupply,  string[] memory names, uint256[] memory mins, uint256[] memory maxs) public onlyOwner {
@@ -100,6 +100,7 @@ contract AttachableERC721 is ERC721, Ownable {
             require (maxs[index] > mins[index], "invalid max and min (max should be greater than min)");
             propertiesTypes[types.length - 1].push(Property(names[index], mins[index], maxs[index]));
         }
+        emit AddType(types.length - 1,typeName,  allowedAccessorTypes,maxSupply, names, mins, maxs, primeNumbers[types.length - 1]);
     }
 
     function addPropertiesToType(uint256 typeIndex, string[] memory names, uint256[] memory mins, uint256[] memory maxs) public onlyOwner {
@@ -212,7 +213,6 @@ contract AttachableERC721 is ERC721, Ownable {
             values.push(power);
             cumulativeValues.push(power);
         }
-        emit MintTypedNFT(to, latestTokenID - 1, typeIndex,values);
     }
 
 
@@ -263,10 +263,18 @@ contract AttachableERC721 is ERC721, Ownable {
     }
 
     function getCumulativeTokenProperties (uint256 tokenId) public view returns (uint256[] memory) {
-        return CumulativeTokenProperties[tokenId];
+        return cumulativeTokenProperties[tokenId];
     }
 
     function getTokenProperties (uint256 tokenId) public view returns (uint256[] memory) {
+        return tokenPropertiesValues[tokenId];
+    }
+
+    function breed (uint256 tokenId) public view returns (uint256[] memory) {
+        return tokenPropertiesValues[tokenId];
+    }
+
+    function upgrade (uint256 tokenId) public view returns (uint256[] memory) {
         return tokenPropertiesValues[tokenId];
     }
 }
