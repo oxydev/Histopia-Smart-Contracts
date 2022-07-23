@@ -40,7 +40,7 @@ contract AttachableERC721 is ERC721, Ownable {
 
     mapping(uint256 => uint256) public assignedNFTs;
     mapping(uint256 => mapping(address => bool)) upgradeAccessor;
-
+    uint256 private randomNonce = 1;
     address public ERA;
     uint256 public mintFee;
 
@@ -173,20 +173,21 @@ contract AttachableERC721 is ERC721, Ownable {
         Property[] memory typeProperties = propertiesTypes[typeIndex];
         uint256[] storage tokenProperties = tokenPropertiesValues[tokenId];
         uint256[] storage cumulativeValues = cumulativeTokenProperties[tokenId];
+        updatingIndex = tokenProperties.length;
         if (typeProperties.length > tokenProperties.length) {
-            updatingIndex = tokenProperties.length;
             for (uint256 index = tokenProperties.length; index < typeProperties.length; index++) {
+                randomNonce++;
                 uint256 power = random(
                     typeProperties[index].minimum,
                     typeProperties[index].maximum,
-                    typeProperties[index].name
+                    typeProperties[index].name,
+                    index
                 );
                 tokenProperties.push(power);
                 cumulativeValues.push(power);
             }
-            return updatingIndex;
         }
-        return 0;
+        return updatingIndex;
     }
 
 
@@ -205,10 +206,12 @@ contract AttachableERC721 is ERC721, Ownable {
         uint256[] storage cumulativeValues = cumulativeTokenProperties[latestTokenID];
         latestTokenID += 1;
         for (uint256 index = 0; index < propertiesTypes[typeIndex].length; index++) {
+            randomNonce++;
             uint256 power = random(
                 propertiesTypes[typeIndex][index].minimum,
                 propertiesTypes[typeIndex][index].maximum,
-                propertiesTypes[typeIndex][index].name
+                propertiesTypes[typeIndex][index].name,
+                index
             );
             values.push(power);
             cumulativeValues.push(power);
@@ -216,8 +219,8 @@ contract AttachableERC721 is ERC721, Ownable {
     }
 
 
-    function random(uint256 min, uint256 max, string memory name) private view returns (uint) {
-        return (uint(keccak256(abi.encodePacked(block.difficulty, block.timestamp, block.coinbase, latestTokenID, name))) % (max - min)) + min;
+    function random(uint256 min, uint256 max, string memory name, uint256 index) private view returns (uint) {
+        return (uint(keccak256(abi.encodePacked(block.difficulty, block.timestamp, block.coinbase, index, latestTokenID, name, randomNonce))) % (max - min)) + min;
     }
 
 
@@ -254,6 +257,7 @@ contract AttachableERC721 is ERC721, Ownable {
         return  string(abi.encodePacked(baseURI, tokenId.toString()));
     }
 
+    // TODO: check the chainId
     function getChainID() public view returns (uint256) {
         uint256 id;
         assembly {
@@ -270,10 +274,12 @@ contract AttachableERC721 is ERC721, Ownable {
         return tokenPropertiesValues[tokenId];
     }
 
+    // TODO: Implement breed function
     function breed (uint256 tokenId) public view returns (uint256[] memory) {
         return tokenPropertiesValues[tokenId];
     }
 
+    // TODO: Implement upgrade function
     function upgrade (uint256 tokenId) public view returns (uint256[] memory) {
         return tokenPropertiesValues[tokenId];
     }
