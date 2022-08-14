@@ -17,6 +17,7 @@ interface INFT {
 }
 interface Allocator{
     function withdrawShare(address dest, uint256 amount) external;
+    function getEraContractAddress() external returns (address);
 }
 // Fountain of ERA
 //
@@ -38,13 +39,13 @@ contract FountainOfEra is Ownable {
         //   pending reward = (user.militaryPower * generalAccEraPerShare) - user.rewardDebt
         //
         // Whenever a user deposits or withdraws LP tokens to a pool. Here's what happens:
-        //   1. The pool's `accEraPerShare` (and `lastRewardBlock`) gets updated.
+        //   1. The `accEraPerShare` (and `lastRewardBlock`) gets updated.
         //   2. User receives the pending reward sent to his/her address.
         //   3. User's `militaryPower` gets updated.
         //   4. User's `rewardDebt` gets updated.
     }
     // Info of each pool.
-    INFT public nftContract; // Address of LP token contract.
+    INFT public nftContract; // Address of NFT token contract.
     Allocator public eraAllocator;
     IERC20 public era;
     uint256 public eraPerBlock;
@@ -56,7 +57,7 @@ contract FountainOfEra is Ownable {
 
 
 
-    // Info of each user that stakes LP tokens.
+    // Info of each user that stakes NFT tokens.
     mapping(address => UserInfo) public userInfo;
     mapping(uint256 => bool) public histopianTypes;
 
@@ -68,41 +69,14 @@ contract FountainOfEra is Ownable {
         uint256[] tokenIds
     );
 
-    constructor() {
+    constructor(address _eraAllocatorAddress, uint256 _eraPerBlock) {
+        eraAllocator = Allocator(_eraAllocatorAddress);
+        eraPerBlock = _eraPerBlock;
     }
 
-
-    function setNFTContract(INFT _nft) public onlyOwner{
-        nftContract = _nft;
+    function addHistopianType(uint256 typeId) public onlyOwner{
+        histopianTypes[typeId] = true;
     }
-
-    function setEraAllocator(Allocator _alloc) public onlyOwner{
-        eraAllocator = _alloc;
-    }
-    function setERA(IERC20 _era) public onlyOwner{
-        era = _era;
-    }
-
-    // Add a new lp to the pool. Can only be called by the owner.
-    // XXX DO NOT add the same LP token more than once. Rewards will be messed up if you do.
-    // function add(
-    //     IERC20 _lpToken,
-    //     bool _withUpdate,
-    //     uint256 startBlock,
-    //     uint256 lastBlock
-    // ) public onlyOwner {
-    //     if (_withUpdate) {
-    //         massUpdatePools();
-    //     }
-    //     poolInfo.push(
-    //         PoolInfo({
-    //             lastRewardBlock: startBlock,
-    //             accEraPerShare: 0,
-    //             lastBlock: lastBlock,
-    //             currentMilitaryRate: 0
-    //         })
-    //     );
-    // }
 
 
     // Return reward multiplier over the given _from to _to block.
@@ -143,7 +117,7 @@ contract FountainOfEra is Ownable {
             return;
         }
         uint256 multiplier = getMultiplier(lastRewardBlock, block.number);
-        uint256 eraReward = multiplier - eraPerBlock;
+        uint256 eraReward = multiplier * eraPerBlock;
         eraAllocator.withdrawShare(address(this), eraReward);
         generalAccEraPerShare += eraReward * 1e12 / militaryRate;
         lastRewardBlock = block.number;
@@ -160,7 +134,7 @@ contract FountainOfEra is Ownable {
         for (uint256 index = 0; index < tokenIds.length; index++) {
             require(histopianTypes[nftContract.tokenIdToTypeIndex(tokenIds[index])], "Your NFT is not Histopian!.");
             nftContract.transferFrom(msg.sender, address(this), tokenIds[index]);
-            user.militaryPower += calculateMilitaryPower(nftContract.getCumulativeTokenProperties(tokenIds[index]));
+            user.militaryPower += calculateMilitaryPowerOfTokenId(tokenIds[index]);
             user.tokenIDs.push(tokenIds[index]);
         }
 
@@ -168,9 +142,15 @@ contract FountainOfEra is Ownable {
         emit Deposit(msg.sender, tokenIds);
     }
 
-    function calculateMilitaryPower(uint256[] memory properties) internal pure returns (uint256) {
-        // TODO: calculate military power based on NFT properties
-        return 10;
+    function calculateMilitaryPowerOfTokenId(uint256 tokenId) public view returns (uint256 ) {
+        return calculateMilitaryPower(nftContract.getCumulativeTokenProperties(tokenId));
+    }
+
+    function calculateMilitaryPower(uint256[] memory properties) public pure returns (uint256 militaryPower) {
+        for (uint256 i = 0; i < properties.length; i++) {
+            militaryPower += properties[i];
+        }
+        return militaryPower;
     }
 
     // Withdraw LP tokens from MasterChef.
@@ -179,14 +159,22 @@ contract FountainOfEra is Ownable {
         updatePool();
         uint256 pending = (user.militaryPower * generalAccEraPerShare / 1e12 ) - user.rewardDebt;
         safeERATransfer(msg.sender, pending);
-
         for (uint256 index = 0; index < tokenIndices.length; index++) {
             emit Withdraw(msg.sender, user.tokenIDs[tokenIndices[index]]);
             nftContract.transferFrom(address(this), msg.sender, user.tokenIDs[tokenIndices[index]]);
-            user.militaryPower -= calculateMilitaryPower(nftContract.getCumulativeTokenProperties(user.tokenIDs[tokenIndices[index]]));
-            user.tokenIDs[tokenIndices[index]] = user.tokenIDs[user.tokenIDs.length - 1];
-            delete user.tokenIDs[user.tokenIDs.length - 1];
-            user.tokenIDs.pop();
+            user.militaryPower -= calculateMilitaryPowerOfTokenId(user.tokenIDs[tokenIndices[index]]);
+            user.tokenIDs[tokenIndices[index]] = 0;
+        }
+        for (uint256 index = 0; index < tokenIndices.length; index++) {
+            if (tokenIndices[index] < user.tokenIDs.length) {
+                uint256 movingTokenId = user.tokenIDs[user.tokenIDs.length - 1];
+                while (movingTokenId == 0) {
+                    user.tokenIDs.pop();
+                    movingTokenId = user.tokenIDs[user.tokenIDs.length - 1];
+                }
+                user.tokenIDs[tokenIndices[index]] = movingTokenId;
+                user.tokenIDs.pop();
+            }
         }
         user.rewardDebt = user.militaryPower * generalAccEraPerShare / 1e12;
     }
@@ -198,8 +186,9 @@ contract FountainOfEra is Ownable {
             nftContract.transferFrom(address(this), msg.sender, user.tokenIDs[index]);
         }
         emit EmergencyWithdraw(msg.sender, user.tokenIDs);
-        delete user.tokenIDs ;
+        delete user.tokenIDs;
         user.rewardDebt = 0;
+        user.militaryPower = 0;
     }
 
     // Safe ERA transfer function, just in case if rounding error causes pool to not have enough ERAs.
