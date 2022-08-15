@@ -2,7 +2,6 @@
 
 pragma solidity 0.8.1;
 
-
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
@@ -10,7 +9,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 interface INFT {
     function getCumulativeTokenProperties(uint256) external view returns (uint256[] calldata);
 
-    function transferFrom(address sender, address recipient, uint256 tokenId) external returns (bool);
+    function transferFrom(address sender, address recipient, uint256 tokenId) external;
 
     function tokenIdToTypeIndex(uint256 tokenId) external returns (uint256);
 
@@ -50,10 +49,10 @@ contract FountainOfEra is Ownable {
     IERC20 public era;
     uint256 public eraPerBlock;
 
-    uint256 lastRewardBlock; // Last block number that ERAs distribution occurs.
-    uint256 generalAccEraPerShare; // Accumulated ERAs per share, times 1e12. See below.
-    uint256 lastBlock;
-    uint256 currentMilitaryRate;
+    uint256 public lastRewardBlock; // Last block number that ERAs distribution occurs.
+    uint256 public generalAccEraPerShare; // Accumulated ERAs per share, times 1e12. See below.
+    uint256 public lastBlock;
+    uint256 public currentTotalMilitaryPower;
 
 
 
@@ -69,9 +68,11 @@ contract FountainOfEra is Ownable {
         uint256[] tokenIds
     );
 
-    constructor(address _eraAllocatorAddress, uint256 _eraPerBlock) {
+    constructor(address _eraAllocatorAddress, address _histopiaNFT, uint256 _eraPerBlock) {
         eraAllocator = Allocator(_eraAllocatorAddress);
         eraPerBlock = _eraPerBlock;
+        era = IERC20(eraAllocator.getEraContractAddress());
+        nftContract = INFT(_histopiaNFT);
     }
 
     function addHistopianType(uint256 typeId) public onlyOwner{
@@ -96,7 +97,7 @@ contract FountainOfEra is Ownable {
     {
         UserInfo storage user = userInfo[_user];
         uint256 accEraPerShare = generalAccEraPerShare;
-        uint256 militaryRate = currentMilitaryRate;
+        uint256 militaryRate = currentTotalMilitaryPower;
         if (block.number > lastRewardBlock && militaryRate != 0) {
             uint256 multiplier =
             getMultiplier(lastRewardBlock, block.number);
@@ -111,15 +112,14 @@ contract FountainOfEra is Ownable {
         if (block.number <= lastRewardBlock) {
             return;
         }
-        uint256 militaryRate = currentMilitaryRate;
-        if (militaryRate == 0) {
+        if (currentTotalMilitaryPower == 0) {
             lastRewardBlock = block.number;
             return;
         }
         uint256 multiplier = getMultiplier(lastRewardBlock, block.number);
         uint256 eraReward = multiplier * eraPerBlock;
         eraAllocator.withdrawShare(address(this), eraReward);
-        generalAccEraPerShare += eraReward * 1e12 / militaryRate;
+        generalAccEraPerShare += eraReward * 1e12 / currentTotalMilitaryPower;
         lastRewardBlock = block.number;
     }
 
@@ -131,13 +131,17 @@ contract FountainOfEra is Ownable {
             uint256 pending = (user.militaryPower * generalAccEraPerShare / 1e12) - user.rewardDebt;
             safeERATransfer(msg.sender, pending);
         }
+        uint256 militaryPowerIncreament = 0;
         for (uint256 index = 0; index < tokenIds.length; index++) {
-            require(histopianTypes[nftContract.tokenIdToTypeIndex(tokenIds[index])], "Your NFT is not Histopian!.");
+            require(histopianTypes[nftContract.tokenIdToTypeIndex(tokenIds[index])], "FOE: Your NFT is not Histopian!.");
             nftContract.transferFrom(msg.sender, address(this), tokenIds[index]);
-            user.militaryPower += calculateMilitaryPowerOfTokenId(tokenIds[index]);
+
+            militaryPowerIncreament += calculateMilitaryPowerOfTokenId(tokenIds[index]);
+
             user.tokenIDs.push(tokenIds[index]);
         }
-
+        user.militaryPower += militaryPowerIncreament;
+        currentTotalMilitaryPower += militaryPowerIncreament;
         user.rewardDebt = user.militaryPower * generalAccEraPerShare / 1e12;
         emit Deposit(msg.sender, tokenIds);
     }
@@ -159,20 +163,31 @@ contract FountainOfEra is Ownable {
         updatePool();
         uint256 pending = (user.militaryPower * generalAccEraPerShare / 1e12 ) - user.rewardDebt;
         safeERATransfer(msg.sender, pending);
+        uint256 militaryPowerDecreament;
         for (uint256 index = 0; index < tokenIndices.length; index++) {
+            require(tokenIndices[index] < user.tokenIDs.length, "FOE: Invalid token index");
             emit Withdraw(msg.sender, user.tokenIDs[tokenIndices[index]]);
             nftContract.transferFrom(address(this), msg.sender, user.tokenIDs[tokenIndices[index]]);
-            user.militaryPower -= calculateMilitaryPowerOfTokenId(user.tokenIDs[tokenIndices[index]]);
+            militaryPowerDecreament += calculateMilitaryPowerOfTokenId(user.tokenIDs[tokenIndices[index]]);
             user.tokenIDs[tokenIndices[index]] = 0;
         }
-        for (uint256 index = 0; index < tokenIndices.length; index++) {
-            if (tokenIndices[index] < user.tokenIDs.length) {
+        user.militaryPower -= militaryPowerDecreament;
+        currentTotalMilitaryPower -= militaryPowerDecreament;
+        for (uint256 index = tokenIndices.length; index > 0; index--) {
+            uint256 j = index - 1;
+            if (tokenIndices[j]  == user.tokenIDs.length - 1) {
+                user.tokenIDs.pop();
+            }
+            else if (tokenIndices[j] < user.tokenIDs.length - 1) {
                 uint256 movingTokenId = user.tokenIDs[user.tokenIDs.length - 1];
-                while (movingTokenId == 0) {
+                while (movingTokenId == 0 && user.tokenIDs.length > 0) {
                     user.tokenIDs.pop();
                     movingTokenId = user.tokenIDs[user.tokenIDs.length - 1];
                 }
-                user.tokenIDs[tokenIndices[index]] = movingTokenId;
+                if (user.tokenIDs.length == 0) {
+                    break;
+                }
+                user.tokenIDs[tokenIndices[j]] = movingTokenId;
                 user.tokenIDs.pop();
             }
         }
@@ -199,5 +214,9 @@ contract FountainOfEra is Ownable {
         } else {
             era.transfer(_to, _amount);
         }
+    }
+
+    function getTokenIds(address user) public view returns (uint256[] memory) {
+        return userInfo[user].tokenIDs;
     }
 }
