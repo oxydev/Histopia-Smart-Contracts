@@ -17,6 +17,22 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.Ownable__factory>;
     getContractFactory(
+      name: "ERC1155",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.ERC1155__factory>;
+    getContractFactory(
+      name: "IERC1155MetadataURI",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IERC1155MetadataURI__factory>;
+    getContractFactory(
+      name: "IERC1155",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IERC1155__factory>;
+    getContractFactory(
+      name: "IERC1155Receiver",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IERC1155Receiver__factory>;
+    getContractFactory(
       name: "ERC20",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.ERC20__factory>;
@@ -57,6 +73,22 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.IERC165__factory>;
     getContractFactory(
+      name: "Challenger",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.Challenger__factory>;
+    getContractFactory(
+      name: "ERAAllocation",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.ERAAllocation__factory>;
+    getContractFactory(
+      name: "IERC20",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IERC20__factory>;
+    getContractFactory(
+      name: "Ownable",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.Ownable__factory>;
+    getContractFactory(
       name: "ERA",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.ERA__factory>;
@@ -77,15 +109,35 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.AttachableERC721__factory>;
     getContractFactory(
-      name: "Lock",
+      name: "Resources",
       signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.Lock__factory>;
+    ): Promise<Contracts.Resources__factory>;
 
     getContractAt(
       name: "Ownable",
       address: string,
       signer?: ethers.Signer
     ): Promise<Contracts.Ownable>;
+    getContractAt(
+      name: "ERC1155",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.ERC1155>;
+    getContractAt(
+      name: "IERC1155MetadataURI",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IERC1155MetadataURI>;
+    getContractAt(
+      name: "IERC1155",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IERC1155>;
+    getContractAt(
+      name: "IERC1155Receiver",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IERC1155Receiver>;
     getContractAt(
       name: "ERC20",
       address: string,
@@ -137,6 +189,26 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.IERC165>;
     getContractAt(
+      name: "Challenger",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.Challenger>;
+    getContractAt(
+      name: "ERAAllocation",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.ERAAllocation>;
+    getContractAt(
+      name: "IERC20",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IERC20>;
+    getContractAt(
+      name: "Ownable",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.Ownable>;
+    getContractAt(
       name: "ERA",
       address: string,
       signer?: ethers.Signer
@@ -162,10 +234,10 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.AttachableERC721>;
     getContractAt(
-      name: "Lock",
+      name: "Resources",
       address: string,
       signer?: ethers.Signer
-    ): Promise<Contracts.Lock>;
+    ): Promise<Contracts.Resources>;
 
     // default types
     getContractFactory(

@@ -49,7 +49,7 @@ export interface AttachableERC721Interface extends utils.Interface {
     "ownerOf(uint256)": FunctionFragment;
     "primeNumbers(uint256)": FunctionFragment;
     "propertiesTypes(uint256,uint256)": FunctionFragment;
-    "propertiesTypesExistance(uint256,string)": FunctionFragment;
+    "propertiesTypesExistence(uint256,string)": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
     "rootOwner(uint256)": FunctionFragment;
     "safeTransferFrom(address,address,uint256)": FunctionFragment;
@@ -88,7 +88,7 @@ export interface AttachableERC721Interface extends utils.Interface {
       | "ownerOf"
       | "primeNumbers"
       | "propertiesTypes"
-      | "propertiesTypesExistance"
+      | "propertiesTypesExistence"
       | "renounceOwnership"
       | "rootOwner"
       | "safeTransferFrom(address,address,uint256)"
@@ -185,7 +185,7 @@ export interface AttachableERC721Interface extends utils.Interface {
     values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
-    functionFragment: "propertiesTypesExistance",
+    functionFragment: "propertiesTypesExistence",
     values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
@@ -300,7 +300,7 @@ export interface AttachableERC721Interface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "propertiesTypesExistance",
+    functionFragment: "propertiesTypesExistence",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -586,7 +586,7 @@ export interface AttachableERC721 extends BaseContract {
       }
     >;
 
-    propertiesTypesExistance(
+    propertiesTypesExistence(
       arg0: PromiseOrValue<BigNumberish>,
       arg1: PromiseOrValue<string>,
       overrides?: CallOverrides
@@ -775,7 +775,7 @@ export interface AttachableERC721 extends BaseContract {
     }
   >;
 
-  propertiesTypesExistance(
+  propertiesTypesExistence(
     arg0: PromiseOrValue<BigNumberish>,
     arg1: PromiseOrValue<string>,
     overrides?: CallOverrides
@@ -964,7 +964,7 @@ export interface AttachableERC721 extends BaseContract {
       }
     >;
 
-    propertiesTypesExistance(
+    propertiesTypesExistence(
       arg0: PromiseOrValue<BigNumberish>,
       arg1: PromiseOrValue<string>,
       overrides?: CallOverrides
@@ -1233,7 +1233,7 @@ export interface AttachableERC721 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    propertiesTypesExistance(
+    propertiesTypesExistence(
       arg0: PromiseOrValue<BigNumberish>,
       arg1: PromiseOrValue<string>,
       overrides?: CallOverrides
@@ -1409,7 +1409,7 @@ export interface AttachableERC721 extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    propertiesTypesExistance(
+    propertiesTypesExistence(
       arg0: PromiseOrValue<BigNumberish>,
       arg1: PromiseOrValue<string>,
       overrides?: CallOverrides

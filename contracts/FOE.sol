@@ -53,7 +53,7 @@ contract FountainOfEra is Ownable {
     uint256 public generalAccEraPerShare; // Accumulated ERAs per share, times 1e12. See below.
     uint256 public lastBlock;
     uint256 public currentTotalMilitaryPower;
-
+    uint256 public histopianCount;
 
 
     // Info of each user that stakes NFT tokens.
@@ -131,17 +131,18 @@ contract FountainOfEra is Ownable {
             uint256 pending = (user.militaryPower * generalAccEraPerShare / 1e12) - user.rewardDebt;
             safeERATransfer(msg.sender, pending);
         }
-        uint256 militaryPowerIncreament = 0;
+        histopianCount += tokenIds.length;
+        uint256 militaryPowerIncrement = 0;
         for (uint256 index = 0; index < tokenIds.length; index++) {
             require(histopianTypes[nftContract.tokenIdToTypeIndex(tokenIds[index])], "FOE: Your NFT is not Histopian!.");
             nftContract.transferFrom(msg.sender, address(this), tokenIds[index]);
 
-            militaryPowerIncreament += calculateMilitaryPowerOfTokenId(tokenIds[index]);
+            militaryPowerIncrement += calculateMilitaryPowerOfTokenId(tokenIds[index]);
 
             user.tokenIDs.push(tokenIds[index]);
         }
-        user.militaryPower += militaryPowerIncreament;
-        currentTotalMilitaryPower += militaryPowerIncreament;
+        user.militaryPower += militaryPowerIncrement;
+        currentTotalMilitaryPower += militaryPowerIncrement;
         user.rewardDebt = user.militaryPower * generalAccEraPerShare / 1e12;
         emit Deposit(msg.sender, tokenIds);
     }
@@ -163,16 +164,17 @@ contract FountainOfEra is Ownable {
         updatePool();
         uint256 pending = (user.militaryPower * generalAccEraPerShare / 1e12 ) - user.rewardDebt;
         safeERATransfer(msg.sender, pending);
-        uint256 militaryPowerDecreament;
+        histopianCount -= tokenIndices.length;
+        uint256 militaryPowerDecrement;
         for (uint256 index = 0; index < tokenIndices.length; index++) {
             require(tokenIndices[index] < user.tokenIDs.length, "FOE: Invalid token index");
             emit Withdraw(msg.sender, user.tokenIDs[tokenIndices[index]]);
             nftContract.transferFrom(address(this), msg.sender, user.tokenIDs[tokenIndices[index]]);
-            militaryPowerDecreament += calculateMilitaryPowerOfTokenId(user.tokenIDs[tokenIndices[index]]);
+            militaryPowerDecrement += calculateMilitaryPowerOfTokenId(user.tokenIDs[tokenIndices[index]]);
             user.tokenIDs[tokenIndices[index]] = 0;
         }
-        user.militaryPower -= militaryPowerDecreament;
-        currentTotalMilitaryPower -= militaryPowerDecreament;
+        user.militaryPower -= militaryPowerDecrement;
+        currentTotalMilitaryPower -= militaryPowerDecrement;
         for (uint256 index = tokenIndices.length; index > 0; index--) {
             uint256 j = index - 1;
             if (tokenIndices[j]  == user.tokenIDs.length - 1) {
@@ -183,7 +185,7 @@ contract FountainOfEra is Ownable {
                 while (movingTokenId == 0 && user.tokenIDs.length > 0) {
                     user.tokenIDs.pop();
                     movingTokenId = user.tokenIDs[user.tokenIDs.length - 1];
-                } 
+                }
                 if (user.tokenIDs.length == 0) {
                     break;
                 }
@@ -194,6 +196,16 @@ contract FountainOfEra is Ownable {
         user.rewardDebt = user.militaryPower * generalAccEraPerShare / 1e12;
     }
 
+    // Withdraw LP tokens from MasterChef.
+    function harvest() public {
+        UserInfo storage user = userInfo[msg.sender];
+        updatePool();
+        uint256 pending = (user.militaryPower * generalAccEraPerShare / 1e12 ) - user.rewardDebt;
+        safeERATransfer(msg.sender, pending);
+
+        user.rewardDebt = user.militaryPower * generalAccEraPerShare / 1e12;
+    }
+
     // Withdraw without caring about rewards. EMERGENCY ONLY.
     function emergencyWithdraw() public {
         UserInfo storage user = userInfo[msg.sender];
@@ -201,7 +213,9 @@ contract FountainOfEra is Ownable {
             nftContract.transferFrom(address(this), msg.sender, user.tokenIDs[index]);
         }
         emit EmergencyWithdraw(msg.sender, user.tokenIDs);
+        histopianCount -= user.tokenIDs.length;
         delete user.tokenIDs;
+        currentTotalMilitaryPower -= user.militaryPower;
         user.rewardDebt = 0;
         user.militaryPower = 0;
     }

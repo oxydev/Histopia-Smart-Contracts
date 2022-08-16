@@ -1,7 +1,7 @@
 pragma solidity ^0.8.0;
 
-import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
-import "openzeppelin-solidity/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
 struct ChallengeInfo {
     uint256 startingTimestamp;
@@ -40,5 +40,5 @@ contract Challenger is Ownable{
 
     }
 
-  
+
 }

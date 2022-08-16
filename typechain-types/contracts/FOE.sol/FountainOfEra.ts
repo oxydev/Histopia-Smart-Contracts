@@ -41,6 +41,8 @@ export interface FountainOfEraInterface extends utils.Interface {
     "generalAccEraPerShare()": FunctionFragment;
     "getMultiplier(uint256,uint256)": FunctionFragment;
     "getTokenIds(address)": FunctionFragment;
+    "harvest()": FunctionFragment;
+    "histopianCount()": FunctionFragment;
     "histopianTypes(uint256)": FunctionFragment;
     "lastBlock()": FunctionFragment;
     "lastRewardBlock()": FunctionFragment;
@@ -68,6 +70,8 @@ export interface FountainOfEraInterface extends utils.Interface {
       | "generalAccEraPerShare"
       | "getMultiplier"
       | "getTokenIds"
+      | "harvest"
+      | "histopianCount"
       | "histopianTypes"
       | "lastBlock"
       | "lastRewardBlock"
@@ -125,6 +129,11 @@ export interface FountainOfEraInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "getTokenIds",
     values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(functionFragment: "harvest", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "histopianCount",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "histopianTypes",
@@ -205,6 +214,11 @@ export interface FountainOfEraInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "getTokenIds",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "harvest", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "histopianCount",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -365,6 +379,12 @@ export interface FountainOfEra extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber[]]>;
 
+    harvest(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    histopianCount(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     histopianTypes(
       arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
@@ -457,6 +477,12 @@ export interface FountainOfEra extends BaseContract {
     overrides?: CallOverrides
   ): Promise<BigNumber[]>;
 
+  harvest(
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  histopianCount(overrides?: CallOverrides): Promise<BigNumber>;
+
   histopianTypes(
     arg0: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
@@ -543,6 +569,10 @@ export interface FountainOfEra extends BaseContract {
       user: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber[]>;
+
+    harvest(overrides?: CallOverrides): Promise<void>;
+
+    histopianCount(overrides?: CallOverrides): Promise<BigNumber>;
 
     histopianTypes(
       arg0: PromiseOrValue<BigNumberish>,
@@ -671,6 +701,12 @@ export interface FountainOfEra extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    harvest(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    histopianCount(overrides?: CallOverrides): Promise<BigNumber>;
+
     histopianTypes(
       arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
@@ -762,6 +798,12 @@ export interface FountainOfEra extends BaseContract {
       user: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
+
+    harvest(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    histopianCount(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     histopianTypes(
       arg0: PromiseOrValue<BigNumberish>,
