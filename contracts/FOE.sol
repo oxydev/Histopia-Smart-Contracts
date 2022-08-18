@@ -2,6 +2,7 @@
 
 pragma solidity 0.8.1;
 
+import "hardhat/console.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
@@ -177,20 +178,29 @@ contract FountainOfEra is Ownable {
         currentTotalMilitaryPower -= militaryPowerDecrement;
         for (uint256 index = tokenIndices.length; index > 0; index--) {
             uint256 j = index - 1;
+
+//            console.log("index", tokenIndices[j]);
+
+//            for (uint256 p = 0; p < user.tokenIDs.length; p++) {
+//                console.log("user.tokenIDs ", user.tokenIDs[p]);
+//            }
             if (tokenIndices[j]  == user.tokenIDs.length - 1) {
                 user.tokenIDs.pop();
             }
             else if (tokenIndices[j] < user.tokenIDs.length - 1) {
-                uint256 movingTokenId = user.tokenIDs[user.tokenIDs.length - 1];
-                while (movingTokenId == 0 && user.tokenIDs.length > 0) {
+                uint256 temp = 0;
+                while (temp == 0 && user.tokenIDs.length > 0) {
+                    temp = user.tokenIDs[user.tokenIDs.length - 1];
                     user.tokenIDs.pop();
-                    movingTokenId = user.tokenIDs[user.tokenIDs.length - 1];
                 }
                 if (user.tokenIDs.length == 0) {
                     break;
                 }
-                user.tokenIDs[tokenIndices[j]] = movingTokenId;
-                user.tokenIDs.pop();
+                if (tokenIndices[j] < user.tokenIDs.length) {
+                    user.tokenIDs[tokenIndices[j]] = temp;
+                } else if (temp != 0) {
+                    user.tokenIDs.push(temp);
+                }
             }
         }
         user.rewardDebt = user.militaryPower * generalAccEraPerShare / 1e12;

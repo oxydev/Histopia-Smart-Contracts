@@ -752,7 +752,7 @@
         "settings": {
           "optimizer": {
             "enabled": true,
-            "runs": 1000
+            "runs": 10
           },
           "outputSelection": {
             "*": {
@@ -790,7 +790,7 @@
         "settings": {
           "optimizer": {
             "enabled": true,
-            "runs": 1000
+            "runs": 10
           },
           "outputSelection": {
             "*": {
@@ -825,7 +825,7 @@
         "settings": {
           "optimizer": {
             "enabled": true,
-            "runs": 1000
+            "runs": 10
           },
           "outputSelection": {
             "*": {
@@ -862,7 +862,7 @@
         "settings": {
           "optimizer": {
             "enabled": true,
-            "runs": 1000
+            "runs": 10
           },
           "outputSelection": {
             "*": {
@@ -897,7 +897,7 @@
         "settings": {
           "optimizer": {
             "enabled": true,
-            "runs": 1000
+            "runs": 10
           },
           "outputSelection": {
             "*": {
@@ -935,7 +935,7 @@
         "settings": {
           "optimizer": {
             "enabled": true,
-            "runs": 1000
+            "runs": 10
           },
           "outputSelection": {
             "*": {
@@ -977,7 +977,7 @@
         "settings": {
           "optimizer": {
             "enabled": true,
-            "runs": 1000
+            "runs": 10
           },
           "outputSelection": {
             "*": {
@@ -1014,7 +1014,7 @@
         "settings": {
           "optimizer": {
             "enabled": true,
-            "runs": 1000
+            "runs": 10
           },
           "outputSelection": {
             "*": {
@@ -1051,7 +1051,7 @@
         "settings": {
           "optimizer": {
             "enabled": true,
-            "runs": 1000
+            "runs": 10
           },
           "outputSelection": {
             "*": {
@@ -1088,7 +1088,7 @@
         "settings": {
           "optimizer": {
             "enabled": true,
-            "runs": 1000
+            "runs": 10
           },
           "outputSelection": {
             "*": {
@@ -1123,7 +1123,7 @@
         "settings": {
           "optimizer": {
             "enabled": true,
-            "runs": 1000
+            "runs": 10
           },
           "outputSelection": {
             "*": {
@@ -1160,7 +1160,7 @@
         "settings": {
           "optimizer": {
             "enabled": true,
-            "runs": 1000
+            "runs": 10
           },
           "outputSelection": {
             "*": {
@@ -1195,7 +1195,7 @@
         "settings": {
           "optimizer": {
             "enabled": true,
-            "runs": 1000
+            "runs": 10
           },
           "outputSelection": {
             "*": {
@@ -1232,7 +1232,7 @@
         "settings": {
           "optimizer": {
             "enabled": true,
-            "runs": 1000
+            "runs": 10
           },
           "outputSelection": {
             "*": {
@@ -1269,7 +1269,7 @@
         "settings": {
           "optimizer": {
             "enabled": true,
-            "runs": 1000
+            "runs": 10
           },
           "outputSelection": {
             "*": {
@@ -1312,7 +1312,7 @@
         "settings": {
           "optimizer": {
             "enabled": true,
-            "runs": 1000
+            "runs": 10
           },
           "outputSelection": {
             "*": {
@@ -1347,7 +1347,7 @@
         "settings": {
           "optimizer": {
             "enabled": true,
-            "runs": 1000
+            "runs": 10
           },
           "outputSelection": {
             "*": {
@@ -1374,15 +1374,15 @@
       ]
     },
     "/Users/hadiesna/source/Other/Histopia-Smart-Contracts/contracts/HistopiaNFT.sol": {
-      "lastModificationDate": 1660581667496,
-      "contentHash": "a3fce2b9d131e2b279637ca1a2eada45",
+      "lastModificationDate": 1660832797653,
+      "contentHash": "1f64693936825dd6269deed1eec73f3b",
       "sourceName": "contracts/HistopiaNFT.sol",
       "solcConfig": {
         "version": "0.8.1",
         "settings": {
           "optimizer": {
             "enabled": true,
-            "runs": 1000
+            "runs": 10
           },
           "outputSelection": {
             "*": {
@@ -1423,7 +1423,7 @@
         "settings": {
           "optimizer": {
             "enabled": true,
-            "runs": 1000
+            "runs": 10
           },
           "outputSelection": {
             "*": {
@@ -1458,7 +1458,7 @@
         "settings": {
           "optimizer": {
             "enabled": true,
-            "runs": 1000
+            "runs": 10
           },
           "outputSelection": {
             "*": {
@@ -1498,7 +1498,7 @@
         "settings": {
           "optimizer": {
             "enabled": true,
-            "runs": 1000
+            "runs": 10
           },
           "outputSelection": {
             "*": {
@@ -1537,7 +1537,7 @@
         "settings": {
           "optimizer": {
             "enabled": true,
-            "runs": 1000
+            "runs": 10
           },
           "outputSelection": {
             "*": {
@@ -1564,15 +1564,15 @@
       ]
     },
     "/Users/hadiesna/source/Other/Histopia-Smart-Contracts/contracts/FOE.sol": {
-      "lastModificationDate": 1660682454165,
-      "contentHash": "6d4b8c93e7dbbd5542fab9ac8319506a",
+      "lastModificationDate": 1660840992829,
+      "contentHash": "598b8e6b1d7e4d2f29eb7577a8460bc3",
       "sourceName": "contracts/FOE.sol",
       "solcConfig": {
         "version": "0.8.1",
         "settings": {
           "optimizer": {
             "enabled": true,
-            "runs": 1000
+            "runs": 10
           },
           "outputSelection": {
             "*": {
@@ -1591,6 +1591,7 @@
         }
       },
       "imports": [
+        "hardhat/console.sol",
         "@openzeppelin/contracts/token/ERC20/IERC20.sol",
         "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol",
         "@openzeppelin/contracts/access/Ownable.sol"
@@ -1613,7 +1614,7 @@
         "settings": {
           "optimizer": {
             "enabled": true,
-            "runs": 1000
+            "runs": 10
           },
           "outputSelection": {
             "*": {
@@ -1650,7 +1651,7 @@
         "settings": {
           "optimizer": {
             "enabled": true,
-            "runs": 1000
+            "runs": 10
           },
           "outputSelection": {
             "*": {
@@ -1689,7 +1690,7 @@
         "settings": {
           "optimizer": {
             "enabled": true,
-            "runs": 1000
+            "runs": 10
           },
           "outputSelection": {
             "*": {
@@ -1716,6 +1717,76 @@
       ],
       "artifacts": [
         "ERA"
+      ]
+    },
+    "/Users/hadiesna/source/Other/Histopia-Smart-Contracts/contracts/multicall.sol": {
+      "lastModificationDate": 1660835571253,
+      "contentHash": "3f6477c68f71709d399a0ca7c7783d33",
+      "sourceName": "contracts/multicall.sol",
+      "solcConfig": {
+        "version": "0.8.1",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 10
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        ">=0.5.0"
+      ],
+      "artifacts": [
+        "Multicall"
+      ]
+    },
+    "/Users/hadiesna/source/Other/Histopia-Smart-Contracts/node_modules/hardhat/console.sol": {
+      "lastModificationDate": 1660578471514,
+      "contentHash": "cc4777addd464ea56fa35b1c45df0591",
+      "sourceName": "hardhat/console.sol",
+      "solcConfig": {
+        "version": "0.8.1",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 10
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        ">=0.4.22 <0.9.0"
+      ],
+      "artifacts": [
+        "console"
       ]
     }
   }

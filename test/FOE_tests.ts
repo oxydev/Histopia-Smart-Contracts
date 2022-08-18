@@ -186,6 +186,51 @@ describe("FOE", function () {
             expect((await foe.userInfo(otherAccount.address)).militaryPower).to.equal(otherAccountTotalPower);
 
         });
+
+        it("Should set the deposit and withdraw correctly", async function () {
+            const { era, nft, foe,  owner, otherAccount  } = await loadFixture(deployFOE);
+
+            expect(await nft.balanceOf(owner.address)).to.equal(5);
+            expect(await nft.balanceOf(otherAccount.address)).to.equal(5);
+
+            let nftPropertiesArr = [];
+            for (let index = 1; index < 6; index++) {
+                let nftProperties = await nft.getCumulativeTokenProperties(index)
+                // console.log("nft Properties : ", index,  nftProperties)
+                let nftPower = 0;
+                for (let index = 0; index < nftProperties.length; index++) {
+                    const element = nftProperties[index];
+                    nftPower += Number(element);
+                }
+                nftPropertiesArr.push(nftPower);
+            }
+            // console.log("nftPropertiesArr : ", nftPropertiesArr)
+            let ownerTotalPower = nftPropertiesArr[0] + nftPropertiesArr[1] + nftPropertiesArr[2] + nftPropertiesArr[3];
+            await nft.setApprovalForAll(foe.address, true);
+            await foe.addHistopianType(0);
+            await foe.deposit([3,4,1,2]);
+
+            expect(await nft.balanceOf(owner.address)).to.equal(1);
+            expect(await nft.balanceOf(foe.address)).to.equal(4);
+
+            expect(await foe.currentTotalMilitaryPower()).to.equal(ownerTotalPower);
+            expect((await foe.userInfo(owner.address)).militaryPower).to.equal(ownerTotalPower);
+
+
+            await foe.withdraw([3,2,0,1]);
+            await foe.deposit([3,4,1,2]);
+            await foe.withdraw([3,2,0]);
+            await foe.withdraw([0]);
+            await foe.deposit([3,4,1,2]);
+            await foe.withdraw([3,2]);
+            await foe.withdraw([0,1]);
+            await foe.deposit([3,4,5,1,2]);
+            await foe.withdraw([0,2,4]);
+            await foe.withdraw([0,1]);
+            await foe.deposit([3,4,5,1,2]);
+            await foe.withdraw([2,3,4]);
+            await foe.withdraw([0,1]);
+        });
     });
 
     describe("Reward", function () {

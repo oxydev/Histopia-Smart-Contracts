@@ -50,5 +50,7 @@ export type { INFT } from "./contracts/FOE.sol/INFT";
 export { INFT__factory } from "./factories/contracts/FOE.sol/INFT__factory";
 export type { AttachableERC721 } from "./contracts/HistopiaNFT.sol/AttachableERC721";
 export { AttachableERC721__factory } from "./factories/contracts/HistopiaNFT.sol/AttachableERC721__factory";
+export type { Multicall } from "./contracts/multicall.sol/Multicall";
+export { Multicall__factory } from "./factories/contracts/multicall.sol/Multicall__factory";
 export type { Resources } from "./contracts/Resources";
 export { Resources__factory } from "./factories/contracts/Resources__factory";

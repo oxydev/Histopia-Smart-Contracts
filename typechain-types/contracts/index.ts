@@ -7,6 +7,8 @@ import type * as foeSol from "./FOE.sol";
 export type { foeSol };
 import type * as histopiaNftSol from "./HistopiaNFT.sol";
 export type { histopiaNftSol };
+import type * as multicallSol from "./multicall.sol";
+export type { multicallSol };
 export type { Challenger } from "./Challenger";
 export type { ERA } from "./ERA";
 export type { Resources } from "./Resources";

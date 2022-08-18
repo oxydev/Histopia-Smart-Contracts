@@ -7,7 +7,7 @@ const config: HardhatUserConfig = {
     settings: {
       optimizer: {
         enabled: true,
-        runs: 1000,
+        runs: 10,
       },
     },
   },
@@ -15,6 +15,11 @@ const config: HardhatUserConfig = {
     oasis_test: {
       url: "https://testnet.emerald.oasis.dev",
       accounts: ['4f83e33b48dd6f53062a339d7dd9bb403a768664591d45b798d60a4e4a21cc9b']
+    },
+    testnet_aurora: {
+      url: 'https://testnet.aurora.dev',
+      accounts: [`4f83e33b48dd6f53062a339d7dd9bb403a768664591d45b798d60a4e4a21cc9b`],
+      gasMultiplier: 2,
     }
   }
 };
