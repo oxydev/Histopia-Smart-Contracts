@@ -2,9 +2,9 @@
 
 pragma solidity ^0.8.1;
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Burnable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 
     struct Property {
@@ -27,7 +27,7 @@ import "@openzeppelin/contracts/utils/Strings.sol";
         uint256 dueDate;
     }
 
-contract AttachableERC721 is ERC721, Ownable {
+contract AttachableERC721 is ERC721, Ownable, ERC721Burnable {
     using Strings for uint256;
 
     uint256 public latestTokenID = 1;
@@ -45,6 +45,7 @@ contract AttachableERC721 is ERC721, Ownable {
     address public ERA;
     uint256 public mintFee;
 
+    event Mint(address indexed to, uint256 indexed typeId, uint256 indexed tokenId, uint256[] properties);
     event AddType(uint256 typeId, string typeName, uint256 allowedAccessorTypes, uint256 maxSupply, string[]names, uint256[]mins, uint256[]maxs, uint256 primeNumber);
     event Unequip(address indexed owner, uint256 indexed assigneeTokenId, uint256 indexed assignorTokenId);
     event Equip(address indexed owner,uint256 indexed assigneeTokenId, uint256 indexed assignorTokenId);
@@ -139,11 +140,12 @@ contract AttachableERC721 is ERC721, Ownable {
         require(types[typeIndex].maxSupply == 0 || types[typeIndex].maxSupply > types[typeIndex].currentSupply, "current supply exceeds max supply!");
         IERC20(ERA).transferFrom(msg.sender, owner(), mintFee);
         types[typeIndex].currentSupply += 1;
-        _mint(to, latestTokenID);
+
         tokenIdToTypeIndex[latestTokenID] = typeIndex;
         mapping(string => uint256) storage values = tokenPropertiesValues[latestTokenID];
         mapping(string => uint256) storage cumulativeValues = cumulativeTokenProperties[latestTokenID];
         latestTokenID += 1;
+        uint256[] memory propertiesForEvents = new uint256[](propertiesTypes[typeIndex].length);
         for (uint256 index = 0; index < propertiesTypes[typeIndex].length; index++) {
             randomNonce++;
             uint256 power = random(
@@ -152,9 +154,12 @@ contract AttachableERC721 is ERC721, Ownable {
                 propertiesTypes[typeIndex][index].name,
                 index
             );
+            propertiesForEvents[index] = power;
             values[propertiesTypes[typeIndex][index].name] = power;
             cumulativeValues[propertiesTypes[typeIndex][index].name] = power;
         }
+        emit Mint(to,  typeIndex,latestTokenID - 1, propertiesForEvents);
+        _mint(to, latestTokenID - 1);
     }
 
 

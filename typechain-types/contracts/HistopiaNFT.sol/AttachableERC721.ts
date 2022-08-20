@@ -34,6 +34,7 @@ export interface AttachableERC721Interface extends utils.Interface {
     "approve(address,uint256)": FunctionFragment;
     "assignedNFTs(uint256)": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
+    "burn(uint256)": FunctionFragment;
     "editType(uint256,string,uint256)": FunctionFragment;
     "equip(uint256,uint256)": FunctionFragment;
     "getApproved(uint256)": FunctionFragment;
@@ -73,6 +74,7 @@ export interface AttachableERC721Interface extends utils.Interface {
       | "approve"
       | "assignedNFTs"
       | "balanceOf"
+      | "burn"
       | "editType"
       | "equip"
       | "getApproved"
@@ -128,6 +130,10 @@ export interface AttachableERC721Interface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "balanceOf",
     values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "burn",
+    values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
     functionFragment: "editType",
@@ -263,6 +269,7 @@ export interface AttachableERC721Interface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "burn", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "editType", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "equip", data: BytesLike): Result;
   decodeFunctionResult(
@@ -347,6 +354,7 @@ export interface AttachableERC721Interface extends utils.Interface {
     "Approval(address,address,uint256)": EventFragment;
     "ApprovalForAll(address,address,bool)": EventFragment;
     "Equip(address,uint256,uint256)": EventFragment;
+    "Mint(address,uint256,uint256,uint256[])": EventFragment;
     "OwnershipTransferred(address,address)": EventFragment;
     "Transfer(address,address,uint256)": EventFragment;
     "Unequip(address,uint256,uint256)": EventFragment;
@@ -356,6 +364,7 @@ export interface AttachableERC721Interface extends utils.Interface {
   getEvent(nameOrSignatureOrTopic: "Approval"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "ApprovalForAll"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Equip"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "Mint"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Transfer"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Unequip"): EventFragment;
@@ -422,6 +431,19 @@ export type EquipEvent = TypedEvent<
 >;
 
 export type EquipEventFilter = TypedEventFilter<EquipEvent>;
+
+export interface MintEventObject {
+  to: string;
+  typeId: BigNumber;
+  tokenId: BigNumber;
+  properties: BigNumber[];
+}
+export type MintEvent = TypedEvent<
+  [string, BigNumber, BigNumber, BigNumber[]],
+  MintEventObject
+>;
+
+export type MintEventFilter = TypedEventFilter<MintEvent>;
 
 export interface OwnershipTransferredEventObject {
   previousOwner: string;
@@ -513,6 +535,11 @@ export interface AttachableERC721 extends BaseContract {
       owner: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
+
+    burn(
+      tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
 
     editType(
       typeindex: PromiseOrValue<BigNumberish>,
@@ -703,6 +730,11 @@ export interface AttachableERC721 extends BaseContract {
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
+  burn(
+    tokenId: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
   editType(
     typeindex: PromiseOrValue<BigNumberish>,
     typeName: PromiseOrValue<string>,
@@ -891,6 +923,11 @@ export interface AttachableERC721 extends BaseContract {
       owner: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
+
+    burn(
+      tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     editType(
       typeindex: PromiseOrValue<BigNumberish>,
@@ -1106,6 +1143,19 @@ export interface AttachableERC721 extends BaseContract {
       assignorTokenId?: PromiseOrValue<BigNumberish> | null
     ): EquipEventFilter;
 
+    "Mint(address,uint256,uint256,uint256[])"(
+      to?: PromiseOrValue<string> | null,
+      typeId?: PromiseOrValue<BigNumberish> | null,
+      tokenId?: PromiseOrValue<BigNumberish> | null,
+      properties?: null
+    ): MintEventFilter;
+    Mint(
+      to?: PromiseOrValue<string> | null,
+      typeId?: PromiseOrValue<BigNumberish> | null,
+      tokenId?: PromiseOrValue<BigNumberish> | null,
+      properties?: null
+    ): MintEventFilter;
+
     "OwnershipTransferred(address,address)"(
       previousOwner?: PromiseOrValue<string> | null,
       newOwner?: PromiseOrValue<string> | null
@@ -1165,6 +1215,11 @@ export interface AttachableERC721 extends BaseContract {
     balanceOf(
       owner: PromiseOrValue<string>,
       overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    burn(
+      tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
     editType(
@@ -1341,6 +1396,11 @@ export interface AttachableERC721 extends BaseContract {
     balanceOf(
       owner: PromiseOrValue<string>,
       overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    burn(
+      tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
     editType(

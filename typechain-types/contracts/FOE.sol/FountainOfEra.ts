@@ -251,12 +251,14 @@ export interface FountainOfEraInterface extends utils.Interface {
   events: {
     "Deposit(address,uint256[])": EventFragment;
     "EmergencyWithdraw(address,uint256[])": EventFragment;
+    "Harvest(address,uint256)": EventFragment;
     "OwnershipTransferred(address,address)": EventFragment;
     "Withdraw(address,uint256)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "Deposit"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "EmergencyWithdraw"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "Harvest"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Withdraw"): EventFragment;
 }
@@ -283,6 +285,14 @@ export type EmergencyWithdrawEvent = TypedEvent<
 
 export type EmergencyWithdrawEventFilter =
   TypedEventFilter<EmergencyWithdrawEvent>;
+
+export interface HarvestEventObject {
+  user: string;
+  amount: BigNumber;
+}
+export type HarvestEvent = TypedEvent<[string, BigNumber], HarvestEventObject>;
+
+export type HarvestEventFilter = TypedEventFilter<HarvestEvent>;
 
 export interface OwnershipTransferredEventObject {
   previousOwner: string;
@@ -635,6 +645,15 @@ export interface FountainOfEra extends BaseContract {
       user?: PromiseOrValue<string> | null,
       tokenIds?: null
     ): EmergencyWithdrawEventFilter;
+
+    "Harvest(address,uint256)"(
+      user?: PromiseOrValue<string> | null,
+      amount?: null
+    ): HarvestEventFilter;
+    Harvest(
+      user?: PromiseOrValue<string> | null,
+      amount?: null
+    ): HarvestEventFilter;
 
     "OwnershipTransferred(address,address)"(
       previousOwner?: PromiseOrValue<string> | null,

@@ -68,6 +68,7 @@ contract FountainOfEra is Ownable {
         address indexed user,
         uint256[] tokenIds
     );
+    event Harvest(address indexed user, uint256 amount);
 
     constructor(address _eraAllocatorAddress, address _histopiaNFT, uint256 _eraPerBlock) {
         eraAllocator = Allocator(_eraAllocatorAddress);
@@ -131,6 +132,7 @@ contract FountainOfEra is Ownable {
         if (user.militaryPower > 0) {
             uint256 pending = (user.militaryPower * generalAccEraPerShare / 1e12) - user.rewardDebt;
             safeERATransfer(msg.sender, pending);
+            emit Harvest(msg.sender, pending);
         }
         histopianCount += tokenIds.length;
         uint256 militaryPowerIncrement = 0;
@@ -165,6 +167,7 @@ contract FountainOfEra is Ownable {
         updatePool();
         uint256 pending = (user.militaryPower * generalAccEraPerShare / 1e12 ) - user.rewardDebt;
         safeERATransfer(msg.sender, pending);
+        emit Harvest(msg.sender, pending);
         histopianCount -= tokenIndices.length;
         uint256 militaryPowerDecrement;
         for (uint256 index = 0; index < tokenIndices.length; index++) {
@@ -212,7 +215,7 @@ contract FountainOfEra is Ownable {
         updatePool();
         uint256 pending = (user.militaryPower * generalAccEraPerShare / 1e12 ) - user.rewardDebt;
         safeERATransfer(msg.sender, pending);
-
+        emit Harvest(msg.sender, pending);
         user.rewardDebt = user.militaryPower * generalAccEraPerShare / 1e12;
     }
 
