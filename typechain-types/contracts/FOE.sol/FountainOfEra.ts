@@ -249,11 +249,11 @@ export interface FountainOfEraInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "withdraw", data: BytesLike): Result;
 
   events: {
-    "Deposit(address,uint256[])": EventFragment;
+    "Deposit(address,uint256[],uint256,uint256)": EventFragment;
     "EmergencyWithdraw(address,uint256[])": EventFragment;
     "Harvest(address,uint256)": EventFragment;
     "OwnershipTransferred(address,address)": EventFragment;
-    "Withdraw(address,uint256)": EventFragment;
+    "Withdraw(address,uint256[],uint256,uint256)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "Deposit"): EventFragment;
@@ -266,9 +266,11 @@ export interface FountainOfEraInterface extends utils.Interface {
 export interface DepositEventObject {
   user: string;
   tokenIds: BigNumber[];
+  userMilitaryPower: BigNumber;
+  totalMilitaryPower: BigNumber;
 }
 export type DepositEvent = TypedEvent<
-  [string, BigNumber[]],
+  [string, BigNumber[], BigNumber, BigNumber],
   DepositEventObject
 >;
 
@@ -308,10 +310,12 @@ export type OwnershipTransferredEventFilter =
 
 export interface WithdrawEventObject {
   user: string;
-  tokenId: BigNumber;
+  tokenIds: BigNumber[];
+  userMilitaryPower: BigNumber;
+  totalMilitaryPower: BigNumber;
 }
 export type WithdrawEvent = TypedEvent<
-  [string, BigNumber],
+  [string, BigNumber[], BigNumber, BigNumber],
   WithdrawEventObject
 >;
 
@@ -628,13 +632,17 @@ export interface FountainOfEra extends BaseContract {
   };
 
   filters: {
-    "Deposit(address,uint256[])"(
+    "Deposit(address,uint256[],uint256,uint256)"(
       user?: PromiseOrValue<string> | null,
-      tokenIds?: null
+      tokenIds?: null,
+      userMilitaryPower?: null,
+      totalMilitaryPower?: null
     ): DepositEventFilter;
     Deposit(
       user?: PromiseOrValue<string> | null,
-      tokenIds?: null
+      tokenIds?: null,
+      userMilitaryPower?: null,
+      totalMilitaryPower?: null
     ): DepositEventFilter;
 
     "EmergencyWithdraw(address,uint256[])"(
@@ -664,13 +672,17 @@ export interface FountainOfEra extends BaseContract {
       newOwner?: PromiseOrValue<string> | null
     ): OwnershipTransferredEventFilter;
 
-    "Withdraw(address,uint256)"(
+    "Withdraw(address,uint256[],uint256,uint256)"(
       user?: PromiseOrValue<string> | null,
-      tokenId?: null
+      tokenIds?: null,
+      userMilitaryPower?: null,
+      totalMilitaryPower?: null
     ): WithdrawEventFilter;
     Withdraw(
       user?: PromiseOrValue<string> | null,
-      tokenId?: null
+      tokenIds?: null,
+      userMilitaryPower?: null,
+      totalMilitaryPower?: null
     ): WithdrawEventFilter;
   };
 

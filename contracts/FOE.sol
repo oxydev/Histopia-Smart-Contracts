@@ -62,8 +62,8 @@ contract FountainOfEra is Ownable {
     mapping(uint256 => bool) public histopianTypes;
 
 
-    event Deposit(address indexed user, uint256[] tokenIds);
-    event Withdraw(address indexed user, uint256 tokenId);
+    event Deposit(address indexed user, uint256[] tokenIds, uint256 userMilitaryPower, uint256 totalMilitaryPower);
+    event Withdraw(address indexed user, uint256[] tokenIds, uint256 userMilitaryPower, uint256 totalMilitaryPower);
     event EmergencyWithdraw(
         address indexed user,
         uint256[] tokenIds
@@ -147,7 +147,7 @@ contract FountainOfEra is Ownable {
         user.militaryPower += militaryPowerIncrement;
         currentTotalMilitaryPower += militaryPowerIncrement;
         user.rewardDebt = user.militaryPower * generalAccEraPerShare / 1e12;
-        emit Deposit(msg.sender, tokenIds);
+        emit Deposit(msg.sender, tokenIds, user.militaryPower, currentTotalMilitaryPower);
     }
 
     function calculateMilitaryPowerOfTokenId(uint256 tokenId) public view returns (uint256 ) {
@@ -170,15 +170,18 @@ contract FountainOfEra is Ownable {
         emit Harvest(msg.sender, pending);
         histopianCount -= tokenIndices.length;
         uint256 militaryPowerDecrement;
+        uint256[] memory tokenIds = new uint256[](tokenIndices.length);
         for (uint256 index = 0; index < tokenIndices.length; index++) {
             require(tokenIndices[index] < user.tokenIDs.length, "FOE: Invalid token index");
-            emit Withdraw(msg.sender, user.tokenIDs[tokenIndices[index]]);
+            tokenIds[index] = user.tokenIDs[tokenIndices[index]];
             nftContract.transferFrom(address(this), msg.sender, user.tokenIDs[tokenIndices[index]]);
             militaryPowerDecrement += calculateMilitaryPowerOfTokenId(user.tokenIDs[tokenIndices[index]]);
             user.tokenIDs[tokenIndices[index]] = 0;
         }
         user.militaryPower -= militaryPowerDecrement;
         currentTotalMilitaryPower -= militaryPowerDecrement;
+        emit Withdraw(msg.sender, tokenIds, user.militaryPower, currentTotalMilitaryPower);
+
         for (uint256 index = tokenIndices.length; index > 0; index--) {
             uint256 j = index - 1;
 
