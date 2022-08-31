@@ -185,28 +185,28 @@ contract FountainOfEra is Ownable {
         for (uint256 index = tokenIndices.length; index > 0; index--) {
             uint256 j = index - 1;
 
-//            console.log("index", tokenIndices[j]);
-
+//            console.log("index", tokenIndices[j], user.tokenIDs.length, j);
+//
 //            for (uint256 p = 0; p < user.tokenIDs.length; p++) {
 //                console.log("user.tokenIDs ", user.tokenIDs[p]);
 //            }
-            if (tokenIndices[j]  == user.tokenIDs.length - 1) {
-                user.tokenIDs.pop();
-            }
-            else if (tokenIndices[j] < user.tokenIDs.length - 1) {
-                uint256 temp = 0;
-                while (temp == 0 && user.tokenIDs.length > 0) {
-                    temp = user.tokenIDs[user.tokenIDs.length - 1];
+            if(tokenIndices[j] > user.tokenIDs.length - 1)
+                continue;
+            uint256 t = 0;
+            while (t == 0 && user.tokenIDs.length > 0) {
+                t = user.tokenIDs[user.tokenIDs.length - 1];
+                if (t == 0) {
                     user.tokenIDs.pop();
                 }
-                if (user.tokenIDs.length == 0) {
-                    break;
-                }
-                if (tokenIndices[j] < user.tokenIDs.length) {
-                    user.tokenIDs[tokenIndices[j]] = temp;
-                } else if (temp != 0) {
-                    user.tokenIDs.push(temp);
-                }
+            }
+            if (user.tokenIDs.length == 0) {
+                break;
+            }
+            if (tokenIndices[j] == user.tokenIDs.length - 1) {
+                user.tokenIDs.pop();
+            } else if (tokenIndices[j] < user.tokenIDs.length - 1) {
+                user.tokenIDs[tokenIndices[j]] = t;
+                user.tokenIDs.pop();
             }
         }
         user.rewardDebt = user.militaryPower * generalAccEraPerShare / 1e12;

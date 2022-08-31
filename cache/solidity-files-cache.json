@@ -1564,8 +1564,8 @@
       ]
     },
     "/Users/hadiesna/source/Other/Histopia-Smart-Contracts/contracts/FOE.sol": {
-      "lastModificationDate": 1661004449665,
-      "contentHash": "61e5d2f155f49e68bc55906b251acff6",
+      "lastModificationDate": 1661949688719,
+      "contentHash": "da8fa40e0771d174700d1ab5cdb06454",
       "sourceName": "contracts/FOE.sol",
       "solcConfig": {
         "version": "0.8.1",
@@ -1825,6 +1825,41 @@
       ],
       "artifacts": [
         "ERC721Burnable"
+      ]
+    },
+    "/Users/hadiesna/source/Other/Histopia-Smart-Contracts/contracts/test/Test.sol": {
+      "lastModificationDate": 1661851817349,
+      "contentHash": "f861a0559c4defab526bd8e4ffc3ab69",
+      "sourceName": "contracts/test/Test.sol",
+      "solcConfig": {
+        "version": "0.8.1",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 10
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "Test"
       ]
     }
   }

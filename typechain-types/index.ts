@@ -56,3 +56,5 @@ export type { Multicall } from "./contracts/multicall.sol/Multicall";
 export { Multicall__factory } from "./factories/contracts/multicall.sol/Multicall__factory";
 export type { Resources } from "./contracts/Resources";
 export { Resources__factory } from "./factories/contracts/Resources__factory";
+export type { Test } from "./contracts/test/Test";
+export { Test__factory } from "./factories/contracts/test/Test__factory";
