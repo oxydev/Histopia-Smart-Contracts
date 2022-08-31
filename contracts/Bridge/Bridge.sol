@@ -14,7 +14,7 @@ contract BridgeERA {
     // Locks ERA tokens in the contract and backend mints ERA token on the other chain
     function lock(uint256 amount, address to, uint256 destChain) public {
         require(amount > MINIMUM_THRESHOLD, "Amount must be greater than Minimum Threshold");
-        ERA.burn(msg.sender, rewardERA);
+        ERA.burn(msg.sender, amount);
         emit Locked(amount, to, destChain);
     }
 }
