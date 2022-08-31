@@ -1682,8 +1682,8 @@
       ]
     },
     "/Users/hadiesna/source/Other/Histopia-Smart-Contracts/contracts/ERA.sol": {
-      "lastModificationDate": 1660572121950,
-      "contentHash": "1f6a326baf989efd64627634accbe2d4",
+      "lastModificationDate": 1661957560463,
+      "contentHash": "72f7e0ad88dbbe44f15f866370650b63",
       "sourceName": "contracts/ERA.sol",
       "solcConfig": {
         "version": "0.8.1",
@@ -1860,6 +1860,43 @@
       ],
       "artifacts": [
         "Test"
+      ]
+    },
+    "/Users/hadiesna/source/Other/Histopia-Smart-Contracts/contracts/Bridge/Bridge.sol": {
+      "lastModificationDate": 1661957879024,
+      "contentHash": "1e546fc69019837e3c0b1de4ad8c3d40",
+      "sourceName": "contracts/Bridge/Bridge.sol",
+      "solcConfig": {
+        "version": "0.8.1",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 10
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../ERA.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "BridgeERA"
       ]
     }
   }

@@ -38,6 +38,8 @@ export type { ERC165 } from "./@openzeppelin/contracts/utils/introspection/ERC16
 export { ERC165__factory } from "./factories/@openzeppelin/contracts/utils/introspection/ERC165__factory";
 export type { IERC165 } from "./@openzeppelin/contracts/utils/introspection/IERC165";
 export { IERC165__factory } from "./factories/@openzeppelin/contracts/utils/introspection/IERC165__factory";
+export type { BridgeERA } from "./contracts/Bridge/Bridge.sol/BridgeERA";
+export { BridgeERA__factory } from "./factories/contracts/Bridge/Bridge.sol/BridgeERA__factory";
 export type { Challenger } from "./contracts/Challenger";
 export { Challenger__factory } from "./factories/contracts/Challenger__factory";
 export type { ERAAllocation } from "./contracts/Distributor.sol/ERAAllocation";

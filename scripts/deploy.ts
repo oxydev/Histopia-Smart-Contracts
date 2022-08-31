@@ -40,6 +40,12 @@ async function main() {
   console.log("NFT deployed to:", nft.address, nft.deployTransaction.blockNumber);
   console.log("FOE deployed to:", foe.address);
 
+  const Bridge = await ethers.getContractFactory("BridgeERA");
+  const bridge = await Bridge.deploy(era.address);
+
+  await bridge.deployed();
+
+  console.log("Bridge deployed to:", nft.address);
   // console.log("Lock with 1 ETH deployed to:", lock.address);
 }
 

@@ -5,9 +5,11 @@ async function main() {
   const [owner] = await ethers.getSigners();
   console.log("Deploying NFT contract...", owner.address, await owner.getBalance());
 
+  // const era = await ethers.getContractFactory("ERA");
+  // console.log("Deploying era contract...", era);
 
   const NFT = await ethers.getContractFactory("BridgeERA");
-  const nft = await NFT.deploy();
+  const nft = await NFT.deploy("0xBf4Dc84191F713E5613090704aB8918CE88a3ec5");
 
   await nft.deployed();
 
