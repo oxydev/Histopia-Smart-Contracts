@@ -1564,8 +1564,8 @@
       ]
     },
     "/Users/hadiesna/source/Other/Histopia-Smart-Contracts/contracts/FOE.sol": {
-      "lastModificationDate": 1661949688719,
-      "contentHash": "da8fa40e0771d174700d1ab5cdb06454",
+      "lastModificationDate": 1661949732681,
+      "contentHash": "077a06f25681aa96d28712a428d1acb5",
       "sourceName": "contracts/FOE.sol",
       "solcConfig": {
         "version": "0.8.1",

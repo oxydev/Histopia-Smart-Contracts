@@ -419,8 +419,6 @@ describe("FOE", function () {
             await foe.withdraw([6, 2, 5, 1, 4, 3, 8, 10, 11, 9, 0]);
             expect(await nft.balanceOf(owner.address)).to.equal(54);
             expect((await foe.getTokenIds(owner.address)).map(Number)).to.eql([31]);
-
-
         });
     });
 });
