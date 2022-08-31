@@ -45,7 +45,7 @@ async function main() {
 
   await bridge.deployed();
 
-  console.log("Bridge deployed to:", nft.address);
+  console.log("Bridge deployed to:", bridge.address);
   // console.log("Lock with 1 ETH deployed to:", lock.address);
 }
 
