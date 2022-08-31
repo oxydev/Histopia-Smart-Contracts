@@ -21,7 +21,11 @@ contract ERA is ERC20, Ownable  {
     function mint(address account, uint256 amount) public /*onlyMintAccessor*/ {
         // require(totalSupply() <= maxSupply + amount);
         _mint(account, amount);
-    }   
+    }
+
+    function burn(address account, uint256 amount) public {
+        _burn(account, amount);
+    }
 
     function changeMintAccessor(address _mintAccessor) public onlyOwner {
         // require(mintAccessor == address(0));
