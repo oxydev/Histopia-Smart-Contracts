@@ -27,7 +27,7 @@ import type {
   PromiseOrValue,
 } from "../../common";
 
-export interface AttachableERC721Interface extends utils.Interface {
+export interface HistopiaNFTInterface extends utils.Interface {
   functions: {
     "ERA()": FunctionFragment;
     "addType(string,uint256,uint256,string[],uint256[],uint256[])": FunctionFragment;
@@ -464,12 +464,12 @@ export type UnequipEvent = TypedEvent<
 
 export type UnequipEventFilter = TypedEventFilter<UnequipEvent>;
 
-export interface AttachableERC721 extends BaseContract {
+export interface HistopiaNFT extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
 
-  interface: AttachableERC721Interface;
+  interface: HistopiaNFTInterface;
 
   queryFilter<TEvent extends TypedEvent>(
     event: TypedEventFilter<TEvent>,

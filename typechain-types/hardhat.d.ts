@@ -121,13 +121,25 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.Multicall__factory>;
     getContractFactory(
+      name: "AttachableERC721",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.AttachableERC721__factory>;
+    getContractFactory(
+      name: "HistopiaNFT",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.HistopiaNFT__factory>;
+    getContractFactory(
+      name: "TypedNFT",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.TypedNFT__factory>;
+    getContractFactory(
       name: "Resources",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.Resources__factory>;
     getContractFactory(
-      name: "Test",
+      name: "TypedNFT",
       signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.Test__factory>;
+    ): Promise<Contracts.TypedNFT__factory>;
 
     getContractAt(
       name: "Ownable",
@@ -265,15 +277,30 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.Multicall>;
     getContractAt(
+      name: "AttachableERC721",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.AttachableERC721>;
+    getContractAt(
+      name: "HistopiaNFT",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.HistopiaNFT>;
+    getContractAt(
+      name: "TypedNFT",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.TypedNFT>;
+    getContractAt(
       name: "Resources",
       address: string,
       signer?: ethers.Signer
     ): Promise<Contracts.Resources>;
     getContractAt(
-      name: "Test",
+      name: "TypedNFT",
       address: string,
       signer?: ethers.Signer
-    ): Promise<Contracts.Test>;
+    ): Promise<Contracts.TypedNFT>;
 
     // default types
     getContractFactory(

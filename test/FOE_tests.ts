@@ -14,7 +14,7 @@ describe("FOE", function () {
         const ERA = await ethers.getContractFactory("ERA");
         const era = await ERA.deploy();
 
-        const NFT = await ethers.getContractFactory("AttachableERC721");
+        const NFT = await ethers.getContractFactory("HistopiaNFT");
         const nft = await NFT.deploy("NFT", "NFT", era.address, 0);
         await nft.addType(
             "Histopian",
@@ -54,7 +54,7 @@ describe("FOE", function () {
 
             let nftPropertiesArr = [];
             for (let index = 1; index < 6; index++) {
-                let nftProperties = await nft.getCumulativeTokenProperties(index)
+                let nftProperties = await nft.getTokenProperties(index)
                 // console.log("nft Properties : ", index,  nftProperties)
                 let nftPower = 0;
                 for (let index = 0; index < nftProperties.length; index++) {
@@ -90,7 +90,7 @@ describe("FOE", function () {
 
             let nftPropertiesArr = [];
             for (let index = 1; index < 6; index++) {
-                let nftProperties = await nft.getCumulativeTokenProperties(index)
+                let nftProperties = await nft.getTokenProperties(index)
                 // console.log("nft Properties : ", index,  nftProperties)
                 let nftPower = 0;
                 for (let index = 0; index < nftProperties.length; index++) {
@@ -135,7 +135,7 @@ describe("FOE", function () {
 
             let nftPropertiesArr = [];
             for (let index = 1; index < 6; index++) {
-                let nftProperties = await nft.getCumulativeTokenProperties(index)
+                let nftProperties = await nft.getTokenProperties(index)
                 // console.log("nft Properties : ", index,  nftProperties)
                 let nftPower = 0;
                 for (let index = 0; index < nftProperties.length; index++) {
@@ -202,7 +202,7 @@ describe("FOE", function () {
 
             let nftPropertiesArr = [];
             for (let index = 1; index < 6; index++) {
-                let nftProperties = await nft.getCumulativeTokenProperties(index)
+                let nftProperties = await nft.getTokenProperties(index)
                 // console.log("nft Properties : ", index,  nftProperties)
                 let nftPower = 0;
                 for (let index = 0; index < nftProperties.length; index++) {
@@ -251,7 +251,7 @@ describe("FOE", function () {
 
             let nftPropertiesArr = [];
             for (let index = 1; index < 6; index++) {
-                let nftProperties = await nft.getCumulativeTokenProperties(index)
+                let nftProperties = await nft.getTokenProperties(index)
                 // console.log("nft Properties : ", index,  nftProperties)
                 let nftPower = 0;
                 for (let index = 0; index < nftProperties.length; index++) {
@@ -300,7 +300,7 @@ describe("FOE", function () {
 
             let nftPropertiesArr = [];
             for (let index = 1; index < 6; index++) {
-                let nftProperties = await nft.getCumulativeTokenProperties(index)
+                let nftProperties = await nft.getTokenProperties(index)
                 // console.log("nft Properties : ", index,  nftProperties)
                 let nftPower = 0;
                 for (let index = 0; index < nftProperties.length; index++) {
@@ -412,8 +412,6 @@ describe("FOE", function () {
             expect((await foe.getTokenIds(owner.address)).map(Number)).to.eql([34, 13, 12, 20, 19, 14, 15, 31, 21, 33, 22, 23, 16, 17, 18, 11]);
             await foe.withdraw([15, 2, 5, 1]);
             expect(await nft.balanceOf(owner.address)).to.equal(43);
-            expect((await foe.getTokenIds(owner.address)).map(Number)).to.eql([34, 18, 16, 20, 19, 17, 15, 31, 21, 33, 22, 23]);
-            await foe.deposit([34, 18, 16, 20, 19, 17, 15, 31, 21, 33, 22, 23]);
             expect((await foe.getTokenIds(owner.address)).map(Number)).to.eql([34, 18, 16, 20, 19, 17, 15, 31, 21, 33, 22, 23]);
 
             await foe.withdraw([6, 2, 5, 1, 4, 3, 8, 10, 11, 9, 0]);

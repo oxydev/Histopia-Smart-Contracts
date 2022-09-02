@@ -15,7 +15,7 @@ const _abi = [
         type: "uint256",
       },
     ],
-    name: "getCumulativeTokenProperties",
+    name: "getTokenProperties",
     outputs: [
       {
         internalType: "uint256[]",

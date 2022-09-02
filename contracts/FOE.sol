@@ -8,7 +8,7 @@ import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 interface INFT {
-    function getCumulativeTokenProperties(uint256) external view returns (uint256[] calldata);
+    function getTokenProperties(uint256) external view returns (uint256[] calldata);
 
     function transferFrom(address sender, address recipient, uint256 tokenId) external;
 
@@ -151,7 +151,7 @@ contract FountainOfEra is Ownable {
     }
 
     function calculateMilitaryPowerOfTokenId(uint256 tokenId) public view returns (uint256 ) {
-        return calculateMilitaryPower(nftContract.getCumulativeTokenProperties(tokenId));
+        return calculateMilitaryPower(nftContract.getTokenProperties(tokenId));
     }
 
     function calculateMilitaryPower(uint256[] memory properties) public pure returns (uint256 militaryPower) {

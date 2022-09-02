@@ -56,7 +56,9 @@ export type { AttachableERC721 } from "./contracts/HistopiaNFT.sol/AttachableERC
 export { AttachableERC721__factory } from "./factories/contracts/HistopiaNFT.sol/AttachableERC721__factory";
 export type { Multicall } from "./contracts/multicall.sol/Multicall";
 export { Multicall__factory } from "./factories/contracts/multicall.sol/Multicall__factory";
+export type { HistopiaNFT } from "./contracts/NFT/HistopiaNFT";
+export { HistopiaNFT__factory } from "./factories/contracts/NFT/HistopiaNFT__factory";
+export type { TypedNFT } from "./contracts/NFT/TypedNFT";
+export { TypedNFT__factory } from "./factories/contracts/NFT/TypedNFT__factory";
 export type { Resources } from "./contracts/Resources";
 export { Resources__factory } from "./factories/contracts/Resources__factory";
-export type { Test } from "./contracts/test/Test";
-export { Test__factory } from "./factories/contracts/test/Test__factory";

@@ -25,20 +25,20 @@ import type {
 
 export interface INFTInterface extends utils.Interface {
   functions: {
-    "getCumulativeTokenProperties(uint256)": FunctionFragment;
+    "getTokenProperties(uint256)": FunctionFragment;
     "tokenIdToTypeIndex(uint256)": FunctionFragment;
     "transferFrom(address,address,uint256)": FunctionFragment;
   };
 
   getFunction(
     nameOrSignatureOrTopic:
-      | "getCumulativeTokenProperties"
+      | "getTokenProperties"
       | "tokenIdToTypeIndex"
       | "transferFrom"
   ): FunctionFragment;
 
   encodeFunctionData(
-    functionFragment: "getCumulativeTokenProperties",
+    functionFragment: "getTokenProperties",
     values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
@@ -55,7 +55,7 @@ export interface INFTInterface extends utils.Interface {
   ): string;
 
   decodeFunctionResult(
-    functionFragment: "getCumulativeTokenProperties",
+    functionFragment: "getTokenProperties",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -97,7 +97,7 @@ export interface INFT extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
-    getCumulativeTokenProperties(
+    getTokenProperties(
       arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<[BigNumber[]]>;
@@ -115,7 +115,7 @@ export interface INFT extends BaseContract {
     ): Promise<ContractTransaction>;
   };
 
-  getCumulativeTokenProperties(
+  getTokenProperties(
     arg0: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
   ): Promise<BigNumber[]>;
@@ -133,7 +133,7 @@ export interface INFT extends BaseContract {
   ): Promise<ContractTransaction>;
 
   callStatic: {
-    getCumulativeTokenProperties(
+    getTokenProperties(
       arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BigNumber[]>;
@@ -154,7 +154,7 @@ export interface INFT extends BaseContract {
   filters: {};
 
   estimateGas: {
-    getCumulativeTokenProperties(
+    getTokenProperties(
       arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
@@ -173,7 +173,7 @@ export interface INFT extends BaseContract {
   };
 
   populateTransaction: {
-    getCumulativeTokenProperties(
+    getTokenProperties(
       arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;

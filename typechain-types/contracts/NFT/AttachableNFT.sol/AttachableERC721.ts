@@ -25,11 +25,10 @@ import type {
   TypedListener,
   OnEvent,
   PromiseOrValue,
-} from "../../common";
+} from "../../../common";
 
 export interface AttachableERC721Interface extends utils.Interface {
   functions: {
-    "ERA()": FunctionFragment;
     "addType(string,uint256,uint256,string[],uint256[],uint256[])": FunctionFragment;
     "approve(address,uint256)": FunctionFragment;
     "assignedNFTs(uint256)": FunctionFragment;
@@ -41,8 +40,6 @@ export interface AttachableERC721Interface extends utils.Interface {
     "getTokenProperties(uint256)": FunctionFragment;
     "isApprovedForAll(address,address)": FunctionFragment;
     "latestTokenID()": FunctionFragment;
-    "mint(address,uint256)": FunctionFragment;
-    "mintFee()": FunctionFragment;
     "name()": FunctionFragment;
     "owner()": FunctionFragment;
     "ownerOf(uint256)": FunctionFragment;
@@ -54,7 +51,6 @@ export interface AttachableERC721Interface extends utils.Interface {
     "safeTransferFrom(address,address,uint256)": FunctionFragment;
     "safeTransferFrom(address,address,uint256,bytes)": FunctionFragment;
     "setApprovalForAll(address,bool)": FunctionFragment;
-    "setMintFee(uint256)": FunctionFragment;
     "supportsInterface(bytes4)": FunctionFragment;
     "symbol()": FunctionFragment;
     "tokenIdToTypeIndex(uint256)": FunctionFragment;
@@ -67,7 +63,6 @@ export interface AttachableERC721Interface extends utils.Interface {
 
   getFunction(
     nameOrSignatureOrTopic:
-      | "ERA"
       | "addType"
       | "approve"
       | "assignedNFTs"
@@ -79,8 +74,6 @@ export interface AttachableERC721Interface extends utils.Interface {
       | "getTokenProperties"
       | "isApprovedForAll"
       | "latestTokenID"
-      | "mint"
-      | "mintFee"
       | "name"
       | "owner"
       | "ownerOf"
@@ -92,7 +85,6 @@ export interface AttachableERC721Interface extends utils.Interface {
       | "safeTransferFrom(address,address,uint256)"
       | "safeTransferFrom(address,address,uint256,bytes)"
       | "setApprovalForAll"
-      | "setMintFee"
       | "supportsInterface"
       | "symbol"
       | "tokenIdToTypeIndex"
@@ -103,7 +95,6 @@ export interface AttachableERC721Interface extends utils.Interface {
       | "unequip"
   ): FunctionFragment;
 
-  encodeFunctionData(functionFragment: "ERA", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "addType",
     values: [
@@ -159,11 +150,6 @@ export interface AttachableERC721Interface extends utils.Interface {
     functionFragment: "latestTokenID",
     values?: undefined
   ): string;
-  encodeFunctionData(
-    functionFragment: "mint",
-    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(functionFragment: "mintFee", values?: undefined): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
@@ -212,10 +198,6 @@ export interface AttachableERC721Interface extends utils.Interface {
     values: [PromiseOrValue<string>, PromiseOrValue<boolean>]
   ): string;
   encodeFunctionData(
-    functionFragment: "setMintFee",
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
     functionFragment: "supportsInterface",
     values: [PromiseOrValue<BytesLike>]
   ): string;
@@ -249,7 +231,6 @@ export interface AttachableERC721Interface extends utils.Interface {
     values: [PromiseOrValue<BigNumberish>]
   ): string;
 
-  decodeFunctionResult(functionFragment: "ERA", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "addType", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
   decodeFunctionResult(
@@ -276,8 +257,6 @@ export interface AttachableERC721Interface extends utils.Interface {
     functionFragment: "latestTokenID",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "mint", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "mintFee", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "ownerOf", data: BytesLike): Result;
@@ -310,7 +289,6 @@ export interface AttachableERC721Interface extends utils.Interface {
     functionFragment: "setApprovalForAll",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "setMintFee", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "supportsInterface",
     data: BytesLike
@@ -337,7 +315,6 @@ export interface AttachableERC721Interface extends utils.Interface {
     "Approval(address,address,uint256)": EventFragment;
     "ApprovalForAll(address,address,bool)": EventFragment;
     "Equip(address,uint256,uint256)": EventFragment;
-    "Mint(address,uint256,uint256,uint256[])": EventFragment;
     "OwnershipTransferred(address,address)": EventFragment;
     "Transfer(address,address,uint256)": EventFragment;
     "Unequip(address,uint256,uint256)": EventFragment;
@@ -347,7 +324,6 @@ export interface AttachableERC721Interface extends utils.Interface {
   getEvent(nameOrSignatureOrTopic: "Approval"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "ApprovalForAll"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Equip"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "Mint"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Transfer"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Unequip"): EventFragment;
@@ -415,19 +391,6 @@ export type EquipEvent = TypedEvent<
 
 export type EquipEventFilter = TypedEventFilter<EquipEvent>;
 
-export interface MintEventObject {
-  to: string;
-  typeId: BigNumber;
-  tokenId: BigNumber;
-  properties: BigNumber[];
-}
-export type MintEvent = TypedEvent<
-  [string, BigNumber, BigNumber, BigNumber[]],
-  MintEventObject
->;
-
-export type MintEventFilter = TypedEventFilter<MintEvent>;
-
 export interface OwnershipTransferredEventObject {
   previousOwner: string;
   newOwner: string;
@@ -491,8 +454,6 @@ export interface AttachableERC721 extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
-    ERA(overrides?: CallOverrides): Promise<[string]>;
-
     addType(
       typeName: PromiseOrValue<string>,
       allowedAccessorTypes: PromiseOrValue<BigNumberish>,
@@ -554,14 +515,6 @@ export interface AttachableERC721 extends BaseContract {
     ): Promise<[boolean]>;
 
     latestTokenID(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    mint(
-      to: PromiseOrValue<string>,
-      typeIndex: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    mintFee(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     name(overrides?: CallOverrides): Promise<[string]>;
 
@@ -625,11 +578,6 @@ export interface AttachableERC721 extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    setMintFee(
-      _fee: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
     supportsInterface(
       interfaceId: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
@@ -677,8 +625,6 @@ export interface AttachableERC721 extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
   };
-
-  ERA(overrides?: CallOverrides): Promise<string>;
 
   addType(
     typeName: PromiseOrValue<string>,
@@ -742,14 +688,6 @@ export interface AttachableERC721 extends BaseContract {
 
   latestTokenID(overrides?: CallOverrides): Promise<BigNumber>;
 
-  mint(
-    to: PromiseOrValue<string>,
-    typeIndex: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  mintFee(overrides?: CallOverrides): Promise<BigNumber>;
-
   name(overrides?: CallOverrides): Promise<string>;
 
   owner(overrides?: CallOverrides): Promise<string>;
@@ -812,11 +750,6 @@ export interface AttachableERC721 extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  setMintFee(
-    _fee: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
   supportsInterface(
     interfaceId: PromiseOrValue<BytesLike>,
     overrides?: CallOverrides
@@ -865,8 +798,6 @@ export interface AttachableERC721 extends BaseContract {
   ): Promise<ContractTransaction>;
 
   callStatic: {
-    ERA(overrides?: CallOverrides): Promise<string>;
-
     addType(
       typeName: PromiseOrValue<string>,
       allowedAccessorTypes: PromiseOrValue<BigNumberish>,
@@ -929,14 +860,6 @@ export interface AttachableERC721 extends BaseContract {
 
     latestTokenID(overrides?: CallOverrides): Promise<BigNumber>;
 
-    mint(
-      to: PromiseOrValue<string>,
-      typeIndex: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    mintFee(overrides?: CallOverrides): Promise<BigNumber>;
-
     name(overrides?: CallOverrides): Promise<string>;
 
     owner(overrides?: CallOverrides): Promise<string>;
@@ -994,11 +917,6 @@ export interface AttachableERC721 extends BaseContract {
     setApprovalForAll(
       operator: PromiseOrValue<string>,
       approved: PromiseOrValue<boolean>,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    setMintFee(
-      _fee: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -1105,19 +1023,6 @@ export interface AttachableERC721 extends BaseContract {
       assignorTokenId?: PromiseOrValue<BigNumberish> | null
     ): EquipEventFilter;
 
-    "Mint(address,uint256,uint256,uint256[])"(
-      to?: PromiseOrValue<string> | null,
-      typeId?: PromiseOrValue<BigNumberish> | null,
-      tokenId?: PromiseOrValue<BigNumberish> | null,
-      properties?: null
-    ): MintEventFilter;
-    Mint(
-      to?: PromiseOrValue<string> | null,
-      typeId?: PromiseOrValue<BigNumberish> | null,
-      tokenId?: PromiseOrValue<BigNumberish> | null,
-      properties?: null
-    ): MintEventFilter;
-
     "OwnershipTransferred(address,address)"(
       previousOwner?: PromiseOrValue<string> | null,
       newOwner?: PromiseOrValue<string> | null
@@ -1151,8 +1056,6 @@ export interface AttachableERC721 extends BaseContract {
   };
 
   estimateGas: {
-    ERA(overrides?: CallOverrides): Promise<BigNumber>;
-
     addType(
       typeName: PromiseOrValue<string>,
       allowedAccessorTypes: PromiseOrValue<BigNumberish>,
@@ -1215,14 +1118,6 @@ export interface AttachableERC721 extends BaseContract {
 
     latestTokenID(overrides?: CallOverrides): Promise<BigNumber>;
 
-    mint(
-      to: PromiseOrValue<string>,
-      typeIndex: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    mintFee(overrides?: CallOverrides): Promise<BigNumber>;
-
     name(overrides?: CallOverrides): Promise<BigNumber>;
 
     owner(overrides?: CallOverrides): Promise<BigNumber>;
@@ -1279,11 +1174,6 @@ export interface AttachableERC721 extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    setMintFee(
-      _fee: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
     supportsInterface(
       interfaceId: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
@@ -1325,8 +1215,6 @@ export interface AttachableERC721 extends BaseContract {
   };
 
   populateTransaction: {
-    ERA(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     addType(
       typeName: PromiseOrValue<string>,
       allowedAccessorTypes: PromiseOrValue<BigNumberish>,
@@ -1389,14 +1277,6 @@ export interface AttachableERC721 extends BaseContract {
 
     latestTokenID(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    mint(
-      to: PromiseOrValue<string>,
-      typeIndex: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    mintFee(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     name(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
@@ -1450,11 +1330,6 @@ export interface AttachableERC721 extends BaseContract {
     setApprovalForAll(
       operator: PromiseOrValue<string>,
       approved: PromiseOrValue<boolean>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    setMintFee(
-      _fee: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
