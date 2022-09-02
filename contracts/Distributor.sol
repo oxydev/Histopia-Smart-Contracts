@@ -13,7 +13,7 @@ pragma solidity ^0.8.0;
 /******************************************/
 /*       IERC20 starts here               */
 /******************************************/
-import "openzeppelin-solidity/contracts/utils/math/SafeMath.sol";
+import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
 // File: @openzeppelin/contracts/token/ERC20/IERC20.sol
 
@@ -203,7 +203,7 @@ abstract contract Ownable is Context {
 contract ERAAllocation is Ownable {
     using SafeMath for uint256;
 
-    IERC20 public ERA; 
+    IERC20 public ERA;
 
     uint256 public startTime;
     uint256 public endTime;
@@ -233,7 +233,7 @@ contract ERAAllocation is Ownable {
             withdrawableAmount: 0
             });
         }
-       
+
         startTime = block.timestamp;
         endTime = block.timestamp + (31_104_000 * 2); //60*60*24*30*12 * 2
     }
