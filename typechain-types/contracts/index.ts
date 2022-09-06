@@ -16,4 +16,3 @@ export type { multicallSol };
 export type { Challenger } from "./Challenger";
 export type { ERA } from "./ERA";
 export type { Resources } from "./Resources";
-export type { TypedNFT } from "./TypedNFT";

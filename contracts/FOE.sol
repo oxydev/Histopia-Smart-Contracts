@@ -62,19 +62,21 @@ contract FountainOfEra is Ownable {
     mapping(uint256 => bool) public histopianTypes;
 
 
-    event Deposit(address indexed user, uint256[] tokenIds, uint256 userMilitaryPower, uint256 totalMilitaryPower);
-    event Withdraw(address indexed user, uint256[] tokenIds, uint256 userMilitaryPower, uint256 totalMilitaryPower);
+    event Deposit(address indexed user, uint256[] tokenIds, uint256 userMilitaryPower, uint256 totalMilitaryPower, uint256 timestamp);
+    event Withdraw(address indexed user, uint256[] tokenIds, uint256 userMilitaryPower, uint256 totalMilitaryPower, uint256 timestamp);
     event EmergencyWithdraw(
         address indexed user,
         uint256[] tokenIds
     );
     event Harvest(address indexed user, uint256 amount);
+    event ChangeEraPerBlock(uint256 oldAmount, uint256 newAmount);
 
     constructor(address _eraAllocatorAddress, address _histopiaNFT, uint256 _eraPerBlock) {
         eraAllocator = Allocator(_eraAllocatorAddress);
         eraPerBlock = _eraPerBlock;
         era = IERC20(eraAllocator.getEraContractAddress());
         nftContract = INFT(_histopiaNFT);
+        emit ChangeEraPerBlock(0, eraPerBlock);
     }
 
     function addHistopianType(uint256 typeId) public onlyOwner{
@@ -147,7 +149,7 @@ contract FountainOfEra is Ownable {
         user.militaryPower += militaryPowerIncrement;
         currentTotalMilitaryPower += militaryPowerIncrement;
         user.rewardDebt = user.militaryPower * generalAccEraPerShare / 1e12;
-        emit Deposit(msg.sender, tokenIds, user.militaryPower, currentTotalMilitaryPower);
+        emit Deposit(msg.sender, tokenIds, user.militaryPower, currentTotalMilitaryPower, block.timestamp);
     }
 
     function calculateMilitaryPowerOfTokenId(uint256 tokenId) public view returns (uint256 ) {
@@ -180,7 +182,7 @@ contract FountainOfEra is Ownable {
         }
         user.militaryPower -= militaryPowerDecrement;
         currentTotalMilitaryPower -= militaryPowerDecrement;
-        emit Withdraw(msg.sender, tokenIds, user.militaryPower, currentTotalMilitaryPower);
+        emit Withdraw(msg.sender, tokenIds, user.militaryPower, currentTotalMilitaryPower, block.timestamp);
 
         for (uint256 index = tokenIndices.length; index > 0; index--) {
             uint256 j = index - 1;

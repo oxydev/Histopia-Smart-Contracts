@@ -15,8 +15,8 @@ async function main() {
   await era.deployed();
   console.log("era deployed to:", era.address);
 
-  const NFT = await ethers.getContractFactory("AttachableERC721");
-  const nft = await NFT.deploy("NFT", "NFT", era.address, 0);
+  const NFT = await ethers.getContractFactory("HistopiaNFT");
+  const nft = await NFT.deploy("NFT", "NFT", era.address, 100);
   // const nft = await NFT.deploy("NFT", "NFT", "0xb48dea62c889c6B92992001c2077F17a93eBb00D", 0);
 
   await nft.deployed();

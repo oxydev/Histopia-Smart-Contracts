@@ -249,13 +249,15 @@ export interface FountainOfEraInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "withdraw", data: BytesLike): Result;
 
   events: {
-    "Deposit(address,uint256[],uint256,uint256)": EventFragment;
+    "ChangeEraPerBlock(uint256,uint256)": EventFragment;
+    "Deposit(address,uint256[],uint256,uint256,uint256)": EventFragment;
     "EmergencyWithdraw(address,uint256[])": EventFragment;
     "Harvest(address,uint256)": EventFragment;
     "OwnershipTransferred(address,address)": EventFragment;
-    "Withdraw(address,uint256[],uint256,uint256)": EventFragment;
+    "Withdraw(address,uint256[],uint256,uint256,uint256)": EventFragment;
   };
 
+  getEvent(nameOrSignatureOrTopic: "ChangeEraPerBlock"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Deposit"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "EmergencyWithdraw"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Harvest"): EventFragment;
@@ -263,14 +265,27 @@ export interface FountainOfEraInterface extends utils.Interface {
   getEvent(nameOrSignatureOrTopic: "Withdraw"): EventFragment;
 }
 
+export interface ChangeEraPerBlockEventObject {
+  oldAmount: BigNumber;
+  newAmount: BigNumber;
+}
+export type ChangeEraPerBlockEvent = TypedEvent<
+  [BigNumber, BigNumber],
+  ChangeEraPerBlockEventObject
+>;
+
+export type ChangeEraPerBlockEventFilter =
+  TypedEventFilter<ChangeEraPerBlockEvent>;
+
 export interface DepositEventObject {
   user: string;
   tokenIds: BigNumber[];
   userMilitaryPower: BigNumber;
   totalMilitaryPower: BigNumber;
+  timestamp: BigNumber;
 }
 export type DepositEvent = TypedEvent<
-  [string, BigNumber[], BigNumber, BigNumber],
+  [string, BigNumber[], BigNumber, BigNumber, BigNumber],
   DepositEventObject
 >;
 
@@ -313,9 +328,10 @@ export interface WithdrawEventObject {
   tokenIds: BigNumber[];
   userMilitaryPower: BigNumber;
   totalMilitaryPower: BigNumber;
+  timestamp: BigNumber;
 }
 export type WithdrawEvent = TypedEvent<
-  [string, BigNumber[], BigNumber, BigNumber],
+  [string, BigNumber[], BigNumber, BigNumber, BigNumber],
   WithdrawEventObject
 >;
 
@@ -632,17 +648,28 @@ export interface FountainOfEra extends BaseContract {
   };
 
   filters: {
-    "Deposit(address,uint256[],uint256,uint256)"(
+    "ChangeEraPerBlock(uint256,uint256)"(
+      oldAmount?: null,
+      newAmount?: null
+    ): ChangeEraPerBlockEventFilter;
+    ChangeEraPerBlock(
+      oldAmount?: null,
+      newAmount?: null
+    ): ChangeEraPerBlockEventFilter;
+
+    "Deposit(address,uint256[],uint256,uint256,uint256)"(
       user?: PromiseOrValue<string> | null,
       tokenIds?: null,
       userMilitaryPower?: null,
-      totalMilitaryPower?: null
+      totalMilitaryPower?: null,
+      timestamp?: null
     ): DepositEventFilter;
     Deposit(
       user?: PromiseOrValue<string> | null,
       tokenIds?: null,
       userMilitaryPower?: null,
-      totalMilitaryPower?: null
+      totalMilitaryPower?: null,
+      timestamp?: null
     ): DepositEventFilter;
 
     "EmergencyWithdraw(address,uint256[])"(
@@ -672,17 +699,19 @@ export interface FountainOfEra extends BaseContract {
       newOwner?: PromiseOrValue<string> | null
     ): OwnershipTransferredEventFilter;
 
-    "Withdraw(address,uint256[],uint256,uint256)"(
+    "Withdraw(address,uint256[],uint256,uint256,uint256)"(
       user?: PromiseOrValue<string> | null,
       tokenIds?: null,
       userMilitaryPower?: null,
-      totalMilitaryPower?: null
+      totalMilitaryPower?: null,
+      timestamp?: null
     ): WithdrawEventFilter;
     Withdraw(
       user?: PromiseOrValue<string> | null,
       tokenIds?: null,
       userMilitaryPower?: null,
-      totalMilitaryPower?: null
+      totalMilitaryPower?: null,
+      timestamp?: null
     ): WithdrawEventFilter;
   };
 
