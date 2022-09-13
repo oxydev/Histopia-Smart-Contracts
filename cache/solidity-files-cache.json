@@ -1904,8 +1904,8 @@
       ]
     },
     "/Users/hadiesna/source/Other/Histopia-Smart-Contracts/contracts/NFT/HistopiaNFT.sol": {
-      "lastModificationDate": 1662466639857,
-      "contentHash": "988a18cfa30c70a50644ffd429a79852",
+      "lastModificationDate": 1662977485087,
+      "contentHash": "af146dafbd3cc59716b94e59d6efd869",
       "sourceName": "contracts/NFT/HistopiaNFT.sol",
       "solcConfig": {
         "version": "0.8.1",

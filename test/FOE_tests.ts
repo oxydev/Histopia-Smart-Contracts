@@ -420,3 +420,44 @@ describe("FOE", function () {
         });
     });
 });
+
+describe("NFT", function () {
+    async function deployEraAndNFT() {
+
+        // Contracts are deployed using the first signer/account by default
+        const [owner, otherAccount] = await ethers.getSigners();
+        const ERA = await ethers.getContractFactory("ERA");
+        const era = await ERA.deploy();
+
+        const NFT = await ethers.getContractFactory("HistopiaNFT");
+        const nft = await NFT.deploy("NFT", "NFT", era.address, 0);
+        await nft.addType(
+            "Histopian",
+            30,
+            100,
+            ["speed", "strength", "intelligence", "charisma", "luck"],
+            [10, 10, 10, 10, 10],
+            [100, 100, 100, 100, 100],
+        )
+        for (let index = 0; index < 5; index++) {
+            await nft.mint(owner.address, 0);
+        }
+
+        return {era, nft, owner, otherAccount};
+    }
+
+    describe("Deployment", function () {
+        it("Should set the right nft contract address", async function () {
+            const {era, nft, owner, otherAccount} = await loadFixture(deployEraAndNFT);
+            expect(await nft.balanceOf(owner.address)).to.equal(6);
+            expect(await nft.usersCounter(owner.address)).to.equal(6);
+        })
+
+        it("Should set the right nft contract address", async function () {
+            const {era, nft, owner, otherAccount} = await loadFixture(deployEraAndNFT);
+            expect(await nft.balanceOf(owner.address)).to.equal(6);
+            expect(await nft.usersCounter(owner.address)).to.equal(6);
+        })
+    })
+
+})

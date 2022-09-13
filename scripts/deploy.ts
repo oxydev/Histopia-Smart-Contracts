@@ -1,5 +1,6 @@
 import { ethers } from "hardhat";
 import {BigNumber} from "ethers";
+const fs = require("fs");
 
 async function main() {
   // const currentTimestampInSeconds = Math.round(Date.now() / 1000);
@@ -7,6 +8,8 @@ async function main() {
   // const unlockTime = currentTimestampInSeconds + ONE_YEAR_IN_SECS;
 
   // const lockedAmount = ethers.utils.parseEther("1");
+  const chainId = await ethers.provider.getNetwork().then((network) => network.chainId);
+  console.log(chainId);
   const [owner] = await ethers.getSigners();
   console.log("Deploying NFT contract...", owner.address, await owner.getBalance());
   const Era = await ethers.getContractFactory("ERA");
@@ -16,10 +19,10 @@ async function main() {
   console.log("era deployed to:", era.address);
 
   const NFT = await ethers.getContractFactory("HistopiaNFT");
-  const nft = await NFT.deploy("NFT", "NFT", era.address, 100);
-  // const nft = await NFT.deploy("NFT", "NFT", "0xb48dea62c889c6B92992001c2077F17a93eBb00D", 0);
+  const nft = await NFT.deploy("NFT", "NFT", era.address, BigNumber.from("2500000000000000000000"));
+  // const nft = await NFT.deploy("NFT", "NFT", "0xF07780BD59BD7b554a1DBF0e306f482EcEAF5C56", BigNumber.from("2500000000000000000000"));
 
-  await nft.deployed();
+  let nft2 = await nft.deployed();
 
 
   await nft.addType(
@@ -31,13 +34,15 @@ async function main() {
       [100, 100, 100, 100, 100],
   )
   const FOE = await ethers.getContractFactory("FountainOfEra");
-  const foe = await FOE.deploy(era.address, nft.address, BigNumber.from("0xDE0B6B3A7640000"));
+  const foe = await FOE.deploy(era.address, nft.address, BigNumber.from("10000000000000000000"));
+  // const foe = await FOE.deploy("0xF07780BD59BD7b554a1DBF0e306f482EcEAF5C56", nft.address, BigNumber.from("10000000000000000000"));
   // const foe = await FOE.deploy("0xb48dea62c889c6B92992001c2077F17a93eBb00D", "0x20143976Cd2Cf0882e28F35B312a2b62545aE35b",  BigNumber.from("0xDE0B6B3A7640000"));
 
-  await foe.deployed();
+  let foe2 = await foe.deployed();
 
   await foe.addHistopianType(0)
-  console.log("NFT deployed to:", nft.address, nft.deployTransaction.blockNumber);
+  let n =  await nft2.deployTransaction.wait(4);
+  console.log("NFT deployed to:", nft.address, n.blockNumber);
   console.log("FOE deployed to:", foe.address);
 
   const Bridge = await ethers.getContractFactory("BridgeERA");
@@ -46,6 +51,33 @@ async function main() {
   await bridge.deployed();
 
   console.log("Bridge deployed to:", bridge.address);
+
+  fs.readFile( "address.json", (err:any, content:any) => {
+    if (err) {
+        console.log("Error:", err);
+    }
+    let json:{[key: string]: any} = {};
+    if (content) {
+        json = JSON.parse(content.toString());
+    }
+    // console.log(json);
+    json[chainId] = {
+        "era": era.address,
+        "nft": nft.address,
+        "foe": foe.address,
+        "bridge": bridge.address,
+        "startBlock": n.blockNumber
+    }
+    // console.log(json);
+    fs.writeFile("address.json", JSON.stringify(json), (err:any) => {
+      if (err) {
+        console.log(err);
+      }
+    })
+  })
+
+
+
   // console.log("Lock with 1 ETH deployed to:", lock.address);
 }
 

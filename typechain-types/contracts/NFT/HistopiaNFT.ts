@@ -63,6 +63,7 @@ export interface HistopiaNFTInterface extends utils.Interface {
     "transferOwnership(address)": FunctionFragment;
     "types(uint256)": FunctionFragment;
     "unequip(uint256)": FunctionFragment;
+    "usersCounter(address)": FunctionFragment;
   };
 
   getFunction(
@@ -101,6 +102,7 @@ export interface HistopiaNFTInterface extends utils.Interface {
       | "transferOwnership"
       | "types"
       | "unequip"
+      | "usersCounter"
   ): FunctionFragment;
 
   encodeFunctionData(functionFragment: "ERA", values?: undefined): string;
@@ -248,6 +250,10 @@ export interface HistopiaNFTInterface extends utils.Interface {
     functionFragment: "unequip",
     values: [PromiseOrValue<BigNumberish>]
   ): string;
+  encodeFunctionData(
+    functionFragment: "usersCounter",
+    values: [PromiseOrValue<string>]
+  ): string;
 
   decodeFunctionResult(functionFragment: "ERA", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "addType", data: BytesLike): Result;
@@ -331,6 +337,10 @@ export interface HistopiaNFTInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "types", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "unequip", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "usersCounter",
+    data: BytesLike
+  ): Result;
 
   events: {
     "AddType(uint256,string,uint256,uint256,string[],uint256[],uint256[],uint256)": EventFragment;
@@ -676,6 +686,11 @@ export interface HistopiaNFT extends BaseContract {
       assigneeTokenId: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
+
+    usersCounter(
+      arg0: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
   };
 
   ERA(overrides?: CallOverrides): Promise<string>;
@@ -864,6 +879,11 @@ export interface HistopiaNFT extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  usersCounter(
+    arg0: PromiseOrValue<string>,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
   callStatic: {
     ERA(overrides?: CallOverrides): Promise<string>;
 
@@ -1048,6 +1068,11 @@ export interface HistopiaNFT extends BaseContract {
       assigneeTokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    usersCounter(
+      arg0: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
   };
 
   filters: {
@@ -1322,6 +1347,11 @@ export interface HistopiaNFT extends BaseContract {
       assigneeTokenId: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
+
+    usersCounter(
+      arg0: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
   };
 
   populateTransaction: {
@@ -1495,6 +1525,11 @@ export interface HistopiaNFT extends BaseContract {
     unequip(
       assigneeTokenId: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    usersCounter(
+      arg0: PromiseOrValue<string>,
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
   };
 }
