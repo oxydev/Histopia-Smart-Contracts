@@ -37,15 +37,14 @@ export interface FountainOfEraInterface extends utils.Interface {
     "emergencyWithdraw()": FunctionFragment;
     "era()": FunctionFragment;
     "eraAllocator()": FunctionFragment;
-    "eraPerBlock()": FunctionFragment;
+    "eraPerSecond()": FunctionFragment;
     "generalAccEraPerShare()": FunctionFragment;
     "getMultiplier(uint256,uint256)": FunctionFragment;
     "getTokenIds(address)": FunctionFragment;
     "harvest()": FunctionFragment;
     "histopianCount()": FunctionFragment;
     "histopianTypes(uint256)": FunctionFragment;
-    "lastBlock()": FunctionFragment;
-    "lastRewardBlock()": FunctionFragment;
+    "lastRewardTime()": FunctionFragment;
     "nftContract()": FunctionFragment;
     "owner()": FunctionFragment;
     "pendingERA(address)": FunctionFragment;
@@ -66,15 +65,14 @@ export interface FountainOfEraInterface extends utils.Interface {
       | "emergencyWithdraw"
       | "era"
       | "eraAllocator"
-      | "eraPerBlock"
+      | "eraPerSecond"
       | "generalAccEraPerShare"
       | "getMultiplier"
       | "getTokenIds"
       | "harvest"
       | "histopianCount"
       | "histopianTypes"
-      | "lastBlock"
-      | "lastRewardBlock"
+      | "lastRewardTime"
       | "nftContract"
       | "owner"
       | "pendingERA"
@@ -115,7 +113,7 @@ export interface FountainOfEraInterface extends utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "eraPerBlock",
+    functionFragment: "eraPerSecond",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -139,9 +137,8 @@ export interface FountainOfEraInterface extends utils.Interface {
     functionFragment: "histopianTypes",
     values: [PromiseOrValue<BigNumberish>]
   ): string;
-  encodeFunctionData(functionFragment: "lastBlock", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "lastRewardBlock",
+    functionFragment: "lastRewardTime",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -201,7 +198,7 @@ export interface FountainOfEraInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "eraPerBlock",
+    functionFragment: "eraPerSecond",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -225,9 +222,8 @@ export interface FountainOfEraInterface extends utils.Interface {
     functionFragment: "histopianTypes",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "lastBlock", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "lastRewardBlock",
+    functionFragment: "lastRewardTime",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -249,7 +245,7 @@ export interface FountainOfEraInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "withdraw", data: BytesLike): Result;
 
   events: {
-    "ChangeEraPerBlock(uint256,uint256)": EventFragment;
+    "ChangeEraPerSecond(uint256,uint256)": EventFragment;
     "Deposit(address,uint256[],uint256,uint256,uint256)": EventFragment;
     "EmergencyWithdraw(address,uint256[])": EventFragment;
     "Harvest(address,uint256)": EventFragment;
@@ -257,7 +253,7 @@ export interface FountainOfEraInterface extends utils.Interface {
     "Withdraw(address,uint256[],uint256,uint256,uint256)": EventFragment;
   };
 
-  getEvent(nameOrSignatureOrTopic: "ChangeEraPerBlock"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "ChangeEraPerSecond"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Deposit"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "EmergencyWithdraw"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Harvest"): EventFragment;
@@ -265,17 +261,17 @@ export interface FountainOfEraInterface extends utils.Interface {
   getEvent(nameOrSignatureOrTopic: "Withdraw"): EventFragment;
 }
 
-export interface ChangeEraPerBlockEventObject {
+export interface ChangeEraPerSecondEventObject {
   oldAmount: BigNumber;
   newAmount: BigNumber;
 }
-export type ChangeEraPerBlockEvent = TypedEvent<
+export type ChangeEraPerSecondEvent = TypedEvent<
   [BigNumber, BigNumber],
-  ChangeEraPerBlockEventObject
+  ChangeEraPerSecondEventObject
 >;
 
-export type ChangeEraPerBlockEventFilter =
-  TypedEventFilter<ChangeEraPerBlockEvent>;
+export type ChangeEraPerSecondEventFilter =
+  TypedEventFilter<ChangeEraPerSecondEvent>;
 
 export interface DepositEventObject {
   user: string;
@@ -394,7 +390,7 @@ export interface FountainOfEra extends BaseContract {
 
     eraAllocator(overrides?: CallOverrides): Promise<[string]>;
 
-    eraPerBlock(overrides?: CallOverrides): Promise<[BigNumber]>;
+    eraPerSecond(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     generalAccEraPerShare(overrides?: CallOverrides): Promise<[BigNumber]>;
 
@@ -420,9 +416,7 @@ export interface FountainOfEra extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
-    lastBlock(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    lastRewardBlock(overrides?: CallOverrides): Promise<[BigNumber]>;
+    lastRewardTime(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     nftContract(overrides?: CallOverrides): Promise<[string]>;
 
@@ -492,7 +486,7 @@ export interface FountainOfEra extends BaseContract {
 
   eraAllocator(overrides?: CallOverrides): Promise<string>;
 
-  eraPerBlock(overrides?: CallOverrides): Promise<BigNumber>;
+  eraPerSecond(overrides?: CallOverrides): Promise<BigNumber>;
 
   generalAccEraPerShare(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -518,9 +512,7 @@ export interface FountainOfEra extends BaseContract {
     overrides?: CallOverrides
   ): Promise<boolean>;
 
-  lastBlock(overrides?: CallOverrides): Promise<BigNumber>;
-
-  lastRewardBlock(overrides?: CallOverrides): Promise<BigNumber>;
+  lastRewardTime(overrides?: CallOverrides): Promise<BigNumber>;
 
   nftContract(overrides?: CallOverrides): Promise<string>;
 
@@ -585,7 +577,7 @@ export interface FountainOfEra extends BaseContract {
 
     eraAllocator(overrides?: CallOverrides): Promise<string>;
 
-    eraPerBlock(overrides?: CallOverrides): Promise<BigNumber>;
+    eraPerSecond(overrides?: CallOverrides): Promise<BigNumber>;
 
     generalAccEraPerShare(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -609,9 +601,7 @@ export interface FountainOfEra extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
-    lastBlock(overrides?: CallOverrides): Promise<BigNumber>;
-
-    lastRewardBlock(overrides?: CallOverrides): Promise<BigNumber>;
+    lastRewardTime(overrides?: CallOverrides): Promise<BigNumber>;
 
     nftContract(overrides?: CallOverrides): Promise<string>;
 
@@ -648,14 +638,14 @@ export interface FountainOfEra extends BaseContract {
   };
 
   filters: {
-    "ChangeEraPerBlock(uint256,uint256)"(
+    "ChangeEraPerSecond(uint256,uint256)"(
       oldAmount?: null,
       newAmount?: null
-    ): ChangeEraPerBlockEventFilter;
-    ChangeEraPerBlock(
+    ): ChangeEraPerSecondEventFilter;
+    ChangeEraPerSecond(
       oldAmount?: null,
       newAmount?: null
-    ): ChangeEraPerBlockEventFilter;
+    ): ChangeEraPerSecondEventFilter;
 
     "Deposit(address,uint256[],uint256,uint256,uint256)"(
       user?: PromiseOrValue<string> | null,
@@ -746,7 +736,7 @@ export interface FountainOfEra extends BaseContract {
 
     eraAllocator(overrides?: CallOverrides): Promise<BigNumber>;
 
-    eraPerBlock(overrides?: CallOverrides): Promise<BigNumber>;
+    eraPerSecond(overrides?: CallOverrides): Promise<BigNumber>;
 
     generalAccEraPerShare(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -772,9 +762,7 @@ export interface FountainOfEra extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    lastBlock(overrides?: CallOverrides): Promise<BigNumber>;
-
-    lastRewardBlock(overrides?: CallOverrides): Promise<BigNumber>;
+    lastRewardTime(overrides?: CallOverrides): Promise<BigNumber>;
 
     nftContract(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -842,7 +830,7 @@ export interface FountainOfEra extends BaseContract {
 
     eraAllocator(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    eraPerBlock(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    eraPerSecond(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     generalAccEraPerShare(
       overrides?: CallOverrides
@@ -870,9 +858,7 @@ export interface FountainOfEra extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    lastBlock(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    lastRewardBlock(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    lastRewardTime(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     nftContract(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 

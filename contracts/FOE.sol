@@ -39,7 +39,7 @@ contract FountainOfEra is Ownable {
         //   pending reward = (user.militaryPower * generalAccEraPerShare) - user.rewardDebt
         //
         // Whenever a user deposits or withdraws LP tokens to a pool. Here's what happens:
-        //   1. The `accEraPerShare` (and `lastRewardBlock`) gets updated.
+        //   1. The `accEraPerShare` (and `lastRewardTime`) gets updated.
         //   2. User receives the pending reward sent to his/her address.
         //   3. User's `militaryPower` gets updated.
         //   4. User's `rewardDebt` gets updated.
@@ -48,11 +48,10 @@ contract FountainOfEra is Ownable {
     INFT public nftContract; // Address of NFT token contract.
     Allocator public eraAllocator;
     IERC20 public era;
-    uint256 public eraPerBlock;
+    uint256 public eraPerSecond;
 
-    uint256 public lastRewardBlock; // Last block number that ERAs distribution occurs.
+    uint256 public lastRewardTime; // Last time that ERAs distribution occurs.
     uint256 public generalAccEraPerShare; // Accumulated ERAs per share, times 1e12. See below.
-    uint256 public lastBlock;
     uint256 public currentTotalMilitaryPower;
     uint256 public histopianCount;
 
@@ -69,14 +68,14 @@ contract FountainOfEra is Ownable {
         uint256[] tokenIds
     );
     event Harvest(address indexed user, uint256 amount);
-    event ChangeEraPerBlock(uint256 oldAmount, uint256 newAmount);
+    event ChangeEraPerSecond(uint256 oldAmount, uint256 newAmount);
 
-    constructor(address _eraAllocatorAddress, address _histopiaNFT, uint256 _eraPerBlock) {
+    constructor(address _eraAllocatorAddress, address _histopiaNFT, uint256 _eraPerSecond) {
         eraAllocator = Allocator(_eraAllocatorAddress);
-        eraPerBlock = _eraPerBlock;
+        eraPerSecond = _eraPerSecond;
         era = IERC20(eraAllocator.getEraContractAddress());
         nftContract = INFT(_histopiaNFT);
-        emit ChangeEraPerBlock(0, eraPerBlock);
+        emit ChangeEraPerSecond(0, eraPerSecond);
     }
 
     function addHistopianType(uint256 typeId) public onlyOwner{
@@ -102,10 +101,10 @@ contract FountainOfEra is Ownable {
         UserInfo storage user = userInfo[_user];
         uint256 accEraPerShare = generalAccEraPerShare;
         uint256 militaryRate = currentTotalMilitaryPower;
-        if (block.number > lastRewardBlock && militaryRate != 0) {
+        if (block.timestamp > lastRewardTime && militaryRate != 0) {
             uint256 multiplier =
-                getMultiplier(lastRewardBlock, block.number);
-            uint256 eraReward = multiplier * eraPerBlock;
+                getMultiplier(lastRewardTime, block.timestamp);
+            uint256 eraReward = multiplier * eraPerSecond;
             accEraPerShare += (eraReward * 1e12) / militaryRate;
         }
         return ((user.militaryPower * accEraPerShare) / 1e12) - user.rewardDebt;
@@ -113,18 +112,18 @@ contract FountainOfEra is Ownable {
 
     // Update reward variables o be up-to-date.
     function updatePool() public {
-        if (block.number <= lastRewardBlock) {
+        if (block.timestamp <= lastRewardTime) {
             return;
         }
         if (currentTotalMilitaryPower == 0) {
-            lastRewardBlock = block.number;
+            lastRewardTime = block.timestamp;
             return;
         }
-        uint256 multiplier = getMultiplier(lastRewardBlock, block.number);
-        uint256 eraReward = multiplier * eraPerBlock;
+        uint256 multiplier = getMultiplier(lastRewardTime, block.timestamp);
+        uint256 eraReward = multiplier * eraPerSecond;
         eraAllocator.withdrawShare(address(this), eraReward);
         generalAccEraPerShare += eraReward * 1e12 / currentTotalMilitaryPower;
-        lastRewardBlock = block.number;
+        lastRewardTime = block.timestamp;
     }
 
     // Deposit NFT tokens to FOE for Era allocation.
