@@ -34,6 +34,7 @@ export interface HistopiaNFTInterface extends utils.Interface {
     "approve(address,uint256)": FunctionFragment;
     "assignedNFTs(uint256)": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
+    "baseTokenURI()": FunctionFragment;
     "burn(uint256)": FunctionFragment;
     "editType(uint256,string,uint256)": FunctionFragment;
     "equip(uint256,uint256)": FunctionFragment;
@@ -73,6 +74,7 @@ export interface HistopiaNFTInterface extends utils.Interface {
       | "approve"
       | "assignedNFTs"
       | "balanceOf"
+      | "baseTokenURI"
       | "burn"
       | "editType"
       | "equip"
@@ -128,6 +130,10 @@ export interface HistopiaNFTInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "balanceOf",
     values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "baseTokenURI",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "burn",
@@ -263,6 +269,10 @@ export interface HistopiaNFTInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "baseTokenURI",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "burn", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "editType", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "equip", data: BytesLike): Result;
@@ -529,6 +539,8 @@ export interface HistopiaNFT extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
+    baseTokenURI(overrides?: CallOverrides): Promise<[string]>;
+
     burn(
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -721,6 +733,8 @@ export interface HistopiaNFT extends BaseContract {
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
+  baseTokenURI(overrides?: CallOverrides): Promise<string>;
+
   burn(
     tokenId: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -912,6 +926,8 @@ export interface HistopiaNFT extends BaseContract {
       owner: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
+
+    baseTokenURI(overrides?: CallOverrides): Promise<string>;
 
     burn(
       tokenId: PromiseOrValue<BigNumberish>,
@@ -1204,6 +1220,8 @@ export interface HistopiaNFT extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    baseTokenURI(overrides?: CallOverrides): Promise<BigNumber>;
+
     burn(
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -1382,6 +1400,8 @@ export interface HistopiaNFT extends BaseContract {
       owner: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
+
+    baseTokenURI(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     burn(
       tokenId: PromiseOrValue<BigNumberish>,

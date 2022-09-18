@@ -19,7 +19,7 @@ async function main() {
   console.log("era deployed to:", era.address);
 
   const NFT = await ethers.getContractFactory("HistopiaNFT");
-  const nft = await NFT.deploy("NFT", "NFT", era.address, BigNumber.from("2500000000000000000000"));
+  const nft = await NFT.deploy("Histopian NFT", "Histopian", era.address, BigNumber.from("2500000000000000000000"));
   // const nft = await NFT.deploy("NFT", "NFT", "0xF07780BD59BD7b554a1DBF0e306f482EcEAF5C56", BigNumber.from("2500000000000000000000"));
 
   let nft2 = await nft.deployed();

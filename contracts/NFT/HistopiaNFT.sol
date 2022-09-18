@@ -4,6 +4,8 @@ import "./AttachableNFT.sol";
 
 contract HistopiaNFT is AttachableERC721 {
 
+    string public baseTokenURI;
+
     address public ERA;
     uint256 public mintFee;
     mapping(address => uint256) public usersCounter;
@@ -12,6 +14,7 @@ contract HistopiaNFT is AttachableERC721 {
     constructor (string memory name_, string memory symbol_, address _ERA, uint256 _mintFee) AttachableERC721(name_, symbol_) {
         ERA = _ERA;
         mintFee = _mintFee;
+        baseTokenURI = string(abi.encodePacked("https://api.histopia.io/nft/", Strings.toString(block.chainid), "/"));
     }
 
     function mint(address to, uint256 typeIndex) public {
@@ -25,5 +28,20 @@ contract HistopiaNFT is AttachableERC721 {
 
     function setMintFee(uint256 _fee) public onlyOwner {
         mintFee = _fee;
+    }
+
+    /**
+   * @dev get the base token uri
+    * @return baseTokenURI, base token uri
+     */
+    function _baseURI() internal view override returns (string memory) {
+        return baseTokenURI;
+    }
+
+    function tokenURI(uint256 tokenId) public view virtual override returns (string memory) {
+        _requireMinted(tokenId);
+
+        string memory baseURI = _baseURI();
+        return bytes(baseURI).length > 0 ? string(abi.encodePacked(baseURI, Strings.toString(tokenId))) : "";
     }
 }

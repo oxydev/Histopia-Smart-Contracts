@@ -286,7 +286,7 @@ describe("FOE", function () {
             expect(calculatedReward).to.equal(elapsedBlocks * 100000 - 1);
             await foe.withdraw([0, 1, 2]);
             expect(await foe.currentTotalMilitaryPower()).to.equal(0);
-            elapsedBlocks = 86400.001;
+            elapsedBlocks = 86400.01;
             expect((await era.balanceOf(owner.address))).to.equal(elapsedBlocks * 100000 - 1);
         });
 
