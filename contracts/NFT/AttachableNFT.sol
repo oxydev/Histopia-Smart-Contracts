@@ -82,8 +82,6 @@ contract AttachableERC721 is ERC721Burnable, TypedNFT {
         }
     }
 
-
-
     function rootOwner(uint256 tokenId) public view returns (address) {
         uint256 currentTokenId = tokenId;
         while (assignedNFTs[currentTokenId] > 0) {
@@ -92,17 +90,6 @@ contract AttachableERC721 is ERC721Burnable, TypedNFT {
         return ownerOf(currentTokenId);
     }
 
-    /**
-     * @dev See {IERC721Metadata-tokenURI}.
-     */
-//    function tokenURI(uint256 tokenId) public view override returns (string memory) {
-//        require(_exists(tokenId), "ERC721Metadata: URI query for nonexistent token");
-//        uint256 chainId = getChainID();
-//        string memory baseURI = "https://histopia.io/auth/meta/";
-//        baseURI = string(abi.encodePacked(baseURI, chainId.toString()));
-//        baseURI = string(abi.encodePacked(baseURI, "/"));
-//        return string(abi.encodePacked(baseURI, tokenId.toString()));
-//    }
 
     // // TODO: Implement breed function
     // function breed (uint256 tokenId) public view returns (uint256[] memory) {

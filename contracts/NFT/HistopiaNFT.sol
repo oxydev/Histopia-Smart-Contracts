@@ -14,7 +14,7 @@ contract HistopiaNFT is AttachableERC721 {
     constructor (string memory name_, string memory symbol_, address _ERA, uint256 _mintFee) AttachableERC721(name_, symbol_) {
         ERA = _ERA;
         mintFee = _mintFee;
-        baseTokenURI = string(abi.encodePacked("https://api.histopia.io/nft/", Strings.toString(block.chainid), "/"));
+        baseTokenURI = string(abi.encodePacked("https://api.histopia.io/nft/meta/", Strings.toString(block.chainid), "/"));
     }
 
     function mint(address to, uint256 typeIndex) public {

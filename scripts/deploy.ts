@@ -34,7 +34,7 @@ async function main() {
       [100, 100, 100, 100, 100],
   )
   const FOE = await ethers.getContractFactory("FountainOfEra");
-  const foe = await FOE.deploy(era.address, nft.address, BigNumber.from("10000000000000000000"));
+  const foe = await FOE.deploy(era.address, nft.address, BigNumber.from("1000000000000000000"));
   // const foe = await FOE.deploy("0xF07780BD59BD7b554a1DBF0e306f482EcEAF5C56", nft.address, BigNumber.from("10000000000000000000"));
   // const foe = await FOE.deploy("0xb48dea62c889c6B92992001c2077F17a93eBb00D", "0x20143976Cd2Cf0882e28F35B312a2b62545aE35b",  BigNumber.from("0xDE0B6B3A7640000"));
 
