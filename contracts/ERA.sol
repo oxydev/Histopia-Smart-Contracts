@@ -11,7 +11,7 @@ contract ERA is ERC20, Ownable  {
 
     constructor () ERC20("ERA token", "ERA") {
         _decimals = 18;
-        maxSupply = 10 ** 8 * 10 ** _decimals;
+        maxSupply = 10 ** 12 * 10 ** _decimals;
     }
 
     function decimals() public view virtual override returns (uint8) {
@@ -19,6 +19,7 @@ contract ERA is ERC20, Ownable  {
     }
 
     function mint(address account, uint256 amount) public /*onlyMintAccessor*/ {
+        require(msg.sender == mintAccessor, "only mintAccessor can mint");
         // require(totalSupply() <= maxSupply + amount);
         _mint(account, amount);
     }
@@ -28,7 +29,7 @@ contract ERA is ERC20, Ownable  {
     }
 
     function changeMintAccessor(address _mintAccessor) public onlyOwner {
-        // require(mintAccessor == address(0));
+//         require(mintAccessor == address(0));
         mintAccessor = _mintAccessor;
     }
 

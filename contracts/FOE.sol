@@ -83,6 +83,12 @@ contract FountainOfEra is Ownable {
     }
 
 
+    function setEraPerSecond(uint256 _eraPerSecond) public onlyOwner{
+        eraPerSecond = _eraPerSecond;
+        emit ChangeEraPerSecond(0, eraPerSecond);
+    }
+
+
     // Return reward multiplier over the given _from to _to block.
     function getMultiplier(uint256 _from, uint256 _to)
         public

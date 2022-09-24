@@ -1523,8 +1523,8 @@
       ]
     },
     "/Users/hadiesna/source/Other/Histopia-Smart-Contracts/contracts/FOE.sol": {
-      "lastModificationDate": 1663435531503,
-      "contentHash": "935420a617dd5466dd2dd46e3332188a",
+      "lastModificationDate": 1663772540538,
+      "contentHash": "cbb64f0e11664855619f8bfb51ac713d",
       "sourceName": "contracts/FOE.sol",
       "solcConfig": {
         "version": "0.8.1",
@@ -1641,8 +1641,8 @@
       ]
     },
     "/Users/hadiesna/source/Other/Histopia-Smart-Contracts/contracts/ERA.sol": {
-      "lastModificationDate": 1663513931799,
-      "contentHash": "1b334823e5a7315d26c7295e838d2df7",
+      "lastModificationDate": 1663765284924,
+      "contentHash": "78982b633551656feae8399d6b9a9565",
       "sourceName": "contracts/ERA.sol",
       "solcConfig": {
         "version": "0.8.1",
@@ -1904,8 +1904,8 @@
       ]
     },
     "/Users/hadiesna/source/Other/Histopia-Smart-Contracts/contracts/NFT/HistopiaNFT.sol": {
-      "lastModificationDate": 1663580244432,
-      "contentHash": "a4990ddd74e353beaaad099c488dbac5",
+      "lastModificationDate": 1663848218785,
+      "contentHash": "1f25b29b58c97f40db68655295689081",
       "sourceName": "contracts/NFT/HistopiaNFT.sol",
       "solcConfig": {
         "version": "0.8.1",

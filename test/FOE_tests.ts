@@ -39,7 +39,7 @@ describe("FOE", function () {
         const FOE = await ethers.getContractFactory("FountainOfEra");
         const foe = await FOE.deploy(era.address, nft.address, 1000);
         await foe.addHistopianType(0);
-
+        await era.changeMintAccessor(foe.address);
         return {era, nft, foe, owner, otherAccount};
     }
 

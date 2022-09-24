@@ -19,7 +19,7 @@ contract HistopiaNFT is AttachableERC721 {
 
     function mint(address to, uint256 typeIndex) public {
         if (usersCounter[to] > 0) {
-            require(IERC20(ERA).transferFrom(to, owner(), mintFee), "HistopiaNFT: transfer failed");
+            require(IERC20(ERA).transferFrom(msg.sender, owner(), mintFee), "HistopiaNFT: transfer failed");
         }
         usersCounter[to]++;
         uint256 [] memory powers = _mintAndSetProperties(to, typeIndex);

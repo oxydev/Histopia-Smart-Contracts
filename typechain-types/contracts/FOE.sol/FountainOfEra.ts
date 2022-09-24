@@ -49,6 +49,7 @@ export interface FountainOfEraInterface extends utils.Interface {
     "owner()": FunctionFragment;
     "pendingERA(address)": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
+    "setEraPerSecond(uint256)": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
     "updatePool()": FunctionFragment;
     "userInfo(address)": FunctionFragment;
@@ -77,6 +78,7 @@ export interface FountainOfEraInterface extends utils.Interface {
       | "owner"
       | "pendingERA"
       | "renounceOwnership"
+      | "setEraPerSecond"
       | "transferOwnership"
       | "updatePool"
       | "userInfo"
@@ -153,6 +155,10 @@ export interface FountainOfEraInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "renounceOwnership",
     values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "setEraPerSecond",
+    values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
     functionFragment: "transferOwnership",
@@ -234,6 +240,10 @@ export interface FountainOfEraInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "pendingERA", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "renounceOwnership",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "setEraPerSecond",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -431,6 +441,11 @@ export interface FountainOfEra extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
+    setEraPerSecond(
+      _eraPerSecond: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
     transferOwnership(
       newOwner: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -527,6 +542,11 @@ export interface FountainOfEra extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  setEraPerSecond(
+    _eraPerSecond: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
   transferOwnership(
     newOwner: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -613,6 +633,11 @@ export interface FountainOfEra extends BaseContract {
     ): Promise<BigNumber>;
 
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
+
+    setEraPerSecond(
+      _eraPerSecond: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     transferOwnership(
       newOwner: PromiseOrValue<string>,
@@ -777,6 +802,11 @@ export interface FountainOfEra extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
+    setEraPerSecond(
+      _eraPerSecond: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
     transferOwnership(
       newOwner: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -870,6 +900,11 @@ export interface FountainOfEra extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     renounceOwnership(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    setEraPerSecond(
+      _eraPerSecond: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 

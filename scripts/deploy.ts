@@ -26,12 +26,13 @@ async function main() {
 
 
   await nft.addType(
-      "Histopian",
+      "Histopian_v2",
       30,
-      100,
+      10000,
       ["speed", "strength", "intelligence", "charisma", "luck"],
       [10, 10, 10, 10, 10],
-      [100, 100, 100, 100, 100],
+      [80, 80, 80, 80, 80],
+      // [100, 100, 100, 100, 100],
   )
   const FOE = await ethers.getContractFactory("FountainOfEra");
   const foe = await FOE.deploy(era.address, nft.address, BigNumber.from("1000000000000000000"));
@@ -44,7 +45,7 @@ async function main() {
   let n =  await nft2.deployTransaction.wait(4);
   console.log("NFT deployed to:", nft.address, n.blockNumber);
   console.log("FOE deployed to:", foe.address);
-
+  await era.changeMintAccessor(foe.address);
   const Bridge = await ethers.getContractFactory("BridgeERA");
   const bridge = await Bridge.deploy(era.address);
 
