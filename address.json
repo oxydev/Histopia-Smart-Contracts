@@ -43,7 +43,8 @@
     "era": "0xe1b024379Fb879A2B9e28519fe4a3940DeBb9c97",
     "nft": "0xD29a5C33406f917cDca118592Ceb02F8b482Dcf9",
     "foe": "0xd8591a20e3873C35043F5c777Fc448cBD1Fe782d",
-    "bridge": "0x4a868861118980A4bAb9a4c2456166CD3a75b98B",
-    "startBlock": 100743079
+    "bridge": "0xd6C5b74d2349084D54146989991A6697f0389b55",
+    "startBlock": 100743079,
+    "bridgeDeployBlock": 101075429
   }
 }
