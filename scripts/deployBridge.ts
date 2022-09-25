@@ -1,8 +1,12 @@
 import { ethers } from "hardhat";
 import fs from "fs";
+import * as sapphire from '@oasisprotocol/sapphire-paratime';
 
 async function main() {
-  const [owner] = await ethers.getSigners();
+  const owner = (await ethers.getSigners())[0];
+  const chainId = await owner.getChainId();
+
+  const signer = chainId in sapphire.NETWORKS ? sapphire.wrap(owner): owner;
 
   fs.readFile( "address.json", async (err:any, content:any) => {
     if (err) {
@@ -19,7 +23,7 @@ async function main() {
     }
     const chainId = await ethers.provider.getNetwork().then((network) => network.chainId);
 
-    const Bridge = await ethers.getContractFactory("BridgeERA");
+    const Bridge = await ethers.getContractFactory("BridgeERA", signer);
     const bridge = await Bridge.deploy(json[chainId].era, owner.address);
 
     let txn = await bridge.deployed();

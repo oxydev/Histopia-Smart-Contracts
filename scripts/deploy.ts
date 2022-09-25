@@ -1,5 +1,6 @@
 import { ethers } from "hardhat";
 import {BigNumber} from "ethers";
+import * as sapphire from '@oasisprotocol/sapphire-paratime';
 const fs = require("fs");
 
 async function main() {
@@ -8,17 +9,20 @@ async function main() {
   // const unlockTime = currentTimestampInSeconds + ONE_YEAR_IN_SECS;
 
   // const lockedAmount = ethers.utils.parseEther("1");
-  const chainId = await ethers.provider.getNetwork().then((network) => network.chainId);
-  console.log(chainId);
-  const [owner] = await ethers.getSigners();
+  const owner = (await ethers.getSigners())[0];
+  const chainId = await owner.getChainId();
+
+  const signer = chainId in sapphire.NETWORKS ? sapphire.wrap(owner): owner;
+
+
   console.log("Deploying NFT contract...", owner.address, await owner.getBalance());
-  const Era = await ethers.getContractFactory("ERA");
+  const Era = await ethers.getContractFactory("ERA", signer);
   const era = await Era.deploy();
   //
   await era.deployed();
   console.log("era deployed to:", era.address);
 
-  const NFT = await ethers.getContractFactory("HistopiaNFT");
+  const NFT = await ethers.getContractFactory("HistopiaNFT", signer);
   const nft = await NFT.deploy("Histopian NFT", "Histopian", era.address, BigNumber.from("2500000000000000000000"));
   // const nft = await NFT.deploy("NFT", "NFT", "0xF07780BD59BD7b554a1DBF0e306f482EcEAF5C56", BigNumber.from("2500000000000000000000"));
 
@@ -34,7 +38,7 @@ async function main() {
       [80, 80, 80, 80, 80],
       // [100, 100, 100, 100, 100],
   )
-  const FOE = await ethers.getContractFactory("FountainOfEra");
+  const FOE = await ethers.getContractFactory("FountainOfEra", signer);
   const foe = await FOE.deploy(era.address, nft.address, BigNumber.from("1000000000000000000"));
   // const foe = await FOE.deploy("0xF07780BD59BD7b554a1DBF0e306f482EcEAF5C56", nft.address, BigNumber.from("10000000000000000000"));
   // const foe = await FOE.deploy("0xb48dea62c889c6B92992001c2077F17a93eBb00D", "0x20143976Cd2Cf0882e28F35B312a2b62545aE35b",  BigNumber.from("0xDE0B6B3A7640000"));
@@ -46,8 +50,8 @@ async function main() {
   console.log("NFT deployed to:", nft.address, n.blockNumber);
   console.log("FOE deployed to:", foe.address);
   await era.changeMintAccessor(foe.address);
-  const Bridge = await ethers.getContractFactory("BridgeERA");
-  const bridge = await Bridge.deploy(era.address);
+  const Bridge = await ethers.getContractFactory("BridgeERA", signer);
+  const bridge = await Bridge.deploy(era.address, owner.address);
 
   await bridge.deployed();
 

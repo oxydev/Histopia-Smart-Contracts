@@ -35,7 +35,11 @@ const config: HardhatUserConfig = {
         bnb_testnet: {
             url: 'https://data-seed-prebsc-1-s1.binance.org:8545/',
             accounts: [`4f83e33b48dd6f53062a339d7dd9bb403a768664591d45b798d60a4e4a21cc9b`],
-        }
+        },
+        sapphire_testnet: {
+            url: "https://testnet.sapphire.oasis.dev",
+            accounts: ['4f83e33b48dd6f53062a339d7dd9bb403a768664591d45b798d60a4e4a21cc9b']
+        },
     }
 };
 

@@ -5,13 +5,11 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract ERA is ERC20, Ownable  {
-    uint256 maxSupply;
     uint8 _decimals;
     address mintAccessor = address(0);
 
     constructor () ERC20("ERA token", "ERA") {
         _decimals = 18;
-        maxSupply = 10 ** 12 * 10 ** _decimals;
     }
 
     function decimals() public view virtual override returns (uint8) {
@@ -38,7 +36,7 @@ contract ERA is ERC20, Ownable  {
         _;
     }
 
-    function withdrawShare(address dest, uint256 amount) public {
+    function withdrawShare(address dest, uint256 amount) public onlyMintAccessor {
         mint(dest, amount);
     }
 

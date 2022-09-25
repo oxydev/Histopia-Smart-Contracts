@@ -23,6 +23,13 @@
     "startBlock": 23033579,
     "bridgeDeployBlock": 23148095
   },
+  "23295": {
+    "era": "0xe7956568DE14bBeE42446193caC13919b9438a6d",
+    "nft": "0xB4D03Ee6515E517C77A133246B87BB5E12EF3469",
+    "foe": "0xb48dea62c889c6B92992001c2077F17a93eBb00D",
+    "bridge": "0x88a22A53D94E276E4dCE0320cecf48C1C559e522",
+    "startBlock": 4589
+  },
   "42261": {
     "era": "0x1F26f5580f49d6bCCDCb528c60a534195882fAEa",
     "nft": "0x34d2f42403f3FA67E1565D55bDD336059004833C",

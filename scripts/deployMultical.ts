@@ -1,12 +1,14 @@
 import { ethers } from "hardhat";
+import * as sapphire from '@oasisprotocol/sapphire-paratime';
 
 async function main() {
+    const signer0 = (await ethers.getSigners())[0];
+    const chainId = await signer0.getChainId();
 
-    const [owner] = await ethers.getSigners();
-    console.log("Deploying NFT contract...", owner.address, await owner.getBalance());
+    const signer = chainId in sapphire.NETWORKS ? sapphire.wrap(signer0): signer0;
 
 
-    const NFT = await ethers.getContractFactory("Multicall");
+    const NFT = await ethers.getContractFactory("Multicall", signer);
     const nft = await NFT.deploy();
 
     await nft.deployed();
