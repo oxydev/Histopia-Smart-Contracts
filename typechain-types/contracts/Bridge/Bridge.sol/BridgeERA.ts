@@ -31,11 +31,16 @@ export interface BridgeERAInterface extends utils.Interface {
   functions: {
     "ERAContract()": FunctionFragment;
     "MINIMUM_THRESHOLD()": FunctionFragment;
+    "feeCollector()": FunctionFragment;
     "lock(uint256,address,uint256)": FunctionFragment;
   };
 
   getFunction(
-    nameOrSignatureOrTopic: "ERAContract" | "MINIMUM_THRESHOLD" | "lock"
+    nameOrSignatureOrTopic:
+      | "ERAContract"
+      | "MINIMUM_THRESHOLD"
+      | "feeCollector"
+      | "lock"
   ): FunctionFragment;
 
   encodeFunctionData(
@@ -44,6 +49,10 @@ export interface BridgeERAInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "MINIMUM_THRESHOLD",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "feeCollector",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -61,6 +70,10 @@ export interface BridgeERAInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "MINIMUM_THRESHOLD",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "feeCollector",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "lock", data: BytesLike): Result;
@@ -115,6 +128,8 @@ export interface BridgeERA extends BaseContract {
 
     MINIMUM_THRESHOLD(overrides?: CallOverrides): Promise<[BigNumber]>;
 
+    feeCollector(overrides?: CallOverrides): Promise<[string]>;
+
     lock(
       amount: PromiseOrValue<BigNumberish>,
       to: PromiseOrValue<string>,
@@ -127,6 +142,8 @@ export interface BridgeERA extends BaseContract {
 
   MINIMUM_THRESHOLD(overrides?: CallOverrides): Promise<BigNumber>;
 
+  feeCollector(overrides?: CallOverrides): Promise<string>;
+
   lock(
     amount: PromiseOrValue<BigNumberish>,
     to: PromiseOrValue<string>,
@@ -138,6 +155,8 @@ export interface BridgeERA extends BaseContract {
     ERAContract(overrides?: CallOverrides): Promise<string>;
 
     MINIMUM_THRESHOLD(overrides?: CallOverrides): Promise<BigNumber>;
+
+    feeCollector(overrides?: CallOverrides): Promise<string>;
 
     lock(
       amount: PromiseOrValue<BigNumberish>,
@@ -165,6 +184,8 @@ export interface BridgeERA extends BaseContract {
 
     MINIMUM_THRESHOLD(overrides?: CallOverrides): Promise<BigNumber>;
 
+    feeCollector(overrides?: CallOverrides): Promise<BigNumber>;
+
     lock(
       amount: PromiseOrValue<BigNumberish>,
       to: PromiseOrValue<string>,
@@ -177,6 +198,8 @@ export interface BridgeERA extends BaseContract {
     ERAContract(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     MINIMUM_THRESHOLD(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    feeCollector(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     lock(
       amount: PromiseOrValue<BigNumberish>,

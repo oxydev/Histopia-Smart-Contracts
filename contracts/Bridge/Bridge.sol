@@ -17,7 +17,7 @@ contract BridgeERA {
     function lock(uint256 amount, address to, uint256 destChain) public {
         require(amount > MINIMUM_THRESHOLD, "Amount must be greater than Minimum Threshold");
         ERAContract.burn(msg.sender, amount * 99 / 100);
-        ERAContract.transferFrom(msg.sender, amount / 100);
+        ERAContract.transferFrom(msg.sender,feeCollector, amount / 100);
         emit Locked(amount * 99 / 100, to, destChain);
     }
 }

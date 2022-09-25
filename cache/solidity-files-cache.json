@@ -1641,7 +1641,7 @@
       ]
     },
     "/Users/hadiesna/source/Other/Histopia-Smart-Contracts/contracts/ERA.sol": {
-      "lastModificationDate": 1663765284924,
+      "lastModificationDate": 1664047670525,
       "contentHash": "78982b633551656feae8399d6b9a9565",
       "sourceName": "contracts/ERA.sol",
       "solcConfig": {
@@ -1787,8 +1787,8 @@
       ]
     },
     "/Users/hadiesna/source/Other/Histopia-Smart-Contracts/contracts/Bridge/Bridge.sol": {
-      "lastModificationDate": 1662127823585,
-      "contentHash": "1e546fc69019837e3c0b1de4ad8c3d40",
+      "lastModificationDate": 1664103014158,
+      "contentHash": "e9cbe4ff23254c90cabe51205bb4715e",
       "sourceName": "contracts/Bridge/Bridge.sol",
       "solcConfig": {
         "version": "0.8.1",

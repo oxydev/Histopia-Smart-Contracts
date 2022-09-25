@@ -1,19 +1,41 @@
 import { ethers } from "hardhat";
+import fs from "fs";
 
 async function main() {
-
   const [owner] = await ethers.getSigners();
-  console.log("Deploying NFT contract...", owner.address, await owner.getBalance());
 
-  // const era = await ethers.getContractFactory("ERA");
-  // console.log("Deploying era contract...", era);
+  fs.readFile( "address.json", async (err:any, content:any) => {
+    if (err) {
+      console.log("Error:", err);
+      return
+    }
+    let json:{[key: string]: any} = {};
+    try {
+      json = JSON.parse(content);
+    }
+    catch (e) {
+      console.log("Error:", e);
+      return
+    }
+    const chainId = await ethers.provider.getNetwork().then((network) => network.chainId);
 
-  const NFT = await ethers.getContractFactory("BridgeERA");
-  const nft = await NFT.deploy("0xBf4Dc84191F713E5613090704aB8918CE88a3ec5");
+    const Bridge = await ethers.getContractFactory("BridgeERA");
+    const bridge = await Bridge.deploy(json[chainId].era, owner.address);
 
-  await nft.deployed();
+    let txn = await bridge.deployed();
+    let n =  await txn.deployTransaction.wait(4);
 
-  console.log("NFT deployed to:", nft.address);
+    console.log("bridge deployed to:", bridge.address);
+    json[chainId].bridge = bridge.address;
+    json[chainId].bridgeDeployBlock = n.blockNumber;
+    // console.log(json);
+    fs.writeFile("address.json", JSON.stringify(json), (err:any) => {
+      if (err) {
+        console.log(err);
+      }
+    })
+  })
+
 }
 
 // We recommend this pattern to be able to use async/await everywhere
