@@ -2,7 +2,7 @@ import { ethers } from "hardhat";
 import {BigNumber} from "ethers";
 import * as sapphire from '@oasisprotocol/sapphire-paratime';
 const fs = require("fs");
-
+const BRIDGE_BACKEND = "0x1ce95c19db0fa340bf332131d09f97d747ccea89";
 async function main() {
   // const currentTimestampInSeconds = Math.round(Date.now() / 1000);
   // const ONE_YEAR_IN_SECS = 365 * 24 * 60 * 60;
@@ -49,7 +49,8 @@ async function main() {
   let n =  await nft2.deployTransaction.wait(4);
   console.log("NFT deployed to:", nft.address, n.blockNumber);
   console.log("FOE deployed to:", foe.address);
-  await era.changeMintAccessor(foe.address);
+  await era.changeMintAccessor(foe.address, true);
+  await era.changeMintAccessor(BRIDGE_BACKEND, true);
   const Bridge = await ethers.getContractFactory("BridgeERA", signer);
   const bridge = await Bridge.deploy(era.address, owner.address);
 

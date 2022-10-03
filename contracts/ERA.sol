@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract ERA is ERC20, Ownable  {
     uint8 _decimals;
-    address mintAccessor = address(0);
+    mapping(address => bool) public minters;
 
     constructor () ERC20("ERA token", "ERA") {
         _decimals = 18;
@@ -16,9 +16,7 @@ contract ERA is ERC20, Ownable  {
         return _decimals;
     }
 
-    function mint(address account, uint256 amount) public /*onlyMintAccessor*/ {
-        require(msg.sender == mintAccessor, "only mintAccessor can mint");
-        // require(totalSupply() <= maxSupply + amount);
+    function mint(address account, uint256 amount) public onlyMintAccessor {
         _mint(account, amount);
     }
 
@@ -26,13 +24,12 @@ contract ERA is ERC20, Ownable  {
         _burn(account, amount);
     }
 
-    function changeMintAccessor(address _mintAccessor) public onlyOwner {
-//         require(mintAccessor == address(0));
-        mintAccessor = _mintAccessor;
+    function changeMintAccessor(address _mintAccessor, bool allow) public onlyOwner {
+        minters[_mintAccessor] = allow;
     }
 
     modifier onlyMintAccessor {
-        require(msg.sender == mintAccessor);
+        require(minters[_mintAccessor],"Not a mint accessor");
         _;
     }
 
