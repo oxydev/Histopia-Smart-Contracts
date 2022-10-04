@@ -113,10 +113,6 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.INFT__factory>;
     getContractFactory(
-      name: "AttachableERC721",
-      signerOrOptions?: ethers.Signer | FactoryOptions
-    ): Promise<Contracts.AttachableERC721__factory>;
-    getContractFactory(
       name: "Multicall",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.Multicall__factory>;
@@ -262,11 +258,6 @@ declare module "hardhat/types/runtime" {
       address: string,
       signer?: ethers.Signer
     ): Promise<Contracts.INFT>;
-    getContractAt(
-      name: "AttachableERC721",
-      address: string,
-      signer?: ethers.Signer
-    ): Promise<Contracts.AttachableERC721>;
     getContractAt(
       name: "Multicall",
       address: string,

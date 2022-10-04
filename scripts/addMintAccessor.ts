@@ -29,23 +29,11 @@ async function main() {
 
         //
 
-        const NFT = await ethers.getContractFactory("HistopiaNFT", signer);
-        const nft = await NFT.attach(json[chainId].nft);
+        const ERA = await ethers.getContractFactory("ERA", signer);
+        const era = await ERA.attach(json[chainId].era);
 
-        await nft.addType(
-            "Histopian_v3",
-            30,
-            10000,
-            ["speed", "strength", "intelligence", "charisma", "luck"],
-            [10, 10, 10, 10, 10],
-            [80, 80, 80, 80, 80],
-            // [100, 100, 100, 100, 100],
-        )
+        await era.changeMintAccessor('0x1cE95c19db0Fa340BF332131D09f97d747CceA89', true);
 
-        const FOE = await ethers.getContractFactory("FountainOfEra", signer);
-        const foe = await FOE.attach(json[chainId].foe);
-
-        await foe.addHistopianType(1)
 
         console.log("added successfully", );
     })

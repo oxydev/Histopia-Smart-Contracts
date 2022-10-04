@@ -7,8 +7,6 @@ import type * as distributorSol from "./Distributor.sol";
 export type { distributorSol };
 import type * as foeSol from "./FOE.sol";
 export type { foeSol };
-import type * as histopiaNftSol from "./HistopiaNFT.sol";
-export type { histopiaNftSol };
 import type * as nft from "./NFT";
 export type { nft };
 import type * as multicallSol from "./multicall.sol";

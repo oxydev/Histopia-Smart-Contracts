@@ -4,7 +4,6 @@
 export * as bridge from "./Bridge";
 export * as distributorSol from "./Distributor.sol";
 export * as foeSol from "./FOE.sol";
-export * as histopiaNftSol from "./HistopiaNFT.sol";
 export * as nft from "./NFT";
 export * as multicallSol from "./multicall.sol";
 export { Challenger__factory } from "./Challenger__factory";

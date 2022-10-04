@@ -1,0 +1,18 @@
+{
+  "42261": {
+    "era": "0xf1197e3fc99Ed7d5940aC3ABd09cF6F876e819ee",
+    "nft": "0x6C2FA3aB5b68408cAcF85BD4dEC77e12F803cb01",
+    "foe": "0x3f20D97fdC0BBf00b41E297a6517b8871C9C2678",
+    "bridge": "0x76e2b15085752dcC178efc2f3A789607D1a2841B",
+    "startBlock": 1245406,
+    "bridgeDeployBlock": 1245406
+  },
+  "23295": {
+    "era": "0x2B628021f92e693954285dD03C94BD9968B9868d",
+    "nft": "0xBAfF5A48D33F246fC305FbB86E6C6f69AeF42D89",
+    "foe": "0x3a7AA12d014553Cd078e5d9614024aEd42C3FffD",
+    "bridge": "0xEc66A83b2ae8fF022E233cf7c2f59b57e1363a69",
+    "startBlock": 5264,
+    "bridgeDeployBlock": 5264
+  }
+}

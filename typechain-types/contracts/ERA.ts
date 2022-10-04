@@ -33,12 +33,13 @@ export interface ERAInterface extends utils.Interface {
     "approve(address,uint256)": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
     "burn(address,uint256)": FunctionFragment;
-    "changeMintAccessor(address)": FunctionFragment;
+    "changeMintAccessor(address,bool)": FunctionFragment;
     "decimals()": FunctionFragment;
     "decreaseAllowance(address,uint256)": FunctionFragment;
     "getEraContractAddress()": FunctionFragment;
     "increaseAllowance(address,uint256)": FunctionFragment;
     "mint(address,uint256)": FunctionFragment;
+    "minters(address)": FunctionFragment;
     "name()": FunctionFragment;
     "owner()": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
@@ -62,6 +63,7 @@ export interface ERAInterface extends utils.Interface {
       | "getEraContractAddress"
       | "increaseAllowance"
       | "mint"
+      | "minters"
       | "name"
       | "owner"
       | "renounceOwnership"
@@ -91,7 +93,7 @@ export interface ERAInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "changeMintAccessor",
-    values: [PromiseOrValue<string>]
+    values: [PromiseOrValue<string>, PromiseOrValue<boolean>]
   ): string;
   encodeFunctionData(functionFragment: "decimals", values?: undefined): string;
   encodeFunctionData(
@@ -109,6 +111,10 @@ export interface ERAInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "mint",
     values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "minters",
+    values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
@@ -164,6 +170,7 @@ export interface ERAInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "mint", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "minters", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(
@@ -288,6 +295,7 @@ export interface ERA extends BaseContract {
 
     changeMintAccessor(
       _mintAccessor: PromiseOrValue<string>,
+      allow: PromiseOrValue<boolean>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -314,6 +322,11 @@ export interface ERA extends BaseContract {
       amount: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
+
+    minters(
+      arg0: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
 
     name(overrides?: CallOverrides): Promise<[string]>;
 
@@ -377,6 +390,7 @@ export interface ERA extends BaseContract {
 
   changeMintAccessor(
     _mintAccessor: PromiseOrValue<string>,
+    allow: PromiseOrValue<boolean>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -401,6 +415,11 @@ export interface ERA extends BaseContract {
     amount: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
+
+  minters(
+    arg0: PromiseOrValue<string>,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
 
   name(overrides?: CallOverrides): Promise<string>;
 
@@ -464,6 +483,7 @@ export interface ERA extends BaseContract {
 
     changeMintAccessor(
       _mintAccessor: PromiseOrValue<string>,
+      allow: PromiseOrValue<boolean>,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -488,6 +508,11 @@ export interface ERA extends BaseContract {
       amount: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    minters(
+      arg0: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
 
     name(overrides?: CallOverrides): Promise<string>;
 
@@ -583,6 +608,7 @@ export interface ERA extends BaseContract {
 
     changeMintAccessor(
       _mintAccessor: PromiseOrValue<string>,
+      allow: PromiseOrValue<boolean>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -606,6 +632,11 @@ export interface ERA extends BaseContract {
       account: PromiseOrValue<string>,
       amount: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    minters(
+      arg0: PromiseOrValue<string>,
+      overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     name(overrides?: CallOverrides): Promise<BigNumber>;
@@ -671,6 +702,7 @@ export interface ERA extends BaseContract {
 
     changeMintAccessor(
       _mintAccessor: PromiseOrValue<string>,
+      allow: PromiseOrValue<boolean>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -696,6 +728,11 @@ export interface ERA extends BaseContract {
       account: PromiseOrValue<string>,
       amount: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    minters(
+      arg0: PromiseOrValue<string>,
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     name(overrides?: CallOverrides): Promise<PopulatedTransaction>;

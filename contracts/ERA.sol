@@ -29,7 +29,7 @@ contract ERA is ERC20, Ownable  {
     }
 
     modifier onlyMintAccessor {
-        require(minters[_mintAccessor],"Not a mint accessor");
+        require(minters[msg.sender],"Not a mint accessor");
         _;
     }
 

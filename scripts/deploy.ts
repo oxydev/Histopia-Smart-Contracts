@@ -2,7 +2,7 @@ import { ethers } from "hardhat";
 import {BigNumber} from "ethers";
 import * as sapphire from '@oasisprotocol/sapphire-paratime';
 const fs = require("fs");
-const BRIDGE_BACKEND = "0x1ce95c19db0fa340bf332131d09f97d747ccea89";
+const BRIDGE_BACKEND = "0x1cE95c19db0Fa340BF332131D09f97d747CceA89";
 async function main() {
   // const currentTimestampInSeconds = Math.round(Date.now() / 1000);
   // const ONE_YEAR_IN_SECS = 365 * 24 * 60 * 60;
@@ -23,11 +23,23 @@ async function main() {
   console.log("era deployed to:", era.address);
 
   const NFT = await ethers.getContractFactory("HistopiaNFT", signer);
-  const nft = await NFT.deploy("Histopian NFT", "Histopian", era.address, BigNumber.from("2500000000000000000000"));
+  const nft = await NFT.deploy("Histopian NFT", "Histopian", era.address, BigNumber.from("2500000000000000000000"), {
+    gasLimit: 10000000,
+  });
   // const nft = await NFT.deploy("NFT", "NFT", "0xF07780BD59BD7b554a1DBF0e306f482EcEAF5C56", BigNumber.from("2500000000000000000000"));
 
   let nft2 = await nft.deployed();
 
+
+  await nft.addType(
+      "Histopian_v1",
+      30,
+      10000,
+      ["speed", "strength", "intelligence", "charisma", "luck"],
+      [10, 10, 10, 10, 10],
+      [100, 100, 100, 100, 100],
+      // [100, 100, 100, 100, 100],
+  )
 
   await nft.addType(
       "Histopian_v2",
@@ -46,7 +58,8 @@ async function main() {
   let foe2 = await foe.deployed();
 
   await foe.addHistopianType(0)
-  let n =  await nft2.deployTransaction.wait(4);
+  await foe.addHistopianType(1)
+  let n =  await nft2.deployTransaction.wait(1);
   console.log("NFT deployed to:", nft.address, n.blockNumber);
   console.log("FOE deployed to:", foe.address);
   await era.changeMintAccessor(foe.address, true);
@@ -72,7 +85,8 @@ async function main() {
         "nft": nft.address,
         "foe": foe.address,
         "bridge": bridge.address,
-        "startBlock": n.blockNumber
+        "startBlock": n.blockNumber,
+      "bridgeDeployBlock": n.blockNumber
     }
     // console.log(json);
     fs.writeFile("address.json", JSON.stringify(json), (err:any) => {
