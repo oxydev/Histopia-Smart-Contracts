@@ -9,7 +9,7 @@ async function main() {
     // const unlockTime = currentTimestampInSeconds + ONE_YEAR_IN_SECS;
 
     // const lockedAmount = ethers.utils.parseEther("1");
-    fs.readFile( "address.json", async (err:any, content:any) => {
+    fs.readFile( "deploymentScripts/address.json", async (err:any, content:any) => {
         if (err) {
             console.log("Error:", err);
             return

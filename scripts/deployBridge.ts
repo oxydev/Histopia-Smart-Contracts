@@ -8,7 +8,7 @@ async function main() {
 
   const signer = chainId in sapphire.NETWORKS ? sapphire.wrap(owner): owner;
 
-  fs.readFile( "address.json", async (err:any, content:any) => {
+  fs.readFile( "deploymentScripts/address.json", async (err:any, content:any) => {
     if (err) {
       console.log("Error:", err);
       return
@@ -33,7 +33,7 @@ async function main() {
     json[chainId].bridge = bridge.address;
     json[chainId].bridgeDeployBlock = n.blockNumber;
     // console.log(json);
-    fs.writeFile("address.json", JSON.stringify(json), (err:any) => {
+    fs.writeFile("deploymentScripts/address.json", JSON.stringify(json), (err:any) => {
       if (err) {
         console.log(err);
       }

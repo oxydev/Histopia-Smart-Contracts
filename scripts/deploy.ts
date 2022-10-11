@@ -71,7 +71,7 @@ async function main() {
 
   console.log("Bridge deployed to:", bridge.address);
 
-  fs.readFile( "address.json", (err:any, content:any) => {
+  fs.readFile( "deploymentScripts/address.json", (err:any, content:any) => {
     if (err) {
         console.log("Error:", err);
     }
@@ -89,7 +89,7 @@ async function main() {
       "bridgeDeployBlock": n.blockNumber
     }
     // console.log(json);
-    fs.writeFile("address.json", JSON.stringify(json), (err:any) => {
+    fs.writeFile("deploymentScripts/address.json", JSON.stringify(json), (err:any) => {
       if (err) {
         console.log(err);
       }
