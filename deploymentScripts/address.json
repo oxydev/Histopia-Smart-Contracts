@@ -5,7 +5,8 @@
     "foe": "0x5a1A3f35C742F6b5F171E15466aF2Ab29Be78738",
     "bridge": "0xB4DfC3513D4bf41d4B131a4899d5635B22A26699",
     "startBlock": 7633068,
-    "bridgeDeployBlock": 7656638
+    "bridgeDeployBlock": 7656638,
+    "multi": "0x6a1F5A732e28Cc02Ae27151aAD09cf82115Dc7D4"
   },
   "28": {
     "era": "0x9c7D0fC21F3cd0112A3AcD60D037247fA3f24bDd",
@@ -13,7 +14,8 @@
     "foe": "0xbe245D13D3e91C6d262B5C3d432aBd581B5e7C9c",
     "bridge": "0x31f4DC2992874E8bB7dABe6d5ce2a7F8655848E6",
     "startBlock": 244869,
-    "bridgeDeployBlock": 249965
+    "bridgeDeployBlock": 249965,
+    "multi": "0x0B32c58fd7adC6fcfFF94968C69b48277cb87612"
   },
   "97": {
     "era": "0xf16A17E9CB9b533cDfccF4Dd44d64eAe93cBd7e1",
@@ -21,7 +23,8 @@
     "foe": "0x7E02eD33Df730fd6Df486b178A2D706E5C9732A8",
     "bridge": "0x4414C65F3cf0bA13d96964DD8C7D2C7dbe813E14",
     "startBlock": 23033579,
-    "bridgeDeployBlock": 23148095
+    "bridgeDeployBlock": 23148095,
+    "multi": "0x611CC8Cdc56b0205f00e9f4e14833c76Cc799043"
   },
   "23295": {
     "era": "0x1Ca0Ee0f6BFA8C9DE86a2c1eDD886Dcd36Fc5dcf",
@@ -29,7 +32,8 @@
     "foe": "0x3AFaBe1B284f40f458CFf56c28F544C58E7c4D9B",
     "bridge": "0xd184557dF145A860519eEB49f8AC63074Af6E8F6",
     "startBlock": 5592,
-    "bridgeDeployBlock": 5592
+    "bridgeDeployBlock": 5592,
+    "multi": "0x7d4941CE1347a71441439B92A833BD4989Dac8F8"
   },
   "42261": {
     "era": "0x1F26f5580f49d6bCCDCb528c60a534195882fAEa",
@@ -45,7 +49,8 @@
     "foe": "0x3AFaBe1B284f40f458CFf56c28F544C58E7c4D9B",
     "bridge": "0x4C84b666B1BCF2643D920242a0Bb46933c0cfd90",
     "startBlock": 28218424,
-    "bridgeDeployBlock": 28286914
+    "bridgeDeployBlock": 28286914,
+    "multi": "0x244B5A25ed6989a12B8b71f3A071De0bB3087b0f"
   },
   "1313161555": {
     "era": "0xe1b024379Fb879A2B9e28519fe4a3940DeBb9c97",

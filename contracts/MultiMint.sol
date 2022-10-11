@@ -2,7 +2,7 @@
 pragma solidity 0.8.1;
 
 interface INFT {
-    function mint(address to, uint256 typeIndex) public;
+    function mint(address to, uint256 typeIndex) external;
 
 }
 

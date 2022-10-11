@@ -3,6 +3,7 @@ import fs from "fs";
 import * as sapphire from '@oasisprotocol/sapphire-paratime';
 
 async function main() {
+  console.log("Deploying MultiMint contract...");
   const owner = (await ethers.getSigners())[0];
   const chainId = await owner.getChainId();
 
@@ -22,12 +23,17 @@ async function main() {
       return
     }
     const chainId = await ethers.provider.getNetwork().then((network) => network.chainId);
-
-    const MultiMint = await ethers.getContractFactory("MultiMint", signer);
-    const multi = await MultiMint.deploy(json[chainId].nft);
+    let MultiMint, multi
+    if(chainId in sapphire.NETWORKS) {
+      MultiMint = await ethers.getContractFactory("MultiMintSapphire", signer);
+      multi = await MultiMint.deploy(json[chainId].nft, json[chainId].era);
+    } else {
+      MultiMint = await ethers.getContractFactory("MultiMint");
+      multi = await MultiMint.deploy(json[chainId].nft);
+    }
 
     let txn = await multi.deployed();
-    let n =  await txn.deployTransaction.wait(4);
+    await txn.deployTransaction.wait(1);
 
     console.log("bridge deployed to:", multi.address);
     json[chainId].multi = multi.address;
