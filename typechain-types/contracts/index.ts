@@ -9,6 +9,8 @@ import type * as foeSol from "./FOE.sol";
 export type { foeSol };
 import type * as nft from "./NFT";
 export type { nft };
+import type * as rewardDistributerSol from "./RewardDistributer.sol";
+export type { rewardDistributerSol };
 import type * as multicallSol from "./multicall.sol";
 export type { multicallSol };
 export type { Challenger } from "./Challenger";

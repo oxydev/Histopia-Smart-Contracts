@@ -5,6 +5,7 @@ export * as bridge from "./Bridge";
 export * as distributorSol from "./Distributor.sol";
 export * as foeSol from "./FOE.sol";
 export * as nft from "./NFT";
+export * as rewardDistributerSol from "./RewardDistributer.sol";
 export * as multicallSol from "./multicall.sol";
 export { Challenger__factory } from "./Challenger__factory";
 export { ERA__factory } from "./ERA__factory";

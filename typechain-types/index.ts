@@ -62,3 +62,5 @@ export type { TypedNFT } from "./contracts/NFT/TypedNFT";
 export { TypedNFT__factory } from "./factories/contracts/NFT/TypedNFT__factory";
 export type { Resources } from "./contracts/Resources";
 export { Resources__factory } from "./factories/contracts/Resources__factory";
+export type { RewardDistributor } from "./contracts/RewardDistributer.sol/RewardDistributor";
+export { RewardDistributor__factory } from "./factories/contracts/RewardDistributer.sol/RewardDistributor__factory";
