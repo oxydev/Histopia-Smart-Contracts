@@ -32,31 +32,30 @@ async function main() {
         let mintAccessor = '0xFb2f01A147bD8800DAa7221CF62A1276dd2634a1'
         //
         //
-        const NFT = await ethers.getContractFactory("HistopiaNFT", signer);
-        const nft = await NFT.attach(json[chainId].nft);
-
-        await nft.transferOwnership(
-            newOwner
-        )
-
-        const FOE = await ethers.getContractFactory("FountainOfEra", signer);
-        const foe = await FOE.attach(json[chainId].foe);
-
-        await foe.transferOwnership(
-            newOwner
-        )
-        // const Era = await ethers.getContractFactory("ERA", signer);
-        // const era = await Era.attach(json[chainId].era);
-        // if (chainId == 23295) {
-        //     await era.changeMintAccessor(
-        //         mintAccessor,
-        //         true
-        //     )
-        // }
+        // const NFT = await ethers.getContractFactory("HistopiaNFT", signer);
+        // const nft = await NFT.attach(json[chainId].nft);
         //
-        // await era.transferOwnership(
+        // await nft.transferOwnership(
         //     newOwner
         // )
+        //
+        // const FOE = await ethers.getContractFactory("FountainOfEra", signer);
+        // const foe = await FOE.attach(json[chainId].foe);
+        //
+        // await foe.transferOwnership(
+        //     newOwner
+        // )
+        const Era = await ethers.getContractFactory("ERA", signer);
+        const era = await Era.attach(json[chainId].era);
+
+        let amount = await era.balanceOf(owner.address);
+        console.log("chain" , chainId, amount.toString())
+
+
+        await era.transfer(
+            newOwner,
+        amount.toString()
+        )
 
 
     })
