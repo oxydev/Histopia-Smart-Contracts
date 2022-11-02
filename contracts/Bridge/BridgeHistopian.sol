@@ -25,8 +25,8 @@ contract BridgeHistopian is Ownable{
 
     mapping(bytes32 => bool) public hashes;
 
-    event LockedNFT(uint256[] tokenId, address indexed to, uint256 indexed destChain);
-    event MintNFT(uint256[] tokenId, uint indexed startingIndex, address indexed to);
+    event LockedNFT(uint256[] tokenIds, address indexed to, uint256 indexed destChain);
+    event MintNFT(uint256[] tokenIds, uint indexed startingIndex, address indexed to);
 
     constructor(ERA _ERA, address _feeCollector, INFT _nftContract, address _supplier) {
         ERAContract = _ERA;
