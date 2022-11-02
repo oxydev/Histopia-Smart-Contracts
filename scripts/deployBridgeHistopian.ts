@@ -24,7 +24,8 @@ async function main() {
     const chainId = await ethers.provider.getNetwork().then((network) => network.chainId);
 
     const Bridge = await ethers.getContractFactory("BridgeHistopian", signer);
-    const bridge = await Bridge.deploy(json[chainId].era, owner.address, json[chainId].nft);
+    //todo: change address
+    const bridge = await Bridge.deploy(json[chainId].era, owner.address, json[chainId].nft, "0x" );
 
     let txn = await bridge.deployed();
     let n =  await txn.deployTransaction.wait(4);
