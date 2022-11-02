@@ -40,8 +40,11 @@
     "nft": "0x34d2f42403f3FA67E1565D55bDD336059004833C",
     "foe": "0x67F4cE1e92C612493B888DEe2b527954E6f224f1",
     "bridge": "0x9E39EcD6FFcE262478EB585648Fa2f0b0527F9dD",
+    "multi": "0xC26dc8253FfD91CCB8d21336b1b8b3c55207C84F",
     "startBlock": 1207421,
-    "bridgeDeployBlock": 1220579
+    "bridgeDeployBlock": 1220579,
+    "bridgeHistopian": "0xc5Ed9D1c511697B49E690770059922F3B0c01252",
+    "bridgeHistopianDeployBlock": 1346336
   },
   "80001": {
     "era": "0x9C0F4b1D54380dFbc7237b7C3F1303fb804a080a",
@@ -58,6 +61,7 @@
     "foe": "0xd8591a20e3873C35043F5c777Fc448cBD1Fe782d",
     "bridge": "0xd6C5b74d2349084D54146989991A6697f0389b55",
     "startBlock": 100743079,
-    "bridgeDeployBlock": 101075429
+    "bridgeDeployBlock": 101075429,
+    "multi": "0x0ae1250e56da01bB3f1644EE056d5D01225aFB72"
   }
 }
