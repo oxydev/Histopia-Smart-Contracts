@@ -49,7 +49,6 @@ contract BridgeHistopian is Ownable{
 
     function mintNFTs(uint256[] memory tokenIds, uint typeIndex, address to, bytes32 hashVerifier) public {
         require(!hashes[hashVerifier], "Already minted");
-        ERAContract.transferFrom(msg.sender, feeCollector, tokenIds.length * BRIDGE_FEE);
         ERAContract.transferFrom(supplier, address(this), tokenIds.length * NFT_COST);
         uint256 latestTokenId = nftContract.latestTokenID();
         for (uint256 i = 0; i < tokenIds.length; i++) {
