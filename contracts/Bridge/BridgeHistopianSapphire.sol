@@ -25,7 +25,7 @@ contract BridgeHistopianSapphire is Ownable{
     mapping(bytes32 => bool) public hashes;
 
     event LockedNFT(uint256[] tokenIds, address indexed to, uint256 indexed destChain);
-    event MintNFT(uint256[] tokenIds, uint indexed startingIndex, address indexed to);
+    event MintNFT(uint256[] tokenIds, uint indexed startingIndex, address indexed to, bytes32 hashVerifier);
 
     constructor(ERA _ERA, address _feeCollector, INFT _nftContract) {
         ERAContract = _ERA;
@@ -52,7 +52,7 @@ contract BridgeHistopianSapphire is Ownable{
         for (uint256 i = 0; i < tokenIds.length; i++) {
             nftContract.mint(to, typeIndex);
         }
-        emit MintNFT(tokenIds, latestTokenId, to);
+        emit MintNFT(tokenIds, latestTokenId, to, hashVerifier);
 
     }
 
