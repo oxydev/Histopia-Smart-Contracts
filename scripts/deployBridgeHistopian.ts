@@ -22,10 +22,15 @@ async function main() {
       return
     }
     const chainId = await ethers.provider.getNetwork().then((network) => network.chainId);
+    let Bridge
 
-    const Bridge = await ethers.getContractFactory("BridgeHistopian", signer);
-    //todo: change address
-    const bridge = await Bridge.deploy(json[chainId].era, owner.address, json[chainId].nft, "0x" );
+    if(chainId in sapphire.NETWORKS) {
+      Bridge = await ethers.getContractFactory("BridgeHistopianSapphire", signer);
+    }else{
+      Bridge = await ethers.getContractFactory("BridgeHistopian", signer);
+    }
+
+    const bridge = await Bridge.deploy(json[chainId].era, owner.address, json[chainId].nft);
 
     let txn = await bridge.deployed();
     let n =  await txn.deployTransaction.wait(4);

@@ -14,7 +14,7 @@ interface INFT {
     function mint(address to, uint256 typeIndex) external;
     function owner() external returns (address);
 }
-contract BridgeHistopian is Ownable{
+contract BridgeHistopianSapphire is Ownable{
     uint256 public BRIDGE_FEE = 100 * 10 ** 18; // 100 ERA
     uint256 public NFT_COST = 2500 * 10 ** 18; // 2500 ERA
 
@@ -44,16 +44,13 @@ contract BridgeHistopian is Ownable{
 
     }
 
-    function mintNFTs(uint256[] memory tokenIds, uint256 typeIndex, address to, bytes32 hashVerifier) public {
+    function mintNFTs(uint256[] memory tokenIds, uint typeIndex, address to, bytes32 hashVerifier) public {
         require(!hashes[hashVerifier], "Already minted");
         address owner = nftContract.owner();
         ERAContract.transferFrom(owner, address(this), tokenIds.length * NFT_COST);
         uint256 latestTokenId = nftContract.latestTokenID();
         for (uint256 i = 0; i < tokenIds.length; i++) {
-            nftContract.mint(address(this), typeIndex);
-        }
-        for (uint256 i = 0; i < tokenIds.length; i++) {
-            nftContract.safeTransferFrom(address(this), to, latestTokenId + i);
+            nftContract.mint(to, typeIndex);
         }
         emit MintNFT(tokenIds, latestTokenId, to);
 
