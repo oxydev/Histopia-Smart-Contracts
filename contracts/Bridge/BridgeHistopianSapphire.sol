@@ -5,22 +5,28 @@ import "../ERA.sol";
 
 interface INFT {
     function burn(uint256 tokenId) external;
+
     function latestTokenID() external returns (uint256);
+
     function safeTransferFrom(
         address from,
         address to,
         uint256 tokenId
     ) external;
+
     function mint(address to, uint256 typeIndex) external;
+    function mintFee() external returns (uint256);
     function owner() external returns (address);
 }
-contract BridgeHistopianSapphire is Ownable{
+
+contract BridgeHistopianSapphire is Ownable {
     uint256 public BRIDGE_FEE = 100 * 10 ** 18; // 100 ERA
     uint256 public NFT_COST = 2500 * 10 ** 18; // 2500 ERA
 
     address public feeCollector;
     ERA public ERAContract;
     INFT public nftContract; // Address of NFT token contract.
+    address public bridgeAttestor;
 
     mapping(bytes32 => bool) public hashes;
 
@@ -31,8 +37,9 @@ contract BridgeHistopianSapphire is Ownable{
         ERAContract = _ERA;
         feeCollector = _feeCollector;
         nftContract = _nftContract;
-        ERAContract.approve(address(nftContract), 2**256 - 1);
+        ERAContract.approve(address(nftContract), 2 ** 256 - 1);
         nftContract.mint(msg.sender, 1);
+        NFT_COST = nftContract.mintFee();
     }
 
     function lockNFT(uint256[] memory tokenIds, address to, uint256 destChain) public {
@@ -46,6 +53,7 @@ contract BridgeHistopianSapphire is Ownable{
 
     function mintNFTs(uint256[] memory tokenIds, uint typeIndex, address to, bytes32 hashVerifier) public {
         require(!hashes[hashVerifier], "Already minted");
+        require(msg.sender == bridgeAttestor, "Not authorized");
         address owner = nftContract.owner();
         ERAContract.transferFrom(owner, address(this), tokenIds.length * NFT_COST);
         uint256 latestTokenId = nftContract.latestTokenID();
@@ -66,6 +74,14 @@ contract BridgeHistopianSapphire is Ownable{
 
     function emptyAccountERA(address to) public onlyOwner {
         ERAContract.transfer(to, ERAContract.balanceOf(address(this)));
+    }
+
+    function updateNFTCost() public {
+        NFT_COST = nftContract.mintFee();
+    }
+
+    function setBridgeAttestor(address _bridgeAttestor) public onlyOwner {
+        bridgeAttestor = _bridgeAttestor;
     }
 
     function transferAccountNFT(address to, uint256[] memory indices) public onlyOwner {

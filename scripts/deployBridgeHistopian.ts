@@ -4,6 +4,7 @@ import * as sapphire from '@oasisprotocol/sapphire-paratime';
 
 async function main() {
   const owner = (await ethers.getSigners())[0];
+  const otherAccount = (await ethers.getSigners())[1];
   const chainId = await owner.getChainId();
 
   const signer = chainId in sapphire.NETWORKS ? sapphire.wrap(owner): owner;
@@ -30,14 +31,22 @@ async function main() {
       Bridge = await ethers.getContractFactory("BridgeHistopian", signer);
     }
 
-    const bridge = await Bridge.deploy(json[chainId].era, owner.address, json[chainId].nft);
+    const bridge = await Bridge.deploy(json[chainId].era, owner.address, json[chainId].nft,otherAccount.address );
 
     let txn = await bridge.deployed();
     let n =  await txn.deployTransaction.wait(4);
 
-    console.log("bridge deployed to:", bridge.address);
+    console.log("Bridge deployed to:", bridge.address);
+
+    const Era = await ethers.getContractFactory("ERA", signer);
+    const era = await Era.attach(json[chainId].era);
+
+    await era.approve(bridge.address, ethers.constants.MaxUint256)
+
     json[chainId].bridgeHistopian = bridge.address;
     json[chainId].bridgeHistopianDeployBlock = n.blockNumber;
+
+
     // console.log(json);
     fs.writeFile("deploymentScripts/address.json", JSON.stringify(json), (err:any) => {
       if (err) {
@@ -45,7 +54,6 @@ async function main() {
       }
     })
   })
-
 }
 
 // We recommend this pattern to be able to use async/await everywhere

@@ -6,7 +6,9 @@
     "bridge": "0xB4DfC3513D4bf41d4B131a4899d5635B22A26699",
     "startBlock": 7633068,
     "bridgeDeployBlock": 7656638,
-    "multi": "0x6a1F5A732e28Cc02Ae27151aAD09cf82115Dc7D4"
+    "multi": "0x6a1F5A732e28Cc02Ae27151aAD09cf82115Dc7D4",
+    "bridgeHistopian": "0x261007ce9f06AD84978724012eC0F85C166501D8",
+    "bridgeHistopianDeployBlock": 7883711
   },
   "28": {
     "era": "0x9c7D0fC21F3cd0112A3AcD60D037247fA3f24bDd",
@@ -43,8 +45,8 @@
     "multi": "0xC26dc8253FfD91CCB8d21336b1b8b3c55207C84F",
     "startBlock": 1207421,
     "bridgeDeployBlock": 1220579,
-    "bridgeHistopian": "0xc5Ed9D1c511697B49E690770059922F3B0c01252",
-    "bridgeHistopianDeployBlock": 1346336
+    "bridgeHistopian": "0x261007ce9f06AD84978724012eC0F85C166501D8",
+    "bridgeHistopianDeployBlock": 1349449
   },
   "80001": {
     "era": "0x9C0F4b1D54380dFbc7237b7C3F1303fb804a080a",

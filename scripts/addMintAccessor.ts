@@ -32,7 +32,7 @@ async function main() {
         const ERA = await ethers.getContractFactory("ERA", signer);
         const era = await ERA.attach(json[chainId].era);
 
-        await era.changeMintAccessor('0x1cE95c19db0Fa340BF332131D09f97d747CceA89', true);
+        await era.changeMintAccessor('0xFb2f01A147bD8800DAa7221CF62A1276dd2634a1', true);
 
 
         console.log("added successfully", );

@@ -33,21 +33,21 @@ async function main() {
         const nft = await NFT.attach(json[chainId].nft);
 
         await nft.addType(
-            "Histopian_v3",
+            "Histopian_Bridged",
+            // "Histopian_V4",
             30,
-            10000,
+            100000,
             ["speed", "strength", "intelligence", "charisma", "luck"],
             [10, 10, 10, 10, 10],
-            [80, 80, 80, 80, 80],
-            // [100, 100, 100, 100, 100],
+            // [80, 80, 80, 80, 80],
+            [100, 100, 100, 100, 100],
         )
 
         const FOE = await ethers.getContractFactory("FountainOfEra", signer);
         const foe = await FOE.attach(json[chainId].foe);
+        await foe.addHistopianType(4)
 
-        await foe.addHistopianType(1)
-
-        console.log("added successfully", );
+        console.log("added successfully", chainId);
     })
 
 
