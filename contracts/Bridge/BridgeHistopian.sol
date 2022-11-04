@@ -1,7 +1,8 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "../ERA.sol";
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+
 
 interface INFT {
     function burn(uint256 tokenId) external;
@@ -25,8 +26,9 @@ contract BridgeHistopian is Ownable {
     uint256 public NFT_COST = 2500 * 10 ** 18; // 2500 ERA
 
     address public feeCollector;
-    ERA public ERAContract;
+    IERC20 public ERAContract;
     INFT public nftContract; // Address of NFT token contract.
+    address public nftOwner; // Address of NFT token contract owner.
     address public bridgeAttestor;
 
     mapping(bytes32 => bool) public hashes;
@@ -34,7 +36,7 @@ contract BridgeHistopian is Ownable {
     event LockedNFT(uint256[] tokenIds, address indexed to, uint256 indexed destChain);
     event MintNFT(uint256[] tokenIds, uint indexed startingIndex, address indexed to, bytes32 hashVerifier);
 
-    constructor(ERA _ERA, address _feeCollector, INFT _nftContract, address _bridgeAttestor) {
+    constructor(IERC20 _ERA, address _feeCollector, INFT _nftContract, address _bridgeAttestor) {
         ERAContract = _ERA;
         feeCollector = _feeCollector;
         nftContract = _nftContract;
@@ -44,6 +46,7 @@ contract BridgeHistopian is Ownable {
         nftContract.safeTransferFrom(address(this), msg.sender, latestTokenId);
         NFT_COST = nftContract.mintFee();
         bridgeAttestor = _bridgeAttestor;
+        nftOwner = nftContract.owner();
     }
 
     function lockNFT(uint256[] memory tokenIds, address to, uint256 destChain) public {
@@ -57,17 +60,13 @@ contract BridgeHistopian is Ownable {
     function mintNFTs(uint256[] memory tokenIds, uint256 typeIndex, address to, bytes32 hashVerifier) public {
         require(!hashes[hashVerifier], "Already minted");
         require(msg.sender == bridgeAttestor, "Not authorized");
-        address owner = nftContract.owner();
-        ERAContract.transferFrom(owner, address(this), tokenIds.length * NFT_COST);
+        ERAContract.transferFrom(nftOwner, address(this), tokenIds.length * NFT_COST);
         uint256 latestTokenId = nftContract.latestTokenID();
         for (uint256 i = 0; i < tokenIds.length; i++) {
             nftContract.mint(address(this), typeIndex);
-        }
-        for (uint256 i = 0; i < tokenIds.length; i++) {
             nftContract.safeTransferFrom(address(this), to, latestTokenId + i);
         }
         emit MintNFT(tokenIds, latestTokenId, to, hashVerifier);
-
     }
 
     function setFee(uint256 _fee) public onlyOwner {
@@ -84,6 +83,9 @@ contract BridgeHistopian is Ownable {
 
     function updateNFTCost() public  {
         NFT_COST = nftContract.mintFee();
+    }
+    function updateNFTOwner() public  {
+        nftOwner = nftContract.owner();
     }
 
     function emptyAccountERA(address to) public onlyOwner {

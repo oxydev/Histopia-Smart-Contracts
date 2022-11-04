@@ -34,9 +34,9 @@ async function main() {
     const bridge = await Bridge.deploy(json[chainId].era, owner.address, json[chainId].nft,otherAccount.address );
 
     let txn = await bridge.deployed();
-    let n =  await txn.deployTransaction.wait(4);
+    let n =  await txn.deployTransaction.wait(1);
 
-    console.log("Bridge deployed to:", bridge.address);
+    console.log("Bridge deployed to:", bridge.address," on chain ", chainId);
 
     const Era = await ethers.getContractFactory("ERA", signer);
     const era = await Era.attach(json[chainId].era);
