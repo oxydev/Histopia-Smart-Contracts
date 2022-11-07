@@ -27,7 +27,7 @@ async function main() {
     const bridge = await Bridge.deploy(json[chainId].era, owner.address);
 
     let txn = await bridge.deployed();
-    let n =  await txn.deployTransaction.wait(4);
+    let n =  await txn.deployTransaction.wait(2);
 
     console.log("bridge deployed to:", bridge.address);
     json[chainId].bridge = bridge.address;
