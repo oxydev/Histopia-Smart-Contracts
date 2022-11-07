@@ -40,13 +40,19 @@ describe("FOE", function () {
             const {era, nft, bridge, owner, otherAccount} = await loadFixture(deployEraAndNFTAndBridge);
             await era.mint(otherAccount.address, BigInt("1000000000000000000000000"));
             await era.connect(otherAccount).approve(bridge.address, BigInt("1000000000000000000000"));
-
+            // let x =  Buffer.from(, "hex");
+            // let e = new ArrayBuffer(32);
+            //
+            // let  decoder = new TextDecoder();
+            // let y = decoder.decode(x.valueOf());
+            // console.log("dcsdc", y, x);
             let txn = bridge.connect(otherAccount).lock(BigInt("1000000000000000000000"), "skcnsdklkmcjnsdkj", 0)
             await expect(txn).to.emit(
                 bridge,
                 "Locked"
             ).withArgs(
                 BigInt("990000000000000000000"),
+                otherAccount.address,
                 "skcnsdklkmcjnsdkj",
                 0
             );
