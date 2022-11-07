@@ -18,8 +18,8 @@
     "startBlock": 244869,
     "bridgeDeployBlock": 280313,
     "multi": "0x0B32c58fd7adC6fcfFF94968C69b48277cb87612",
-    "bridgeHistopian": "0x4759723c1CA79886671AA7D3206CC5151f84973C",
-    "bridgeHistopianDeployBlock": 278991
+    "bridgeHistopian": "0x7F42fB913F83C8a459d8898DBA6De01b7f0E45a6",
+    "bridgeHistopianDeployBlock": 280319
   },
   "97": {
     "era": "0xf16A17E9CB9b533cDfccF4Dd44d64eAe93cBd7e1",
@@ -29,8 +29,8 @@
     "startBlock": 23033579,
     "bridgeDeployBlock": 24389908,
     "multi": "0x611CC8Cdc56b0205f00e9f4e14833c76Cc799043",
-    "bridgeHistopian": "0xd204340f8212aE933736d54286507A583deCD309",
-    "bridgeHistopianDeployBlock": 24274447
+    "bridgeHistopian": "0x6B6F6dB0571403aF4C3C005D6614605F4150223c",
+    "bridgeHistopianDeployBlock": 24390334
   },
   "23295": {
     "era": "0x1Ca0Ee0f6BFA8C9DE86a2c1eDD886Dcd36Fc5dcf",
@@ -40,8 +40,8 @@
     "startBlock": 5592,
     "bridgeDeployBlock": 26361,
     "multi": "0x7d4941CE1347a71441439B92A833BD4989Dac8F8",
-    "bridgeHistopian": "0x43E14600413a97dDa4d4BD22A0aD6B19Fb1cd3bf",
-    "bridgeHistopianDeployBlock": 25618
+    "bridgeHistopian": "0x2D708D488f18034Ad95726Ea81a9b1a7FD8f9B59",
+    "bridgeHistopianDeployBlock": 26372
   },
   "42261": {
     "era": "0x1F26f5580f49d6bCCDCb528c60a534195882fAEa",
@@ -51,8 +51,8 @@
     "multi": "0xC26dc8253FfD91CCB8d21336b1b8b3c55207C84F",
     "startBlock": 1207421,
     "bridgeDeployBlock": 1363394,
-    "bridgeHistopian": "0x261007ce9f06AD84978724012eC0F85C166501D8",
-    "bridgeHistopianDeployBlock": 1349449
+    "bridgeHistopian": "0x6469D9A6B47A8Af6859616Fbd9D2BB0799C4745C",
+    "bridgeHistopianDeployBlock": 1363443
   },
   "80001": {
     "era": "0x9C0F4b1D54380dFbc7237b7C3F1303fb804a080a",
@@ -62,8 +62,8 @@
     "startBlock": 28218424,
     "bridgeDeployBlock": 29030786,
     "multi": "0x244B5A25ed6989a12B8b71f3A071De0bB3087b0f",
-    "bridgeHistopian": "0xd204340f8212aE933736d54286507A583deCD309",
-    "bridgeHistopianDeployBlock": 28961572
+    "bridgeHistopian": "0x6B6F6dB0571403aF4C3C005D6614605F4150223c",
+    "bridgeHistopianDeployBlock": 29031040
   },
   "1313161555": {
     "era": "0xe1b024379Fb879A2B9e28519fe4a3940DeBb9c97",
@@ -73,7 +73,7 @@
     "startBlock": 100743079,
     "bridgeDeployBlock": 104538471,
     "multi": "0x0ae1250e56da01bB3f1644EE056d5D01225aFB72",
-    "bridgeHistopian": "0x4759723c1CA79886671AA7D3206CC5151f84973C",
-    "bridgeHistopianDeployBlock": 104200241
+    "bridgeHistopian": "0x7F42fB913F83C8a459d8898DBA6De01b7f0E45a6",
+    "bridgeHistopianDeployBlock": 104539386
   }
 }
