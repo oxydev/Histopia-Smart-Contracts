@@ -18,6 +18,7 @@ interface INFT {
     function mint(address to, uint256 typeIndex) external;
 
     function owner() external returns (address);
+
     function mintFee() external returns (uint256);
 }
 
@@ -33,7 +34,7 @@ contract BridgeHistopian is Ownable {
 
     mapping(bytes32 => bool) public hashes;
 
-    event LockedNFT(uint256[] tokenIds, address indexed to, uint256 indexed destChain);
+    event LockedNFT(uint256[] tokenIds, address from, string to, uint256 indexed destChain);
     event MintNFT(uint256[] tokenIds, uint indexed startingIndex, address indexed to, bytes32 hashVerifier);
 
     constructor(IERC20 _ERA, address _feeCollector, INFT _nftContract, address _bridgeAttestor) {
@@ -49,12 +50,12 @@ contract BridgeHistopian is Ownable {
         nftOwner = nftContract.owner();
     }
 
-    function lockNFT(uint256[] memory tokenIds, address to, uint256 destChain) public {
+    function lockNFT(uint256[] memory tokenIds, string calldata to, uint256 destChain) public {
         ERAContract.transferFrom(msg.sender, feeCollector, tokenIds.length * BRIDGE_FEE);
         for (uint256 i = 0; i < tokenIds.length; i++) {
             nftContract.burn(tokenIds[i]);
         }
-        emit LockedNFT(tokenIds, to, destChain);
+        emit LockedNFT(tokenIds, msg.sender, to, destChain);
     }
 
     function mintNFTs(uint256[] memory tokenIds, uint256 typeIndex, address to, bytes32 hashVerifier) public {
@@ -81,10 +82,11 @@ contract BridgeHistopian is Ownable {
         bridgeAttestor = _bridgeAttestor;
     }
 
-    function updateNFTCost() public  {
+    function updateNFTCost() public {
         NFT_COST = nftContract.mintFee();
     }
-    function updateNFTOwner() public  {
+
+    function updateNFTOwner() public {
         nftOwner = nftContract.owner();
     }
 
