@@ -37,13 +37,13 @@ contract BridgeHistopian is Ownable {
     event LockedNFT(uint256[] tokenIds, address from, string to, uint256 indexed destChain);
     event MintNFT(uint256[] tokenIds, uint indexed startingIndex, address indexed to, bytes32 hashVerifier);
 
-    constructor(IERC20 _ERA, address _feeCollector, INFT _nftContract, address _bridgeAttestor) {
+    constructor(IERC20 _ERA, address _feeCollector, INFT _nftContract, address _bridgeAttestor, uint256 NFT_TYPE) {
         ERAContract = _ERA;
         feeCollector = _feeCollector;
         nftContract = _nftContract;
         ERAContract.approve(address(nftContract), 2 ** 256 - 1);
         uint256 latestTokenId = nftContract.latestTokenID();
-        nftContract.mint(address(this), 1);
+        nftContract.mint(address(this), NFT_TYPE);
         nftContract.safeTransferFrom(address(this), msg.sender, latestTokenId);
         NFT_COST = nftContract.mintFee();
         bridgeAttestor = _bridgeAttestor;
