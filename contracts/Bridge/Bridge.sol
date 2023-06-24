@@ -6,7 +6,7 @@ contract BridgeERA {
     uint256 public MINIMUM_THRESHOLD = 10 ** 18; // 1 ERA
     address public feeCollector;
     ERA public ERAContract;
-    event Locked(uint256 amount, address from,  string to, uint256 indexed destChain);
+    event Locked(uint256 amount, address from,  string to, uint256 indexed destChain, bytes32 _commitment);
 
     constructor(ERA _ERA, address _feeCollector) {
         ERAContract = _ERA;
@@ -18,6 +18,15 @@ contract BridgeERA {
         require(amount > MINIMUM_THRESHOLD, "Amount must be greater than Minimum Threshold");
         ERAContract.burn(msg.sender, amount * 99 / 100);
         ERAContract.transferFrom(msg.sender,feeCollector, amount / 100);
-        emit Locked(amount * 99 / 100,msg.sender, to, destChain);
+        emit Locked(amount * 99 / 100,msg.sender, to, destChain, 0x0);
     }
+
+    function lockZK(uint256 amount, string calldata to, uint256 destChain, bytes32 _commitment) public {
+        require(amount > MINIMUM_THRESHOLD, "Amount must be greater than Minimum Threshold");
+        ERAContract.burn(msg.sender, amount * 99 / 100);
+        ERAContract.transferFrom(msg.sender,feeCollector, amount / 100);
+        emit Locked(amount * 99 / 100,msg.sender, to, destChain, _commitment);
+    }
+
+
 }
