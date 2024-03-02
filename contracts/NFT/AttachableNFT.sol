@@ -10,17 +10,12 @@ import "@openzeppelin/contracts/utils/Strings.sol";
 import "./TypedNFT.sol";
 
 contract AttachableERC721 is ERC721Burnable, TypedNFT {
-
     mapping(uint256 => uint256) public assignedNFTs;
-
-
 
     event Unequip(address indexed owner, uint256 indexed assigneeTokenId, uint256 indexed assignorTokenId);
     event Equip(address indexed owner, uint256 indexed assigneeTokenId, uint256 indexed assignorTokenId);
 
-    constructor (string memory name_, string memory symbol_) TypedNFT(name_, symbol_) {
-    }
-
+    constructor(string memory name_, string memory symbol_) TypedNFT(name_, symbol_) {}
 
     function equip(uint256 assigneeTokenId, uint256 assignorTokenId) public {
         require(assigneeTokenId != assignorTokenId, "identical assignee and assingor");
@@ -28,7 +23,10 @@ contract AttachableERC721 is ERC721Burnable, TypedNFT {
         require(assignedNFTs[assigneeTokenId] == 0, "assignee is already assigned to a nft");
         require(rootOwner(assignorTokenId) == msg.sender, "you don't have access to this assignor");
         uint256 typeId = tokenIdToTypeIndex[assigneeTokenId];
-        require(types[typeId].allowedAssignorTypes % types[tokenIdToTypeIndex[assignorTokenId]].typeId == 0, "AssignableERC721: this assignor type is not allowed for this assignee type");
+        require(
+            types[typeId].allowedAssignorTypes % types[tokenIdToTypeIndex[assignorTokenId]].typeId == 0,
+            "AssignableERC721: this assignor type is not allowed for this assignee type"
+        );
 
         _transfer(msg.sender, address(this), assigneeTokenId);
 
@@ -41,7 +39,9 @@ contract AttachableERC721 is ERC721Burnable, TypedNFT {
         emit Equip(msg.sender, assigneeTokenId, assignorTokenId);
     }
 
-    function _updateRootEquip(uint256 tokenId, Property[] memory updatingProperties, uint256[] memory updatingValues) internal {
+    function _updateRootEquip(uint256 tokenId, Property[] memory updatingProperties, uint256[] memory updatingValues)
+        internal
+    {
         for (uint8 i = 0; i < updatingProperties.length; i++) {
             if (propertiesTypesExistence[tokenIdToTypeIndex[tokenId]][updatingProperties[i].name]) {
                 tokenPropertiesValues[tokenId][updatingProperties[i].name] += updatingValues[i];
@@ -60,7 +60,6 @@ contract AttachableERC721 is ERC721Burnable, TypedNFT {
 
         _transfer(address(this), msg.sender, assigneeTokenId);
 
-
         uint256[] memory updatingValues = getTokenProperties(assigneeTokenId);
         Property[] memory updatingProperties = propertiesTypes[tokenIdToTypeIndex[assigneeTokenId]];
 
@@ -68,10 +67,11 @@ contract AttachableERC721 is ERC721Burnable, TypedNFT {
         emit Unequip(msg.sender, assigneeTokenId, assignedNFTs[assigneeTokenId]);
 
         assignedNFTs[assigneeTokenId] = 0;
-
     }
 
-    function _updateRootUnequip(uint256 tokenId, Property[] memory updatingProperties, uint256[] memory updatingValues) internal {
+    function _updateRootUnequip(uint256 tokenId, Property[] memory updatingProperties, uint256[] memory updatingValues)
+        internal
+    {
         if (assignedNFTs[tokenId] > 0) {
             _updateRootUnequip(assignedNFTs[tokenId], updatingProperties, updatingValues);
         }
@@ -89,15 +89,4 @@ contract AttachableERC721 is ERC721Burnable, TypedNFT {
         }
         return ownerOf(currentTokenId);
     }
-
-
-    // // TODO: Implement breed function
-    // function breed (uint256 tokenId) public view returns (uint256[] memory) {
-    //     return tokenPropertiesValues[tokenId];
-    // }
-
-    // // TODO: Implement upgrade function
-    // function upgrade (uint256 tokenId) public view returns (uint256[] memory) {
-    //     return tokenPropertiesValues[tokenId];
-    // }
 }

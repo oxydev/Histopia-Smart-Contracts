@@ -13,10 +13,10 @@ interface INFT {
     function transferFrom(address sender, address recipient, uint256 tokenId) external;
 
     function tokenIdToTypeIndex(uint256 tokenId) external returns (uint256);
-
 }
-interface Allocator{
-    function withdrawShare(address dest, uint256 amount) external;
+
+interface Allocator {
+    function mint(address dest, uint256 amount) external;
     function getEraContractAddress() external returns (address);
 }
 // Fountain of ERA
@@ -25,26 +25,29 @@ interface Allocator{
 // will be transferred to a governance smart contract once ERA is sufficiently
 // distributed and the community can show to govern itself.
 //
+
 contract FountainOfEra is Ownable {
     using SafeERC20 for IERC20;
     // Info of each user.
+
     struct UserInfo {
         uint256 militaryPower; // How many LP tokens the user has provided.
         uint256 rewardDebt; // Reward debt. See explanation below.
         uint256[] tokenIDs;
-        //
-        // We do some fancy math here. Basically, any point in time, the amount of ERAs
-        // entitled to a user but is pending to be distributed is:
-        //
-        //   pending reward = (user.militaryPower * generalAccEraPerShare) - user.rewardDebt
-        //
-        // Whenever a user deposits or withdraws LP tokens to a pool. Here's what happens:
-        //   1. The `accEraPerShare` (and `lastRewardTime`) gets updated.
-        //   2. User receives the pending reward sent to his/her address.
-        //   3. User's `militaryPower` gets updated.
-        //   4. User's `rewardDebt` gets updated.
     }
+    //
+    // We do some fancy math here. Basically, any point in time, the amount of ERAs
+    // entitled to a user but is pending to be distributed is:
+    //
+    //   pending reward = (user.militaryPower * generalAccEraPerShare) - user.rewardDebt
+    //
+    // Whenever a user deposits or withdraws LP tokens to a pool. Here's what happens:
+    //   1. The `accEraPerShare` (and `lastRewardTime`) gets updated.
+    //   2. User receives the pending reward sent to his/her address.
+    //   3. User's `militaryPower` gets updated.
+    //   4. User's `rewardDebt` gets updated.
     // Info of each pool.
+
     INFT public nftContract; // Address of NFT token contract.
     Allocator public eraAllocator;
     IERC20 public era;
@@ -55,61 +58,57 @@ contract FountainOfEra is Ownable {
     uint256 public currentTotalMilitaryPower;
     uint256 public histopianCount;
 
-
     // Info of each user that stakes NFT tokens.
     mapping(address => UserInfo) public userInfo;
     mapping(uint256 => bool) public histopianTypes;
 
-
-    event Deposit(address indexed user, uint256[] tokenIds, uint256 userMilitaryPower, uint256 totalMilitaryPower, uint256 timestamp);
-    event Withdraw(address indexed user, uint256[] tokenIds, uint256 userMilitaryPower, uint256 totalMilitaryPower, uint256 timestamp);
-    event EmergencyWithdraw(
+    event Deposit(
         address indexed user,
-        uint256[] tokenIds
+        uint256[] tokenIds,
+        uint256 userMilitaryPower,
+        uint256 totalMilitaryPower,
+        uint256 timestamp
     );
+    event Withdraw(
+        address indexed user,
+        uint256[] tokenIds,
+        uint256 userMilitaryPower,
+        uint256 totalMilitaryPower,
+        uint256 timestamp
+    );
+    event EmergencyWithdraw(address indexed user, uint256[] tokenIds);
     event Harvest(address indexed user, uint256 amount);
     event ChangeEraPerSecond(uint256 oldAmount, uint256 newAmount);
 
-    constructor(address _eraAllocatorAddress, address _histopiaNFT, uint256 _eraPerSecond) {
+    constructor(address _eraAllocatorAddress, address _histopiaNFT, address _era, uint256 _eraPerSecond) {
         eraAllocator = Allocator(_eraAllocatorAddress);
         eraPerSecond = _eraPerSecond;
-        era = IERC20(eraAllocator.getEraContractAddress());
+        era = IERC20(_era);
         nftContract = INFT(_histopiaNFT);
         emit ChangeEraPerSecond(0, eraPerSecond);
     }
 
-    function addHistopianType(uint256 typeId) public onlyOwner{
+    function addHistopianType(uint256 typeId) public onlyOwner {
         histopianTypes[typeId] = true;
     }
 
-
-    function setEraPerSecond(uint256 _eraPerSecond) public onlyOwner{
+    function setEraPerSecond(uint256 _eraPerSecond) public onlyOwner {
         eraPerSecond = _eraPerSecond;
         emit ChangeEraPerSecond(0, eraPerSecond);
     }
 
-
     // Return reward multiplier over the given _from to _to block.
-    function getMultiplier(uint256 _from, uint256 _to)
-        public
-        pure
-        returns (uint256)
-    {
+    function getMultiplier(uint256 _from, uint256 _to) public pure returns (uint256) {
         return _to - _from;
     }
 
     // View function to see pending Eras on frontend.
-    function pendingERA(address _user)
-        external
-        view
-        returns (uint256)
-    {
+    function pendingERA(address _user) external view returns (uint256) {
         UserInfo storage user = userInfo[_user];
         uint256 accEraPerShare = generalAccEraPerShare;
         uint256 militaryRate = currentTotalMilitaryPower;
         if (block.timestamp > lastRewardTime && militaryRate != 0) {
-            uint256 multiplier =
-                getMultiplier(lastRewardTime, block.timestamp);
+            uint256 multiplier = getMultiplier(lastRewardTime, block.timestamp);
             uint256 eraReward = multiplier * eraPerSecond;
             accEraPerShare += (eraReward * 1e12) / militaryRate;
         }
@@ -127,7 +126,7 @@ contract FountainOfEra is Ownable {
         }
         uint256 multiplier = getMultiplier(lastRewardTime, block.timestamp);
         uint256 eraReward = multiplier * eraPerSecond;
-        eraAllocator.withdrawShare(address(this), eraReward);
+        eraAllocator.mint(address(this), eraReward);
         generalAccEraPerShare += eraReward * 1e12 / currentTotalMilitaryPower;
         lastRewardTime = block.timestamp;
     }
@@ -157,7 +156,7 @@ contract FountainOfEra is Ownable {
         emit Deposit(msg.sender, tokenIds, user.militaryPower, currentTotalMilitaryPower, block.timestamp);
     }
 
-    function calculateMilitaryPowerOfTokenId(uint256 tokenId) public view returns (uint256 ) {
+    function calculateMilitaryPowerOfTokenId(uint256 tokenId) public view returns (uint256) {
         return calculateMilitaryPower(nftContract.getTokenProperties(tokenId));
     }
 
@@ -172,7 +171,7 @@ contract FountainOfEra is Ownable {
     function withdraw(uint256[] calldata tokenIndices) public {
         UserInfo storage user = userInfo[msg.sender];
         updatePool();
-        uint256 pending = (user.militaryPower * generalAccEraPerShare / 1e12 ) - user.rewardDebt;
+        uint256 pending = (user.militaryPower * generalAccEraPerShare / 1e12) - user.rewardDebt;
         safeERATransfer(msg.sender, pending);
         emit Harvest(msg.sender, pending);
         histopianCount -= tokenIndices.length;
@@ -192,13 +191,14 @@ contract FountainOfEra is Ownable {
         for (uint256 index = tokenIndices.length; index > 0; index--) {
             uint256 j = index - 1;
 
-//            console.log("index", tokenIndices[j], user.tokenIDs.length, j);
-//
-//            for (uint256 p = 0; p < user.tokenIDs.length; p++) {
-//                console.log("user.tokenIDs ", user.tokenIDs[p]);
-//            }
-            if(tokenIndices[j] > user.tokenIDs.length - 1)
+            //            console.log("index", tokenIndices[j], user.tokenIDs.length, j);
+            //
+            //            for (uint256 p = 0; p < user.tokenIDs.length; p++) {
+            //                console.log("user.tokenIDs ", user.tokenIDs[p]);
+            //            }
+            if (tokenIndices[j] > user.tokenIDs.length - 1) {
                 continue;
+            }
             uint256 t = 0;
             while (t == 0 && user.tokenIDs.length > 0) {
                 t = user.tokenIDs[user.tokenIDs.length - 1];
@@ -223,7 +223,7 @@ contract FountainOfEra is Ownable {
     function harvest() public {
         UserInfo storage user = userInfo[msg.sender];
         updatePool();
-        uint256 pending = (user.militaryPower * generalAccEraPerShare / 1e12 ) - user.rewardDebt;
+        uint256 pending = (user.militaryPower * generalAccEraPerShare / 1e12) - user.rewardDebt;
         safeERATransfer(msg.sender, pending);
         emit Harvest(msg.sender, pending);
         user.rewardDebt = user.militaryPower * generalAccEraPerShare / 1e12;

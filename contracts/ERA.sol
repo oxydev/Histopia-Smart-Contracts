@@ -1,20 +1,14 @@
 // SPDX-License-Identifier: MIT
 
 pragma solidity ^0.8.0;
+
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract ERA is ERC20, Ownable  {
-    uint8 _decimals;
+contract ERA is ERC20, Ownable {
     mapping(address => bool) public minters;
 
-    constructor () ERC20("ERA token", "ERA") {
-        _decimals = 18;
-    }
-
-    function decimals() public view virtual override returns (uint8) {
-        return _decimals;
-    }
+    constructor() ERC20("ERA token", "ERA") { }
 
     function mint(address account, uint256 amount) public onlyMintAccessor {
         _mint(account, amount);
@@ -28,16 +22,8 @@ contract ERA is ERC20, Ownable  {
         minters[_mintAccessor] = allow;
     }
 
-    modifier onlyMintAccessor {
-        require(minters[msg.sender],"Not a mint accessor");
+    modifier onlyMintAccessor() {
+        require(minters[msg.sender], "Not a mint accessor");
         _;
-    }
-
-    function withdrawShare(address dest, uint256 amount) public onlyMintAccessor {
-        mint(dest, amount);
-    }
-
-    function getEraContractAddress() public view returns (address EraContract) {
-        return address(this);
     }
 }

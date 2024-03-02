@@ -9,14 +9,16 @@ async function main() {
   let HistopiaAddresses = await readAddresses(String(chainId));
   const signer = owner;
 
-  console.log("Deploying ERA contract...", owner.address, await owner.getBalance());
-  const Era = await ethers.getContractFactory("ERA", signer);
-  const era = await Era.deploy();
-  //
-  await era.deployed();
-  console.log("era deployed to:", era.address);
-  await era.changeMintAccessor(owner.getAddress(), true);
-  HistopiaAddresses.era = era.address;
+  console.log("Deploying NFTMintLogic contract...", owner.address, await owner.getBalance());
+
+  const NFT = await ethers.getContractFactory("NFTMintLogic", signer);
+  const nft = await NFT.deploy(HistopiaAddresses.nft, HistopiaAddresses.era);
+
+  let nft2 = await nft.deployed();
+  console.log("nft deployed to:", nft2.address);
+  HistopiaAddresses.nftMinter = nft2.address;
+
+  nft.setMintFee(0, ethers.BigNumber.from("100000000000000000000"));
 
   writeAddresses(String(chainId), HistopiaAddresses);
 }
