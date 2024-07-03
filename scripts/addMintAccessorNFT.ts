@@ -1,34 +1,32 @@
 import { ethers } from "hardhat";
 import { BigNumber } from "ethers";
+import fs from "fs";
+import * as sapphire from "@oasisprotocol/sapphire-paratime";
 import { readAddresses, writeAddresses } from "./deployUtils";
 
-
 async function main() {
+    // const currentTimestampInSeconds = Math.round(Date.now() / 1000);
+    // const ONE_YEAR_IN_SECS = 365 * 24 * 60 * 60;
+    // const unlockTime = currentTimestampInSeconds + ONE_YEAR_IN_SECS;
 
-  const owner = (await ethers.getSigners())[0];
-  const chainId = await owner.getChainId();
-  let HistopiaAddresses = await readAddresses(String(chainId));
+    // const lockedAmount = ethers.utils.parseEther("1");
 
-  //
-  console.log("HistopiaAddresses", HistopiaAddresses);
-  const NFT = await ethers.getContractFactory("HistopiaNFT", owner);
-  const nft = await NFT.attach(HistopiaAddresses.nft);
+    const owner = (await ethers.getSigners())[0];
+    const chainId = await owner.getChainId();
+    let HistopiaAddresses = await readAddresses(String(chainId));
 
-  await nft.addType(
-    "Histopian_Basic",
-    30,
-    100000,
-    ["speed", "strength", "intelligence", "charisma", "luck"],
-    [10, 10, 10, 10, 10],
-    [100, 100, 100, 100, 100]
-  );
+    //
 
-  const FOE = await ethers.getContractFactory("FountainOfEra", owner);
-  const foe = await FOE.attach(HistopiaAddresses.foe);
-  await foe.addHistopianType(0);
+    const NFT = await ethers.getContractFactory("HistopiaNFT");
+    const nft = await NFT.attach(HistopiaAddresses.nft);
 
-  console.log("added successfully", chainId);
-};
+    await nft.setMinter('0x582F59192dE27fcbBDcC226031e9Ca437139eD88', true);
+
+
+    console.log("added successfully",);
+}
+
+
 
 // const FOE = await ethers.getContractFactory("FountainOfEra");
 // const foe = await FOE.deploy(era.address, nft.address, BigNumber.from("0xDE0B6B3A7640000"));
@@ -52,6 +50,6 @@ async function main() {
 // We recommend this pattern to be able to use async/await everywhere
 // and properly handle errors.
 main().catch((error) => {
-  console.error(error);
-  process.exitCode = 1;
+    console.error(error);
+    process.exitCode = 1;
 });
