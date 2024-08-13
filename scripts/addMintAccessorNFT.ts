@@ -20,7 +20,7 @@ async function main() {
     const NFT = await ethers.getContractFactory("HistopiaNFT");
     const nft = await NFT.attach(HistopiaAddresses.nft);
 
-    await nft.setMinter('0x582F59192dE27fcbBDcC226031e9Ca437139eD88', true);
+    await nft.setMinter('0xccb33171181c1919F255693A1B7c828E262fD604', true);
 
 
     console.log("added successfully",);

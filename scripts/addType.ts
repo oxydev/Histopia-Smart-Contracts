@@ -14,18 +14,19 @@ async function main() {
   const NFT = await ethers.getContractFactory("HistopiaNFT", owner);
   const nft = await NFT.attach(HistopiaAddresses.nft);
 
-  await nft.addType(
-    "Histopian_Basic",
-    30,
-    100000,
-    ["speed", "strength", "intelligence", "charisma", "luck"],
-    [10, 10, 10, 10, 10],
-    [100, 100, 100, 100, 100]
-  );
+  // await nft.addType(
+  //   "Histopian_Basic",
+  //   30,
+  //   100000,
+  //   ["speed", "strength", "intelligence", "charisma", "luck"],
+  //   [10, 10, 10, 10, 10],
+  //   [100, 100, 100, 100, 100]
+  // );
+
 
   const FOE = await ethers.getContractFactory("FountainOfEra", owner);
   const foe = await FOE.attach(HistopiaAddresses.foe);
-  await foe.addHistopianType(0);
+  await foe.addHistopianType(1);
 
   console.log("added successfully", chainId);
 };
